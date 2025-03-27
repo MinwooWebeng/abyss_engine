@@ -1,0 +1,38 @@
+﻿syntax = "proto3";
+
+import "commontype.proto";
+
+option csharp_namespace = "AbyssCLI.ABI";
+
+message UIAction {
+	message Init {
+		string local_hash = 1;
+		string http3_root_dir = 2;
+	}
+	message Kill {
+		int32 code = 1;
+	}
+
+	message MoveWorld {
+		string world_url = 1;
+	}
+
+	// Address Bar Input
+	message ShareContent {
+		string url = 2;
+		string initial_position = 3;
+	}
+
+	message ConnectPeer {
+		string aurl = 1;
+	}
+
+	oneof inner {
+		Init init = 1;
+		Kill kill = 2;
+		MoveWorld move_world = 3;
+		ShareContent share_content = 4;
+
+		ConnectPeer connect_peer = 10;
+	}
+}

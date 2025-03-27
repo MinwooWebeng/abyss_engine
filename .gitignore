@@ -1,0 +1,16 @@
+*.dll
+*.json
+*.cache
+*.BuildWithSkipAnalyzers
+*.editorconfig
+*.pdb
+*.g.cs
+*.vsidx
+*.v2
+*.suo
+*.exe
+*.bin
+*.csproj.*
+*.AssemblyAttributes.cs
+*.AssemblyInfo.cs
+testground/

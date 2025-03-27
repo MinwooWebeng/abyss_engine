@@ -1,0 +1,141 @@
+﻿syntax = "proto3";
+
+import "mime.proto";
+import "commontype.proto";
+
+option csharp_namespace = "AbyssCLI.ABI";
+
+message File {
+	MIME mime = 1;
+	string mmap_name = 2;
+	uint32 off = 3;
+	uint32 len = 4;
+}
+
+//if action is adding new file, ends with 'F'
+//if action is value-only, ends with 'V'
+//if action requires another component, ends with 'C'
+//if -C is possible, then must not have -F.
+//if no variation is possible, no suffix.
+message RenderAction {
+	message CreateElement {
+		int32 parent_id = 1;
+		int32 element_id = 2;
+	}
+	message MoveElement {
+		int32 element_id = 1;
+		int32 new_parent_id = 2;
+	}
+	message DeleteElement {
+		int32 element_id = 1;
+	}
+	message ElemSetPos {
+		int32 element_id = 1;
+		Vec3 pos = 2;
+	}
+
+	//components
+	
+	message CreateImage {
+		int32 image_id = 1;
+		File file = 2;
+	}
+	message DeleteImage {
+		int32 image_id = 1;
+	}
+
+	message CreateMaterialV {
+		int32 material_id = 1;
+		string shader_name = 2;
+	}
+	message CreateMaterialF {
+		int32 material_id = 1;
+		File file = 2;
+	}
+	message MaterialSetParamV {
+		int32 material_id = 1;
+		string param_name = 2;
+		AnyVal param = 3;
+	}
+	message MaterialSetParamC {
+		int32 material_id = 1;
+		string param_name = 2;
+		int32 component_id = 3;
+	}
+	message DeleteMaterial {
+		int32 material_id = 1;
+	}
+
+	message CreateStaticMesh {
+		int32 mesh_id = 1;
+		File file = 2;
+	}
+	message StaticMeshSetMaterial {
+		int32 mesh_id = 1;
+		int32 material_slot = 2;
+		int32 material_id = 3;
+	}
+	message ElemAttachStaticMesh {
+		int32 element_id = 1;
+		int32 mesh_id = 2;
+	}
+	message DeleteStaticMesh {
+		int32 mesh_id = 1;
+	}
+
+	//message CreateDynamicMesh {
+	//	int32 component_id = 1;
+	//	File file = 2;
+	//}
+
+	message CreateAnimation {
+		int32 animation_id = 1;
+		File file = 2;
+	}
+	message DeleteAnimation {
+		int32 animation_id = 1;
+	}
+
+	message LocalInfo {
+		string aurl = 1;
+	}
+	message InfoContentShared {
+		string content_uuid = 1;
+		string content_url = 2;
+		string sharer_hash = 3;
+		string world_uuid = 4;
+	}
+	message InfoContentDeleted {
+		string content_uuid = 1;
+		string sharer_hash = 3;
+		string world_uuid = 4;
+	}
+
+	oneof inner {
+		CreateElement create_element = 1;
+		MoveElement move_element = 2;
+		DeleteElement delete_element = 3;
+		ElemSetPos elem_set_pos = 4;
+
+		CreateImage create_image = 100;
+		DeleteImage delete_image = 109;
+
+		CreateMaterialV create_material_v = 110;
+		CreateMaterialF create_material_f = 111;
+		MaterialSetParamV material_set_param_v = 112;
+		MaterialSetParamC material_set_param_c = 113;
+		DeleteMaterial delete_material = 119;
+
+		CreateStaticMesh create_static_mesh = 120;
+		StaticMeshSetMaterial static_mesh_set_material = 121;
+		ElemAttachStaticMesh elem_attach_static_mesh = 122;
+		DeleteStaticMesh delete_static_mesh = 129;
+		
+		CreateAnimation create_animation = 200;
+		DeleteAnimation delete_animation = 209;
+
+		LocalInfo local_info = 1000;
+		InfoContentShared info_content_shared = 1001;
+		InfoContentDeleted info_content_deleted = 1002;
+	}
+}
