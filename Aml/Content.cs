@@ -4,7 +4,7 @@ using static AbyssCLI.AbyssLib;
 
 namespace AbyssCLI.Aml
 {
-    internal class Content(AbyssLib.AbyssHost host, RenderActionWriter renderActionWriter, StreamWriter cerr,
+    internal class Content(AbyssLib.Host host, RenderActionWriter renderActionWriter, StreamWriter cerr,
         string UUID, AbyssAddress URL, vec3 initial_position)
     {
         public void Activate() => _documentImpl.Activate();

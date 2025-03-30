@@ -8,7 +8,7 @@ namespace AbyssCLI.Aml
     //each content must have one MediaLoader
     //TODO: add CORS protection before adding cookie.
     internal class ResourceLoader(
-        AbyssLib.AbyssHost host,
+        AbyssLib.Host host,
         StreamWriter cerr,
         AbyssAddress origin)
     {
@@ -45,9 +45,10 @@ namespace AbyssCLI.Aml
         {
             return await Task.Run(() =>
             {
-                var response = _host.HttpGet(url);
-                return response.GetStatus() == 200 ? response.GetBody() : throw new Exception(url + " : " + Encoding.UTF8.GetString(response.GetBody()));
-            });
+                //var response = _host.HttpGet(url);
+                //return response.GetStatus() == 200 ? response.GetBody() : throw new Exception(url + " : " + Encoding.UTF8.GetString(response.GetBody()));
+                return Array.Empty<byte>();
+            }); 
         }
 
         private async Task Loadresource(AbyssAddress Source, MIME MimeType, WaiterGroup<FileResource> dest)
@@ -99,7 +100,7 @@ namespace AbyssCLI.Aml
             });
         }
 
-        private readonly AbyssLib.AbyssHost _host = host;
+        private readonly AbyssLib.Host _host = host;
         private readonly StreamWriter _cerr = cerr;
         private readonly AbyssAddress _origin = origin;
         private readonly string _mmf_path_prefix = "abyst" + RanStr.RandomString(10);

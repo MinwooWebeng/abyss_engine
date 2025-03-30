@@ -5,10 +5,9 @@ using System;
 
 namespace AbyssCLI.ABI
 {
-    internal class RenderActionWriter
+    internal class RenderActionWriter(System.IO.Stream stream)
     {
-		public RenderActionWriter(System.IO.Stream stream) { _out_stream = stream; }
-
+		
 public void CreateElement
 (
     int parent_id,
@@ -288,7 +287,7 @@ public void InfoContentDeleted
             }
 		}
 		public bool AutoFlush = false;
-		private readonly System.IO.Stream _out_stream;
+		private readonly System.IO.Stream _out_stream = stream;
 		private readonly System.Threading.Semaphore _out_sema = new(1, 1);
 	}
 }

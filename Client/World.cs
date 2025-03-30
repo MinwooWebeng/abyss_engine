@@ -6,7 +6,7 @@ using static AbyssCLI.AbyssLib;
 
 namespace AbyssCLI.Client
 {
-    internal class World(AbyssHost host, RenderActionWriter renderActionWriter, StreamWriter cerr, string UUID, AbyssAddress URL)
+    internal class World(Host host, RenderActionWriter renderActionWriter, StreamWriter cerr, string UUID, AbyssAddress URL)
     {
         public bool TryActivate()
         {
@@ -52,19 +52,19 @@ namespace AbyssCLI.Client
                 if(!_members.TryAdd(peer_hash, []))
                     return false;
 
-                host.SomInitiateService(peer_hash, UUID);
-                var error = host.SomRequestService(peer_hash, UUID);
-                if(error != null)
-                {
-                    cerr.WriteLine("failed to request som service: " + error.ToString());
-                }
+                //host.SomInitiateService(peer_hash, UUID);
+                //var error = host.SomRequestService(peer_hash, UUID);
+                //if(error != null)
+                //{
+                //    cerr.WriteLine("failed to request som service: " + error.ToString());
+                //}
                 foreach (var content in _local_contents.Keys)
                 {
-                    error = host.SomShareObject(peer_hash, UUID, content);
-                    if(error != null)
-                    {
-                        cerr.WriteLine(error.ToString());
-                    }
+                    //error = host.SomShareObject(peer_hash, UUID, content);
+                    //if(error != null)
+                    //{
+                    //    cerr.WriteLine(error.ToString());
+                    //}
                 }
                 return true;
             }
@@ -83,7 +83,6 @@ namespace AbyssCLI.Client
                     content.Close();
                 }
                 _members.Remove(peer_hash);
-                host.SomTerminateService(peer_hash, UUID);
                 return true;
             }
         }
@@ -158,14 +157,14 @@ namespace AbyssCLI.Client
                     return false;
 
                 content.Activate();
-                host.SomRegisterObject(content_URL.String, content_uuid, initial_position);
+                //host.SomRegisterObject(content_URL.String, content_uuid, initial_position);
                 foreach (var member_hash in _members.Keys)
                 {
-                    var error = host.SomShareObject(member_hash, UUID, content_uuid);
-                    if (error != null)
-                    {
-                        cerr.WriteLine("SomShareObject: " + error.ToString());
-                    }
+                    //var error = host.SomShareObject(member_hash, UUID, content_uuid);
+                    //if (error != null)
+                    //{
+                    //    cerr.WriteLine("SomShareObject: " + error.ToString());
+                    //}
                 }
                 return true;
             }

@@ -5,10 +5,9 @@ using System;
 
 namespace AbyssCLI.ABI
 {
-    internal class UIActionWriter
+    internal class UIActionWriter(System.IO.Stream stream)
     {
-		public UIActionWriter(System.IO.Stream stream) { _out_stream = stream; }
-
+		
 public void Init
 (
     string local_hash,
@@ -87,7 +86,7 @@ public void ConnectPeer
             }
 		}
 		public bool AutoFlush = false;
-		private readonly System.IO.Stream _out_stream;
+		private readonly System.IO.Stream _out_stream = stream;
 
 	}
 }
