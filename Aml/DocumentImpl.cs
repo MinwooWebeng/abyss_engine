@@ -14,7 +14,7 @@ namespace AbyssCLI.Aml
         {
             byte[] aml_file = URL.Scheme switch
             {
-                AbyssAddress.EScheme.WWW => await ResourceLoader.GetHttpFileAsync(URL.WebAddress),
+                AbyssAddress.EScheme.Http => await ResourceLoader.GetHttpFileAsync(URL.WebAddress),
                 AbyssAddress.EScheme.Abyst => await ResourceLoader.GetAbystFileAsync(URL.String),
                 _ => throw new Exception("invalid address scheme"),
             };

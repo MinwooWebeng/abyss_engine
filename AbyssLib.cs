@@ -342,9 +342,26 @@ namespace AbyssCLI
             }
             ~World() => CloseAbyssHandle(handle);
         }
-        public class WorldMemberRequest(IntPtr _handle)
+        public class WorldMemberRequest
         {
-            private readonly IntPtr handle = _handle;
+            public WorldMemberRequest(IntPtr _handle)
+            {
+                handle = _handle;
+
+                unsafe
+                {
+                    [DllImport("abyssnet.dll")]
+                    static extern int WorldPeerRequest_GetHash(IntPtr h, byte* buf, int buflen);
+
+                    fixed (byte* buf = new byte[128])
+                    {
+                        int res_len = WorldPeerRequest_GetHash(handle, buf, 128);
+                        peer_hash = res_len <= 0 ? "" : Encoding.ASCII.GetString(buf, res_len);
+                    }
+                }
+            }
+            private readonly IntPtr handle;
+            public readonly string peer_hash;
             public ErrorCode Accept()
             {
                 [DllImport("abyssnet.dll")]
@@ -377,10 +394,10 @@ namespace AbyssCLI
             }
             ~WorldMemberRequest() => CloseAbyssHandle(handle);
         }
-        private class ObjectInfoFormat
+        public class ObjectInfoFormat
         {
-            public required string ID;
-            public required string Addr;
+            public required string ID { get; set; }
+            public required string Addr { get; set; }
         }
         private static string BytesToHex(byte[] input)
         {
@@ -438,7 +455,8 @@ namespace AbyssCLI
             }
             public ErrorCode AppendObjects(Tuple<Guid, string>[] objects_info)
             {
-                var data = JsonSerializer.Serialize(objects_info.Select(x => new ObjectInfoFormat { ID = BytesToHex(x.Item1.ToByteArray()), Addr = x.Item2 }));
+                var objinfo_marshalled = objects_info.Select(x => new ObjectInfoFormat { ID = BytesToHex(x.Item1.ToByteArray()), Addr = x.Item2 }).ToArray();
+                var data = JsonSerializer.Serialize(objinfo_marshalled);
                 byte[] data_bytes;
                 try
                 {
@@ -461,7 +479,8 @@ namespace AbyssCLI
             }
             public ErrorCode DeleteObjects(Guid[] object_ids)
             {
-                var data = JsonSerializer.Serialize(object_ids.Select(x=>BytesToHex(x.ToByteArray())));
+                var objid_marshalled = object_ids.Select(x => BytesToHex(x.ToByteArray()));
+                var data = JsonSerializer.Serialize(objid_marshalled);
                 byte[] data_bytes;
                 try
                 {

@@ -58,7 +58,7 @@ namespace AbyssCLI.Aml
             {
                 fileBytes = Source.Scheme switch
                 {
-                    AbyssAddress.EScheme.WWW => await GetHttpFileAsync(Source.WebAddress),
+                    AbyssAddress.EScheme.Http => await GetHttpFileAsync(Source.WebAddress),
                     AbyssAddress.EScheme.Abyst => await GetAbystFileAsync(Source.String),
                     _ => throw new Exception("invalid address scheme"),
                 };

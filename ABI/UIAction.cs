@@ -24,21 +24,20 @@ namespace AbyssCLI.ABI {
     static UIActionReflection() {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
-            "Cg5VSUFjdGlvbi5wcm90bxoQY29tbW9udHlwZS5wcm90byKcAwoIVUlBY3Rp",
+            "Cg5VSUFjdGlvbi5wcm90bxoQY29tbW9udHlwZS5wcm90byKCAwoIVUlBY3Rp",
             "b24SHgoEaW5pdBgBIAEoCzIOLlVJQWN0aW9uLkluaXRIABIeCgRraWxsGAIg",
             "ASgLMg4uVUlBY3Rpb24uS2lsbEgAEikKCm1vdmVfd29ybGQYAyABKAsyEy5V",
             "SUFjdGlvbi5Nb3ZlV29ybGRIABIvCg1zaGFyZV9jb250ZW50GAQgASgLMhYu",
             "VUlBY3Rpb24uU2hhcmVDb250ZW50SAASLQoMY29ubmVjdF9wZWVyGAogASgL",
-            "MhUuVUlBY3Rpb24uQ29ubmVjdFBlZXJIABoyCgRJbml0EhIKCmxvY2FsX2hh",
-            "c2gYASABKAkSFgoOaHR0cDNfcm9vdF9kaXIYAiABKAkaFAoES2lsbBIMCgRj",
-            "b2RlGAEgASgFGh4KCU1vdmVXb3JsZBIRCgl3b3JsZF91cmwYASABKAkaNQoM",
-            "U2hhcmVDb250ZW50EgsKA3VybBgCIAEoCRIYChBpbml0aWFsX3Bvc2l0aW9u",
-            "GAMgASgJGhsKC0Nvbm5lY3RQZWVyEgwKBGF1cmwYASABKAlCBwoFaW5uZXJC",
-            "D6oCDEFieXNzQ0xJLkFCSWIGcHJvdG8z"));
+            "MhUuVUlBY3Rpb24uQ29ubmVjdFBlZXJIABoYCgRJbml0EhAKCHJvb3Rfa2V5",
+            "GAEgASgMGhQKBEtpbGwSDAoEY29kZRgBIAEoBRoeCglNb3ZlV29ybGQSEQoJ",
+            "d29ybGRfdXJsGAEgASgJGjUKDFNoYXJlQ29udGVudBILCgN1cmwYAiABKAkS",
+            "GAoQaW5pdGlhbF9wb3NpdGlvbhgDIAEoCRobCgtDb25uZWN0UGVlchIMCgRh",
+            "dXJsGAEgASgJQgcKBWlubmVyQg+qAgxBYnlzc0NMSS5BQkliBnByb3RvMw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::AbyssCLI.ABI.CommontypeReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::AbyssCLI.ABI.UIAction), global::AbyssCLI.ABI.UIAction.Parser, new[]{ "Init", "Kill", "MoveWorld", "ShareContent", "ConnectPeer" }, new[]{ "Inner" }, null, null, new pbr::GeneratedClrTypeInfo[] { new pbr::GeneratedClrTypeInfo(typeof(global::AbyssCLI.ABI.UIAction.Types.Init), global::AbyssCLI.ABI.UIAction.Types.Init.Parser, new[]{ "LocalHash", "Http3RootDir" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::AbyssCLI.ABI.UIAction), global::AbyssCLI.ABI.UIAction.Parser, new[]{ "Init", "Kill", "MoveWorld", "ShareContent", "ConnectPeer" }, new[]{ "Inner" }, null, null, new pbr::GeneratedClrTypeInfo[] { new pbr::GeneratedClrTypeInfo(typeof(global::AbyssCLI.ABI.UIAction.Types.Init), global::AbyssCLI.ABI.UIAction.Types.Init.Parser, new[]{ "RootKey" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::AbyssCLI.ABI.UIAction.Types.Kill), global::AbyssCLI.ABI.UIAction.Types.Kill.Parser, new[]{ "Code" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::AbyssCLI.ABI.UIAction.Types.MoveWorld), global::AbyssCLI.ABI.UIAction.Types.MoveWorld.Parser, new[]{ "WorldUrl" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::AbyssCLI.ABI.UIAction.Types.ShareContent), global::AbyssCLI.ABI.UIAction.Types.ShareContent.Parser, new[]{ "Url", "InitialPosition" }, null, null, null, null),
@@ -540,8 +539,7 @@ namespace AbyssCLI.ABI {
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
         [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public Init(Init other) : this() {
-          localHash_ = other.localHash_;
-          http3RootDir_ = other.http3RootDir_;
+          rootKey_ = other.rootKey_;
           _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
         }
 
@@ -551,27 +549,15 @@ namespace AbyssCLI.ABI {
           return new Init(this);
         }
 
-        /// <summary>Field number for the "local_hash" field.</summary>
-        public const int LocalHashFieldNumber = 1;
-        private string localHash_ = "";
+        /// <summary>Field number for the "root_key" field.</summary>
+        public const int RootKeyFieldNumber = 1;
+        private pb::ByteString rootKey_ = pb::ByteString.Empty;
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
         [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-        public string LocalHash {
-          get { return localHash_; }
+        public pb::ByteString RootKey {
+          get { return rootKey_; }
           set {
-            localHash_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
-          }
-        }
-
-        /// <summary>Field number for the "http3_root_dir" field.</summary>
-        public const int Http3RootDirFieldNumber = 2;
-        private string http3RootDir_ = "";
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-        public string Http3RootDir {
-          get { return http3RootDir_; }
-          set {
-            http3RootDir_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+            rootKey_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
           }
         }
 
@@ -590,8 +576,7 @@ namespace AbyssCLI.ABI {
           if (ReferenceEquals(other, this)) {
             return true;
           }
-          if (LocalHash != other.LocalHash) return false;
-          if (Http3RootDir != other.Http3RootDir) return false;
+          if (RootKey != other.RootKey) return false;
           return Equals(_unknownFields, other._unknownFields);
         }
 
@@ -599,8 +584,7 @@ namespace AbyssCLI.ABI {
         [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public override int GetHashCode() {
           int hash = 1;
-          if (LocalHash.Length != 0) hash ^= LocalHash.GetHashCode();
-          if (Http3RootDir.Length != 0) hash ^= Http3RootDir.GetHashCode();
+          if (RootKey.Length != 0) hash ^= RootKey.GetHashCode();
           if (_unknownFields != null) {
             hash ^= _unknownFields.GetHashCode();
           }
@@ -619,13 +603,9 @@ namespace AbyssCLI.ABI {
         #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
           output.WriteRawMessage(this);
         #else
-          if (LocalHash.Length != 0) {
+          if (RootKey.Length != 0) {
             output.WriteRawTag(10);
-            output.WriteString(LocalHash);
-          }
-          if (Http3RootDir.Length != 0) {
-            output.WriteRawTag(18);
-            output.WriteString(Http3RootDir);
+            output.WriteBytes(RootKey);
           }
           if (_unknownFields != null) {
             _unknownFields.WriteTo(output);
@@ -637,13 +617,9 @@ namespace AbyssCLI.ABI {
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
         [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
-          if (LocalHash.Length != 0) {
+          if (RootKey.Length != 0) {
             output.WriteRawTag(10);
-            output.WriteString(LocalHash);
-          }
-          if (Http3RootDir.Length != 0) {
-            output.WriteRawTag(18);
-            output.WriteString(Http3RootDir);
+            output.WriteBytes(RootKey);
           }
           if (_unknownFields != null) {
             _unknownFields.WriteTo(ref output);
@@ -655,11 +631,8 @@ namespace AbyssCLI.ABI {
         [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public int CalculateSize() {
           int size = 0;
-          if (LocalHash.Length != 0) {
-            size += 1 + pb::CodedOutputStream.ComputeStringSize(LocalHash);
-          }
-          if (Http3RootDir.Length != 0) {
-            size += 1 + pb::CodedOutputStream.ComputeStringSize(Http3RootDir);
+          if (RootKey.Length != 0) {
+            size += 1 + pb::CodedOutputStream.ComputeBytesSize(RootKey);
           }
           if (_unknownFields != null) {
             size += _unknownFields.CalculateSize();
@@ -673,11 +646,8 @@ namespace AbyssCLI.ABI {
           if (other == null) {
             return;
           }
-          if (other.LocalHash.Length != 0) {
-            LocalHash = other.LocalHash;
-          }
-          if (other.Http3RootDir.Length != 0) {
-            Http3RootDir = other.Http3RootDir;
+          if (other.RootKey.Length != 0) {
+            RootKey = other.RootKey;
           }
           _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
         }
@@ -699,11 +669,7 @@ namespace AbyssCLI.ABI {
                 _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
                 break;
               case 10: {
-                LocalHash = input.ReadString();
-                break;
-              }
-              case 18: {
-                Http3RootDir = input.ReadString();
+                RootKey = input.ReadBytes();
                 break;
               }
             }
@@ -726,11 +692,7 @@ namespace AbyssCLI.ABI {
                 _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
                 break;
               case 10: {
-                LocalHash = input.ReadString();
-                break;
-              }
-              case 18: {
-                Http3RootDir = input.ReadString();
+                RootKey = input.ReadBytes();
                 break;
               }
             }

@@ -7,7 +7,7 @@ namespace AbyssCLI.Tool
     {
         public enum EScheme
         {
-            WWW,
+            Http,
             Abyss,
             Abyst
         }
@@ -18,7 +18,7 @@ namespace AbyssCLI.Tool
             {
                 if (address.StartsWith("www."))
                     address = "https:" + address;
-                Scheme = EScheme.WWW;
+                Scheme = EScheme.Http;
                 WebAddress = new Uri(address);
                 Base = WebAddress.Scheme + ':' + WebAddress.Host;
                 return;

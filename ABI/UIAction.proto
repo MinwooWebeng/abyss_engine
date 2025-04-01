@@ -6,8 +6,7 @@ option csharp_namespace = "AbyssCLI.ABI";
 
 message UIAction {
 	message Init {
-		string local_hash = 1;
-		string http3_root_dir = 2;
+		bytes root_key = 1;
 	}
 	message Kill {
 		int32 code = 1;

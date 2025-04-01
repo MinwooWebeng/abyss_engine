@@ -10,15 +10,13 @@ namespace AbyssCLI.ABI
 		
 public void Init
 (
-    string local_hash,
-    string http3_root_dir
+    bytes root_key
 )
 => Write(new UIAction()
 {
     Init = new Init
     {
-        LocalHash = local_hash,
-        Http3RootDir = http3_root_dir
+        RootKey = root_key
     }
 });
 public void Kill
