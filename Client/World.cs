@@ -4,7 +4,7 @@ using AbyssCLI.Tool;
 
 namespace AbyssCLI.Client
 {
-    internal class World(AbyssLib.Host host, RenderActionWriter renderActionWriter, StreamWriter cerr, string UUID, AbyssAddress URL)
+    internal class World(AbyssLib.Host host, RenderActionWriter renderActionWriter, StreamWriter cerr, AbyssURL URL)
     {
         public bool TryActivate()
         {
@@ -84,7 +84,7 @@ namespace AbyssCLI.Client
                 return true;
             }
         }
-        public bool TryAddPeerContent(string peer_hash, string content_uuid, AbyssAddress content_URL, vec3 initial_position)
+        public bool TryAddPeerContent(string peer_hash, string content_uuid, AbyssURL content_URL, vec3 initial_position)
         {
             lock(_lock)
             {
@@ -118,7 +118,7 @@ namespace AbyssCLI.Client
                 return true;
             }
         }
-        public bool TryRenewPeerContent(string peer_hash, Tuple<AbyssAddress/*url*/, string/*uuid*/, vec3>[] content_infos)
+        public bool TryRenewPeerContent(string peer_hash, Tuple<AbyssURL/*url*/, string/*uuid*/, vec3>[] content_infos)
         {
             lock (_lock)
             {
@@ -144,7 +144,7 @@ namespace AbyssCLI.Client
                 return true;
             }
         }
-        public bool TryAddLocalContent(string content_uuid, AbyssAddress content_URL, string initial_position)
+        public bool TryAddLocalContent(string content_uuid, AbyssURL content_URL, string initial_position)
         {
             lock(_lock)
             {
@@ -183,8 +183,7 @@ namespace AbyssCLI.Client
             }
         }
 
-        public readonly string UUID = UUID;
-        private readonly Aml.Content _environment = new(host, renderActionWriter, cerr, UUID, URL, new vec3());
+        private readonly Aml.Content _environment = new(host, renderActionWriter, cerr, URL, new vec3());
         private readonly Dictionary<string, Dictionary<string, Aml.Content>> _members = [];    //peer hash - [uuid - content]
         private readonly Dictionary<string, Aml.Content> _local_contents = [];    //UUID - content
         private readonly object _lock = new();

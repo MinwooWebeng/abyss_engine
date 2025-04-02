@@ -1,4 +1,5 @@
 ﻿using AbyssCLI.Aml;
+using AbyssCLI.Tool;
 using Google.Protobuf;
 using Microsoft.VisualBasic;
 using System;
@@ -153,6 +154,10 @@ namespace AbyssCLI
         {
             public Host(IntPtr _handle)
             {
+                if (handle == IntPtr.Zero)
+                {
+                    throw new Exception("invalid host handle");
+                }
                 handle = _handle;
 
                 unsafe
@@ -166,7 +171,10 @@ namespace AbyssCLI
                     fixed (byte* pBytes = new byte[256])
                     {
                         int len = Host_GetLocalAbyssURL(handle, pBytes, 256);
-                        local_aurl = len <= 0 ? "" : System.Text.Encoding.ASCII.GetString(pBytes, len);
+                        if (!AbyssURLParser.TryParse(len <= 0 ? "" : System.Text.Encoding.ASCII.GetString(pBytes, len), out local_aurl))
+                        {
+                            throw new Exception("failed to parse local host AURL");
+                        }
                     }
 
                     int root_cert_len;
@@ -180,13 +188,16 @@ namespace AbyssCLI
                     {
                         fixed (byte* kbuf = handshake_key_certificate)
                         {
-                            _ = Host_GetCertificates(handle, rbuf, &root_cert_len, kbuf, &hs_key_cert_len);
+                            if (Host_GetCertificates(handle, rbuf, &root_cert_len, kbuf, &hs_key_cert_len) != 0)
+                            {
+                                throw new Exception("failed to receive local host certificates");
+                            }
                         }
                     }
                 }
             }
             private readonly IntPtr handle;
-            public readonly string local_aurl;
+            public readonly AbyssURL local_aurl;
             public readonly byte[] root_certificate;
             public readonly byte[] handshake_key_certificate;
             public bool IsValid() { return handle != IntPtr.Zero; }

@@ -12,7 +12,6 @@ namespace AbyssCLI.Client
         private readonly StreamWriter _cerr;
         private readonly AbyssLib.SimplePathResolver _resolver;
         private AbyssLib.Host _host;
-        private bool _is_running;
 
         private World _current_world;
 
@@ -52,25 +51,15 @@ namespace AbyssCLI.Client
                 _cerr.WriteLine("host creation failed: " + err.ToString());
                 return;
             }
-            _cout.LocalInfo(_host.local_aurl);
+            _cout.LocalInfo(_host.local_aurl.Raw);
 
-            _is_running = true;
-            var concurrent_error_thread = new Thread(() =>
+            if (!AbyssURLParser.TryParse("abyst:" + _host.local_aurl.Id, out AbyssURL default_world_url))
             {
-                while (_is_running)
-                {
-                    Thread.Sleep(1000);
-                    var err_msg = AbyssLib.GetError().ToString();
-                    while (err_msg != "no error")
-                    {
-                        Console.WriteLine(err_msg);
-                        _cerr.WriteLine(err_msg);
-                    }
-                }
-            });
-            concurrent_error_thread.Start();
-
-            _current_world = new World(_host, _cout, _cerr, );
+                _cerr.WriteLine("default world url parsing failed");
+                return;
+            }
+            _current_world = new World(_host, _cout, _cerr, default_world_url);
+            _current_world.TryActivate();
 
             try
             {
@@ -84,9 +73,6 @@ namespace AbyssCLI.Client
                 Console.WriteLine(ex.ToString());
                 _cerr.WriteLine(ex.ToString());
             }
-
-            _is_running = false;
-            concurrent_error_thread.Join();
         }
         private void UIActionHandle()
         {
@@ -124,15 +110,15 @@ namespace AbyssCLI.Client
             switch (world_url.Scheme)
             {
                 //open
-                case AbyssAddress.EScheme.Http:
-                case AbyssAddress.EScheme.Abyst:
+                case AbyssURL.EScheme.Http:
+                case AbyssURL.EScheme.Abyst:
                     if (_host.AndOpenWorld("/", world_url.String) != 0)
                     {
                         _cerr.WriteLine("failed to open world");
                     }
                     break;
                 //join
-                case AbyssAddress.EScheme.Abyss:
+                case AbyssURL.EScheme.Abyss:
                     _host.AndJoin("/", world_url.String);
                     break;
             }
@@ -176,7 +162,7 @@ namespace AbyssCLI.Client
         // 5) on peer leave, terminate SOM service for peer.
         private void OnAndJoinSuccess(AndEvent and_event)
         {
-            AbyssAddress world_url;
+            AbyssURL world_url;
             try
             {
                 world_url = new AbyssAddress(and_event.URL);
@@ -186,8 +172,8 @@ namespace AbyssCLI.Client
                 _cerr.WriteLine("failed to parse world address: " + and_event.URL);
                 return;
             }
-            if (!(world_url.Scheme == AbyssAddress.EScheme.Abyst ||
-                world_url.Scheme == AbyssAddress.EScheme.Http))
+            if (!(world_url.Scheme == AbyssURL.EScheme.Abyst ||
+                world_url.Scheme == AbyssURL.EScheme.Http))
             {
                 _cerr.WriteLine("invalid world address scheme: " + and_event.URL);
                 return;
@@ -238,10 +224,10 @@ namespace AbyssCLI.Client
                 _cerr.WriteLine("som for non-existing world: " + somEvent.WorldUUID);
                 return;
             }
-            Tuple<AbyssAddress, string, vec3>[] parsed_content_info;
+            Tuple<AbyssURL, string, vec3>[] parsed_content_info;
             try
             {
-                parsed_content_info = somEvent.ObjectsInfo.Select(x => new Tuple<AbyssAddress, string, vec3>(new AbyssAddress(x.Item1), x.Item2, AmlValueParser.ParseVec3(x.Item3))).ToArray();
+                parsed_content_info = somEvent.ObjectsInfo.Select(x => new Tuple<AbyssURL, string, vec3>(new AbyssAddress(x.Item1), x.Item2, AmlValueParser.ParseVec3(x.Item3))).ToArray();
             }
             catch (Exception e)
             {
@@ -280,7 +266,7 @@ namespace AbyssCLI.Client
                 return;
             }
         }
-        private bool TryParseMaybeLocalAddress(string address, out AbyssAddress result)
+        private bool TryParseMaybeLocalAddress(string address, out AbyssURL result)
         {
             result = null;
             try

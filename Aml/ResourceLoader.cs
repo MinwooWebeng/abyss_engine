@@ -10,7 +10,7 @@ namespace AbyssCLI.Aml
     internal class ResourceLoader(
         AbyssLib.Host host,
         StreamWriter cerr,
-        AbyssAddress origin)
+        AbyssURL origin)
     {
         public class FileResource
         {
@@ -51,15 +51,15 @@ namespace AbyssCLI.Aml
             }); 
         }
 
-        private async Task Loadresource(AbyssAddress Source, MIME MimeType, WaiterGroup<FileResource> dest)
+        private async Task Loadresource(AbyssURL Source, MIME MimeType, WaiterGroup<FileResource> dest)
         {
             byte[] fileBytes;
             try
             {
                 fileBytes = Source.Scheme switch
                 {
-                    AbyssAddress.EScheme.Http => await GetHttpFileAsync(Source.WebAddress),
-                    AbyssAddress.EScheme.Abyst => await GetAbystFileAsync(Source.String),
+                    AbyssURL.EScheme.Http => await GetHttpFileAsync(Source.WebAddress),
+                    AbyssURL.EScheme.Abyst => await GetAbystFileAsync(Source.String),
                     _ => throw new Exception("invalid address scheme"),
                 };
             }
@@ -102,7 +102,7 @@ namespace AbyssCLI.Aml
 
         private readonly AbyssLib.Host _host = host;
         private readonly StreamWriter _cerr = cerr;
-        private readonly AbyssAddress _origin = origin;
+        private readonly AbyssURL _origin = origin;
         private readonly string _mmf_path_prefix = "abyst" + RanStr.RandomString(10);
         private readonly HttpClient _http_client = new();
         private readonly Dictionary<string, WaiterGroup<FileResource>> _media_cache = []; //registered when resource is requested.
