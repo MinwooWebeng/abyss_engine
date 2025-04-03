@@ -27,6 +27,7 @@ namespace AbyssCLI
             ERROR = -1, //also EOF
             INVALID_ARGUMENTS = -2,
             BUFFER_OVERFLOW = -3,
+            REMOTE_ERROR = -4,
             INVALID_HANDLE = -99,
         }
         static public string GetVersion()
@@ -285,6 +286,30 @@ namespace AbyssCLI
                     }
                 }
             }
+            public AbystClient GetAbystClient(string peer_hash)
+            {
+                byte[] peer_hash_bytes;
+                try
+                {
+                    peer_hash_bytes = Encoding.ASCII.GetBytes(peer_hash);
+                }
+                catch
+                {
+                    return new AbystClient(IntPtr.Zero);
+                }
+
+                unsafe
+                {
+                    [DllImport("abyssnet.dll")]
+                    static extern IntPtr Host_GetAbystClientConnection(IntPtr h, byte* peer_hash_ptr, int peer_hash_len, int timeout_ms);
+
+                    fixed(byte* peer_hash_ptr = peer_hash_bytes)
+                    {
+                        var abyst_client = Host_GetAbystClientConnection(handle, peer_hash_ptr, peer_hash_bytes.Length, 1000);
+                        return new AbystClient(abyst_client);
+                    }
+                }
+            }
             ~Host() => CloseAbyssHandle(handle);
         }
         static public Host OpenAbyssHost(byte[] root_priv_key_pem, SimplePathResolver path_resolver)
@@ -322,10 +347,19 @@ namespace AbyssCLI
                     {
                         _ = World_GetSessionID(handle, buf_ptr);
                     }
+
+                    [DllImport("abyssnet.dll")]
+                    static extern int World_GetURL(IntPtr h, byte* buf, int buflen);
+                    fixed (byte* buf_ptr = new byte[2048])
+                    {
+                        var url_len = World_GetURL(handle, buf_ptr, 2048);
+                        url = url_len > 0 ? Encoding.ASCII.GetString(buf_ptr, url_len) : "";
+                    }
                 }
             }
             private readonly IntPtr handle;
             public readonly byte[] world_id;
+            public readonly string url = "";
             public bool IsValid()
             {
                 return handle != IntPtr.Zero;
@@ -350,6 +384,13 @@ namespace AbyssCLI
                         _ => 0,
                     };
                 }
+            }
+            public int Leave()
+            {
+                [DllImport("abyssnet.dll")]
+                static extern int WorldLeave(IntPtr h);
+
+                return WorldLeave(handle);
             }
             ~World() => CloseAbyssHandle(handle);
         }
@@ -628,5 +669,16 @@ namespace AbyssCLI
             public readonly string peer_hash;
             ~WorldMemberLeave() => CloseAbyssHandle(handle);
         }
+        public class AbystClient(IntPtr _handle)
+        {
+            private readonly IntPtr handle = _handle;
+            public bool IsValid() => handle != IntPtr.Zero;
+            ~AbystClient() => CloseAbyssHandle(handle);
+        }
+        public class AbystResponse(IntPtr _handle)
+        {
+
+        }
     }
+
 }

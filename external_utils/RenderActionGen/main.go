@@ -90,7 +90,11 @@ func formatFunction(input string, name string) string {
 			if equalIndex != -1 {
 				trimmed = trimmed[:equalIndex]
 			}
-			newParams = append(newParams, strings.TrimSpace(trimmed))
+			trimmed_new_param := strings.TrimSpace(trimmed)
+			if strings.HasPrefix(trimmed_new_param, "bytes ") {
+				trimmed_new_param = "ByteString " + trimmed_new_param[6:]
+			}
+			newParams = append(newParams, trimmed_new_param)
 			paramName := strings.TrimSpace(strings.Split(trimmed, " ")[1])
 			paramNames = append(paramNames, toPascalCase(paramName))
 			originalParamNames = append(originalParamNames, paramName) // Keep original format

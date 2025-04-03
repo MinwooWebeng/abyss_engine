@@ -10,7 +10,7 @@ namespace AbyssCLI.ABI
 		
 public void Init
 (
-    bytes root_key
+    ByteString root_key
 )
 => Write(new UIAction()
 {
@@ -43,15 +43,13 @@ public void MoveWorld
 });
 public void ShareContent
 (
-    string url,
-    string initial_position
+    string url
 )
 => Write(new UIAction()
 {
     ShareContent = new ShareContent
     {
-        Url = url,
-        InitialPosition = initial_position
+        Url = url
     }
 });
 public void ConnectPeer

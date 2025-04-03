@@ -7,6 +7,7 @@ namespace AbyssCLI.Aml
     internal class Content(AbyssLib.Host host, RenderActionWriter renderActionWriter, StreamWriter cerr,
         AbyssURL URL, vec3 initial_position)
     {
+        public AbyssURL URL = URL;
         public void Activate() => _documentImpl.Activate();
         public void Close() => _documentImpl.Close();
         public Task CloseAsync() => _documentImpl.CloseAsync();

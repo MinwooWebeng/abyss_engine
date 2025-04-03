@@ -66,7 +66,7 @@ namespace AbyssCLI.Aml
         }
         protected override void DeceaseSelfCallback()
         {
-            _resource_waiter?.CancelWithValue(new ResourceLoader.FileResource());
+            _resource_waiter?.Finalize(new ResourceLoader.FileResource());
             MeshWaiterGroup.TryFinalizeValue(0);
         }
         protected override void CleanupSelfCallback()

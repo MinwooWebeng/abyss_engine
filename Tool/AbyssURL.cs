@@ -1,4 +1,6 @@
-﻿namespace AbyssCLI.Tool
+﻿using static AbyssCLI.ABI.UIAction.Types;
+
+namespace AbyssCLI.Tool
 {
     public class AbyssURL
     {
@@ -12,8 +14,9 @@
 
     public static class AbyssURLParser
     {
-        public static bool TryParse(string input, out AbyssURL result)
+        public static bool TryParse(string _input, out AbyssURL result)
         {
+            string input = _input.Trim();
             if (input.StartsWith("abyss:"))
             {
                 return TryParseAbyss(input, out result);
@@ -41,6 +44,21 @@
                     return false;
                 }
             }
+        }
+        public static bool TryParseFrom(string _input, AbyssURL origin, out AbyssURL result)
+        {
+            string input = _input.Trim();
+            if (!input.Contains(':'))
+            {
+                if (origin.Scheme != "abyss" && origin.Scheme != "abyst")
+                {
+                    result = default;
+                    return false;
+                }
+                return AbyssURLParser.TryParse("abyst:" + origin.Id + "/" + input.Trim().TrimStart('/'), out result);
+            }
+
+            return AbyssURLParser.TryParse(input, out result);
         }
         private const string Base58Chars = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";
         private static bool IsValidPeerID(string input)
@@ -82,7 +100,7 @@
                 {
                     //there is no path either, body is the id.
                     //check if body is a valid id.
-                    if (IsValidPeerID(body)) //id version code
+                    if (!IsValidPeerID(body)) //id version code
                     {
                         return false;
                     }
@@ -92,7 +110,7 @@
 
                 //only path.
                 var _peer_id = body[..path_start_pos];
-                if (IsValidPeerID(_peer_id)) //id version code
+                if (!IsValidPeerID(_peer_id)) //id version code
                 {
                     return false;
                 }
@@ -113,15 +131,65 @@
             var addr_part = path_start_pos != -1 ? body[(addr_start_pos + 1)..path_start_pos] : body[(addr_start_pos + 1)..];
             result.Path = path_start_pos != -1 ? body[(path_start_pos + 1)..] : "";
 
+            //// Parse IP:Port list (IPv4 only)
+            //foreach (var ep in addr_part.Split('|', StringSplitOptions.RemoveEmptyEntries))
+            //{
+            //    var parts = ep.Split(':');
+            //    if (parts.Length == 2 &&
+            //        System.Net.IPAddress.TryParse(parts[0], out _) &&
+            //        int.TryParse(parts[1], out int port))
+            //    {
+            //        result.AddressCandidates.Add((parts[0], port));
+            //    }
+            //}
+
             // Parse IP:Port list
             foreach (var ep in addr_part.Split('|', StringSplitOptions.RemoveEmptyEntries))
             {
-                var parts = ep.Split(':');
-                if (parts.Length == 2 &&
-                    System.Net.IPAddress.TryParse(parts[0], out _) &&
-                    int.TryParse(parts[1], out int port))
+                string ipPart;
+                string portPart;
+
+                // If the endpoint starts with '[', we treat it as a bracketed IPv6 address
+                if (ep.StartsWith('['))
                 {
-                    result.AddressCandidates.Add((parts[0], port));
+                    int closeBracketIndex = ep.IndexOf(']');
+                    // If no closing bracket is found or it's the only character, skip
+                    if (closeBracketIndex <= 0)
+                        continue;
+
+                    // Extract the IP portion from inside the brackets
+                    ipPart = ep[1..closeBracketIndex];
+
+                    // If there is a colon after ']', treat what's after it as the port
+                    if (closeBracketIndex + 1 < ep.Length && ep[closeBracketIndex + 1] == ':')
+                    {
+                        portPart = ep[(closeBracketIndex + 2)..];
+                    }
+                    else
+                    {
+                        // No port specified
+                        continue;
+                    }
+                }
+                else
+                {
+                    // For IPv4, domain names, or any non-bracketed input, split on colon
+                    var parts2 = ep.Split(':');
+                    if (parts2.Length == 2)
+                    {
+                        ipPart = parts2[0];
+                        portPart = parts2[1];
+                    }
+                    else
+                    {
+                        // Possibly invalid or missing port
+                        continue;
+                    }
+                }
+
+                if (System.Net.IPAddress.TryParse(ipPart, out _) && int.TryParse(portPart, out int port))
+                {
+                    result.AddressCandidates.Add((ipPart, port));
                 }
             }
 
@@ -130,7 +198,11 @@
 
         private static bool TryParseAbyst(string input, out AbyssURL result)
         {
-            result = new AbyssURL { Scheme = "abyst" };
+            result = new AbyssURL
+            {
+                Raw = input,
+                Scheme = "abyst"
+            };
             string body = input["abyst:".Length..];
 
             // Extract ID and path/query using first '/'
@@ -145,6 +217,7 @@
                 return true;
             }
 
+            result.Id = body[..slashIndex];
             result.Path = body[(slashIndex+1)..];
             return true;
         }

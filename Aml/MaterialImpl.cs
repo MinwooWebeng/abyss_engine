@@ -52,7 +52,7 @@ namespace AbyssCLI.Aml
         }
         protected override void DeceaseSelfCallback()
         {
-            _parent_waiter?.CancelWithValue(0);
+            _parent_waiter?.Finalize(0);
             MaterialWaiterGroup.TryFinalizeValue(0);
         }
         protected override void CleanupSelfCallback()

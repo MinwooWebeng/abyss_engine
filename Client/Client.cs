@@ -1,7 +1,5 @@
 ﻿using AbyssCLI.ABI;
-using AbyssCLI.Aml;
 using AbyssCLI.Tool;
-using System.Text.Json;
 
 namespace AbyssCLI.Client
 {
@@ -14,8 +12,6 @@ namespace AbyssCLI.Client
         private AbyssLib.Host _host;
 
         private World _current_world;
-
-        private readonly WorldPathMapper _world_map = new();
         public Client()
         {
             _cin = new BinaryReader(Console.OpenStandardInput());
@@ -53,20 +49,19 @@ namespace AbyssCLI.Client
             }
             _cout.LocalInfo(_host.local_aurl.Raw);
 
-            if (!AbyssURLParser.TryParse("abyst:" + _host.local_aurl.Id, out AbyssURL default_world_url))
+            var default_world_url_raw = "abyst:" + _host.local_aurl.Id;
+            if (!AbyssURLParser.TryParse(default_world_url_raw, out AbyssURL default_world_url))
             {
                 _cerr.WriteLine("default world url parsing failed");
                 return;
             }
-            _current_world = new World(_host, _cout, _cerr, default_world_url);
-            _current_world.TryActivate();
+            var net_world =  _host.OpenWorld(default_world_url_raw);
+            _current_world = new World(_host, net_world, _cout, _cerr, default_world_url);
+            _resolver.SetMapping("", net_world.world_id);
 
             try
             {
-                while (true)
-                {
-                    UIActionHandle();
-                }
+                while (UIActionHandle()){}
             }
             catch (Exception ex)
             {
@@ -74,15 +69,21 @@ namespace AbyssCLI.Client
                 _cerr.WriteLine(ex.ToString());
             }
         }
-        private void UIActionHandle()
+        private bool UIActionHandle()
         {
             var message = ReadProtoMessage();
             switch (message.InnerCase)
             {
-                case UIAction.InnerOneofCase.MoveWorld: OnMoveWorld(message.MoveWorld); return;
-                case UIAction.InnerOneofCase.ShareContent: OnShareContent(message.ShareContent); return;
-                case UIAction.InnerOneofCase.ConnectPeer: _host.OpenOutboundConnection(message.ConnectPeer.Aurl); return;
+                case UIAction.InnerOneofCase.MoveWorld: OnMoveWorld(message.MoveWorld); return true;
+                case UIAction.InnerOneofCase.ShareContent: OnShareContent(message.ShareContent); return true;
+                case UIAction.InnerOneofCase.ConnectPeer: 
+                    if (_host.OpenOutboundConnection(message.ConnectPeer.Aurl) != 0)
+                    {
+                        _cerr.WriteLine("failed to open outbound connection: " + message.ConnectPeer.Aurl);
+                    }
+                    return true;
                 case UIAction.InnerOneofCase.Kill:
+                    return false;
                 case UIAction.InnerOneofCase.None:
                 case UIAction.InnerOneofCase.Init:
                 default: throw new Exception("fatal: received invalid UI Action");
@@ -90,58 +91,48 @@ namespace AbyssCLI.Client
         }
         private void OnMoveWorld(UIAction.Types.MoveWorld args)
         {
-            _current_world.TryClose();
-
-            if (!TryParseMaybeLocalAddress(args.WorldUrl, out var world_url))
-            {
-                _cerr.WriteLine("failed to parse address: " + args.WorldUrl);
+            if (!AbyssURLParser.TryParseFrom(args.WorldUrl, _host.local_aurl, out var aurl)) {
+                _cerr.WriteLine("MoveWorld: failed to parse world url");
                 return;
             }
 
-            if (_world_map.TryPopMapping("/", out var old_world))
+            AbyssLib.World net_world;
+            AbyssURL world_url;
+            if (aurl.Scheme == "abyss")
             {
-                _host.AndCloseWorld("/");
-                if (!old_world.TryClose())
+                net_world = _host.JoinWorld(aurl.Raw);
+                if (!AbyssURLParser.TryParse(net_world.url, out world_url) || world_url.Scheme == "abyss")
                 {
-                    _cerr.WriteLine("failed to close world: " + old_world.UUID);
+                    _cerr.WriteLine("invalid world url");
+                    net_world.Leave();
                     return;
                 }
             }
-            switch (world_url.Scheme)
+            else
             {
-                //open
-                case AbyssURL.EScheme.Http:
-                case AbyssURL.EScheme.Abyst:
-                    if (_host.AndOpenWorld("/", world_url.String) != 0)
-                    {
-                        _cerr.WriteLine("failed to open world");
-                    }
-                    break;
-                //join
-                case AbyssURL.EScheme.Abyss:
-                    _host.AndJoin("/", world_url.String);
-                    break;
+                net_world = _host.OpenWorld(aurl.Raw);
+                world_url = aurl;
             }
+            if (!net_world.IsValid())
+            {
+                _cerr.WriteLine("MoveWorld: failed to open world");
+                return;
+            }
+
+            _resolver.DeleteMapping("");
+            _current_world.Leave();
+            _current_world = new World(_host, net_world, _cout, _cerr, world_url);
+            _resolver.SetMapping("", net_world.world_id);
         }
         private void OnShareContent(UIAction.Types.ShareContent args)
         {
-            if (!TryParseMaybeLocalAddress(args.Url, out var content_url))
+            if (!AbyssURLParser.TryParseFrom(args.Url, _host.local_aurl, out var content_url))
             {
                 _cerr.WriteLine("OnShareContent: failed to parse address: " + args.Url);
                 return;
             }
 
-            if (!_world_map.TryGetUUID("/", out var old_world_uuid) || !_world_map.TryGetWorld(old_world_uuid, out var old_world))
-            {
-                _cerr.WriteLine("OnShareContent: failed to find world");
-                return;
-            }
-            var content_uuid = Guid.NewGuid().ToString();
-            if (!old_world.TryAddLocalContent(content_uuid, content_url, args.InitialPosition))
-            {
-                _cerr.WriteLine("failed to share local content:" + content_url);
-                return;
-            }
+            _current_world.ShareObject(content_url);
         }
         private UIAction ReadProtoMessage()
         {
@@ -152,137 +143,6 @@ namespace AbyssCLI.Client
                 throw new Exception("stream closed");
             }
             return UIAction.Parser.ParseFrom(data);
-        }
-        //Actual handler functions
-        //peer join
-        // 1) update world members.
-        // 2) request SOM service to peer.
-        // 3) initiate SOM service for join target.
-        // 4) if there is my shared object for world, share
-        // 5) on peer leave, terminate SOM service for peer.
-        private void OnAndJoinSuccess(AndEvent and_event)
-        {
-            AbyssURL world_url;
-            try
-            {
-                world_url = new AbyssAddress(and_event.URL);
-            }
-            catch
-            {
-                _cerr.WriteLine("failed to parse world address: " + and_event.URL);
-                return;
-            }
-            if (!(world_url.Scheme == AbyssURL.EScheme.Abyst ||
-                world_url.Scheme == AbyssURL.EScheme.Http))
-            {
-                _cerr.WriteLine("invalid world address scheme: " + and_event.URL);
-                return;
-            }
-
-            var new_world = new World(_host, _cout, _cerr, and_event.UUID, world_url);
-            if (!_world_map.TryAddMapping(and_event.LocalPath, and_event.UUID, new_world))
-            {
-                _cerr.WriteLine("world already exist for local path: " + and_event.LocalPath);
-                return;
-            }
-            if(!new_world.TryActivate())
-            {
-                _cerr.WriteLine("failed to activate world: " + and_event.UUID);
-                return;
-            }
-        }
-        private void OnAndPeerJoin(AndEvent and_event)
-        {
-            if(!_world_map.TryGetWorld(and_event.UUID, out World world))
-            {
-                _cerr.WriteLine("peer joined in non-existing world: " + and_event.UUID);
-                return;
-            }
-            if(!world.TryAddPeer(and_event.PeerHash))
-            {
-                _cerr.WriteLine("failed to add peer to world: " + and_event.UUID);
-                return;
-            }
-        }
-        private void OnAndPeerLeave(AndEvent and_event)
-        {
-            if (!_world_map.TryGetWorld(and_event.UUID, out World world))
-            {
-                _cerr.WriteLine("peer leaving non-existing world: " + and_event.UUID);
-                return;
-            }
-            if (!world.TryRemovePeer(and_event.PeerHash))
-            {
-                _cerr.WriteLine("failed to remove peer from world: " + and_event.UUID);
-                return;
-            }
-        }
-        private void OnSomRenew(SomEvent somEvent)
-        {
-            if (!_world_map.TryGetWorld(somEvent.WorldUUID, out World world))
-            {
-                _cerr.WriteLine("som for non-existing world: " + somEvent.WorldUUID);
-                return;
-            }
-            Tuple<AbyssURL, string, vec3>[] parsed_content_info;
-            try
-            {
-                parsed_content_info = somEvent.ObjectsInfo.Select(x => new Tuple<AbyssURL, string, vec3>(new AbyssAddress(x.Item1), x.Item2, AmlValueParser.ParseVec3(x.Item3))).ToArray();
-            }
-            catch (Exception e)
-            {
-                _cerr.WriteLine("invalid address in som renew peer contents: " + somEvent.PeerHash + e.Message);
-                return;
-            }
-            if (!world.TryRenewPeerContent(somEvent.PeerHash, parsed_content_info))
-            {
-                _cerr.WriteLine("failed to renew peer contents: " + somEvent.PeerHash);
-                return;
-            }
-        }
-        private void OnSomAppend(SomEvent somEvent)
-        {
-            if (!_world_map.TryGetWorld(somEvent.WorldUUID, out World world))
-            {
-                _cerr.WriteLine("som for non-existing world: " + somEvent.WorldUUID);
-                return;
-            }
-            if (!world.TryAddPeerContent(somEvent.PeerHash, somEvent.ObjectsInfo[0].Item2, new AbyssAddress(somEvent.ObjectsInfo[0].Item1), AmlValueParser.ParseVec3(somEvent.ObjectsInfo[0].Item3)))
-            {
-                _cerr.WriteLine("failed to add peer contents: " + somEvent.PeerHash + somEvent.ObjectsInfo);
-                return;
-            }
-        }
-        private void OnSomDelete(SomEvent somEvent)
-        {
-            if (!_world_map.TryGetWorld(somEvent.WorldUUID, out World world))
-            {
-                _cerr.WriteLine("som for non-existing world: " + somEvent.WorldUUID);
-                return;
-            }
-            if (!world.TryRemovePeerContent(somEvent.PeerHash, somEvent.ObjectsInfo[0].Item2))
-            {
-                _cerr.WriteLine("failed to add peer contents: " + somEvent.PeerHash + somEvent.ObjectsInfo);
-                return;
-            }
-        }
-        private bool TryParseMaybeLocalAddress(string address, out AbyssURL result)
-        {
-            result = null;
-            try
-            {
-                result = new AbyssAddress(address);
-                return true;
-            }
-            catch
-            {
-                if (address.Contains(':'))
-                    return false;
-
-                //consider as local address.
-                result = new AbyssAddress(new AbyssAddress("abyst:" + _host.local_aurl).GetRelativeAddress(address));
-                return true;
-            }
         }
     }
 }

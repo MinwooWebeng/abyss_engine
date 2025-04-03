@@ -4,189 +4,199 @@ using AbyssCLI.Tool;
 
 namespace AbyssCLI.Client
 {
-    internal class World(AbyssLib.Host host, RenderActionWriter renderActionWriter, StreamWriter cerr, AbyssURL URL)
+    internal class World
     {
-        public bool TryActivate()
+        private readonly AbyssLib.Host _host;
+        private readonly AbyssLib.World _world;
+        private readonly RenderActionWriter _renderActionWriter;
+        private readonly StreamWriter _cerr;
+        private readonly Aml.Content _environment;
+        private readonly Dictionary<string, Tuple<AbyssLib.WorldMember, Dictionary<Guid, Aml.Content>>> _members = []; //peer hash - [uuid - content]
+        private readonly Dictionary<Guid, Aml.Content> _local_contents = []; //UUID - content
+        private readonly object _lock = new();
+        private readonly Thread _world_th;
+
+        public World(AbyssLib.Host host, AbyssLib.World world, RenderActionWriter renderActionWriter, StreamWriter cerr, AbyssURL URL)
         {
-            lock(_lock)
+            _host = host;
+            _world = world;
+            _renderActionWriter = renderActionWriter;
+            _cerr = cerr;
+            _environment = new(host, renderActionWriter, cerr, URL, new vec3());
+            _environment.Activate();
+
+            _world_th = new Thread(() =>
             {
-                if (_state != 0) return false;
-
-                _environment.Activate();
-
-                _state = 1; return true;
-            }
-        }
-        public bool TryClose()
-        {
-            lock(_lock)
-            {
-                if (_state != 1) return false;
-
-                _environment.Close();
-                foreach (var member in _members)
+                while (true)
                 {
-                    foreach (var content in member.Value.Values)
+                    var evnt_raw = world.WaitForEvent();
+                    switch (evnt_raw)
                     {
-                        content.Close();
+                        case AbyssLib.WorldMemberRequest evnt:
+                            OnMemberRequest(evnt);
+                            break;
+                        case AbyssLib.WorldMember evnt:
+                            OnMemberReady(evnt);
+                            break;
+                        case AbyssLib.MemberObjectAppend evnt:
+                            OnMemberObjectAppend(evnt);
+                            break;
+                        case AbyssLib.MemberObjectDelete evnt:
+                            OnMemberObjectDelete(evnt);
+                            break;
+                        case AbyssLib.WorldMemberLeave evnt:
+                            OnMemberLeave(evnt.peer_hash);
+                            break;
+                        case int: //world termination
+                            return;
                     }
                 }
-                _members.Clear();
-                foreach (var content in _local_contents.Values)
-                {
-                    content.Close();
-                }
-                _local_contents.Clear();
-
-                _state = 2; return true;
-            }
+            });
+            _world_th.Start();
         }
-        public bool TryAddPeer(string peer_hash)
+        public Guid ShareObject(AbyssURL url)
         {
-            lock(_lock)
+            var guid = Guid.NewGuid();
+            var content = new Aml.Content(_host, _renderActionWriter, _cerr, url, vec3.zero);
+            content.Activate();
+
+            lock (_lock)
             {
-                if (_state != 1) return false;
-
-                if(!_members.TryAdd(peer_hash, []))
-                    return false;
-
-                //host.SomInitiateService(peer_hash, UUID);
-                //var error = host.SomRequestService(peer_hash, UUID);
-                //if(error != null)
-                //{
-                //    cerr.WriteLine("failed to request som service: " + error.ToString());
-                //}
-                foreach (var content in _local_contents.Keys)
+                _local_contents[guid] = content;
+                foreach (var entry in _members)
                 {
-                    //error = host.SomShareObject(peer_hash, UUID, content);
-                    //if(error != null)
-                    //{
-                    //    cerr.WriteLine(error.ToString());
-                    //}
+                    entry.Value.Item1.AppendObjects([Tuple.Create(guid, url.Raw)]);
                 }
-                return true;
             }
+            return guid;
         }
-        public bool TryRemovePeer(string peer_hash)
-        {
-            lock(_lock)
-            {
-                if (_state != 1) return false;
-
-                if (!_members.TryGetValue(peer_hash, out var contents))
-                    return false;
-
-                foreach (var content in contents.Values)
-                {
-                    content.Close();
-                }
-                _members.Remove(peer_hash);
-                return true;
-            }
-        }
-        public bool TryAddPeerContent(string peer_hash, string content_uuid, AbyssURL content_URL, vec3 initial_position)
-        {
-            lock(_lock)
-            {
-                if (_state != 1) return false;
-
-                if (!_members.TryGetValue(peer_hash, out var contents))
-                    return false;
-
-                var content = new Aml.Content(host, renderActionWriter, cerr, content_uuid, content_URL, initial_position);
-                if (!contents.TryAdd(content_uuid, content))
-                    return false;
-
-                content.Activate();
-                return true;
-            }
-        }
-        public bool TryRemovePeerContent(string peer_hash, string content_uuid)
+        public void RemoveObject(Guid guid)
         {
             lock (_lock)
             {
-                if (_state != 1) return false;
+                _local_contents[guid].Close();
+                _local_contents.Remove(guid);
 
-                if (!_members.TryGetValue(peer_hash, out var contents))
-                    return false;
+                foreach (var member in _members)
+                {
+                    member.Value.Item1.DeleteObjects([guid]);
+                }
+            }
+        }
+        public void Leave()
+        {
+            if (_world.Leave() != 0)
+            {
+                _cerr.WriteLine("failed to leave world");
+            }
+            _world_th.Join();
 
-                if (!contents.TryGetValue(content_uuid, out var content))
-                    return false;
-
+            _environment.Close();
+            foreach (var member in _members)
+            {
+                foreach (var content in member.Value.Item2.Values)
+                {
+                    content.Close();
+                }
+            }
+            foreach (var content in _local_contents.Values)
+            {
                 content.Close();
-                contents.Remove(content_uuid);
-                return true;
             }
+            _members.Clear(); //do we need this?
+            _local_contents.Clear(); //do we need this?
         }
-        public bool TryRenewPeerContent(string peer_hash, Tuple<AbyssURL/*url*/, string/*uuid*/, vec3>[] content_infos)
+
+        //internals
+        private static void OnMemberRequest(AbyssLib.WorldMemberRequest evnt)
+        {
+            evnt.Accept();
+        }
+        private void OnMemberReady(AbyssLib.WorldMember member)
         {
             lock (_lock)
             {
-                if (_state != 1) return false;
-
-                if (!_members.TryGetValue(peer_hash, out var contents))
-                    return false;
-
-                foreach(var old_content in contents)
+                if (!_members.TryAdd(member.hash, Tuple.Create(member, new Dictionary<Guid, Aml.Content>())))
                 {
-                    old_content.Value.Close();
+                    _cerr.WriteLine("failed to append peer; old peer session pends");
+                    return;
                 }
-                contents.Clear();
-
-                foreach (var new_content in content_infos)
+                member.AppendObjects(_local_contents
+                    .Select(kvp => Tuple.Create(kvp.Key, kvp.Value.URL.Raw))
+                    .ToArray());
+            }
+        }
+        private void OnMemberObjectAppend(AbyssLib.MemberObjectAppend evnt)
+        {
+            var parsed_objects = evnt.objects
+                .Select(gst =>
                 {
-                    var content = new Aml.Content(host, renderActionWriter, cerr, new_content.Item2, new_content.Item1, new_content.Item3);
-                    if (!contents.TryAdd(new_content.Item2, content))
+                    if (!AbyssURLParser.TryParse(gst.Item2, out var abyss_url))
+                    {
+                        _cerr.WriteLine("failed to parse object url: " + gst.Item2);
+                    }
+                    return Tuple.Create(gst.Item1, abyss_url);
+                })
+                .Where(gst => gst.Item2 != null)
+                .ToList();
+
+            lock(_lock)
+            {
+                if (!_members.TryGetValue(evnt.peer_hash, out var member))
+                {
+                    _cerr.WriteLine("failed to find member");
+                    return;
+                }
+                
+                foreach (var obj in parsed_objects)
+                {
+                    var content = new Aml.Content(_host, _renderActionWriter, _cerr, obj.Item2, vec3.zero);
+                    if (!member.Item2.TryAdd(obj.Item1, content))
+                    {
+                        _cerr.WriteLine("uid collision of objects appended from peer");
                         continue;
+                    }
 
                     content.Activate();
                 }
-                return true;
             }
         }
-        public bool TryAddLocalContent(string content_uuid, AbyssURL content_URL, string initial_position)
+        private void OnMemberObjectDelete(AbyssLib.MemberObjectDelete evnt)
         {
-            lock(_lock)
+            lock (_lock)
             {
-                if (_state != 1) return false;
-
-                var content = new Aml.Content(host, renderActionWriter, cerr, content_uuid, content_URL, AmlValueParser.ParseVec3(initial_position));
-                if (!_local_contents.TryAdd(content_uuid, content))
-                    return false;
-
-                content.Activate();
-                //host.SomRegisterObject(content_URL.String, content_uuid, initial_position);
-                foreach (var member_hash in _members.Keys)
+                if (!_members.TryGetValue(evnt.peer_hash, out var member))
                 {
-                    //var error = host.SomShareObject(member_hash, UUID, content_uuid);
-                    //if (error != null)
-                    //{
-                    //    cerr.WriteLine("SomShareObject: " + error.ToString());
-                    //}
+                    _cerr.WriteLine("failed to find member");
+                    return;
                 }
-                return true;
+
+                foreach (var id in evnt.object_ids)
+                {
+                    if (!member.Item2.Remove(id, out var content))
+                    {
+                        _cerr.WriteLine("peer tried to delete unshared objects");
+                        continue;
+                    }
+                    content.Close();
+                }
             }
         }
-        public bool TryRemoveLocalContent(string content_uuid)
+        private void OnMemberLeave(string peer_hash)
         {
             lock(_lock)
             {
-                if (_state != 1) return false;
+                if (!_members.Remove(peer_hash, out var value))
+                {
+                    _cerr.WriteLine("non-existing peer leaved");
+                    return;
+                }
 
-                if (!_local_contents.TryGetValue(content_uuid, out var content))
-                    return false;
-
-                content.Close();
-                _local_contents.Remove(content_uuid);
-                //TODO: som remove content
-                return true;
+                foreach (var items in value.Item2)
+                {
+                    items.Value.Close();
+                }
             }
         }
-
-        private readonly Aml.Content _environment = new(host, renderActionWriter, cerr, URL, new vec3());
-        private readonly Dictionary<string, Dictionary<string, Aml.Content>> _members = [];    //peer hash - [uuid - content]
-        private readonly Dictionary<string, Aml.Content> _local_contents = [];    //UUID - content
-        private readonly object _lock = new();
-        private int _state = 0; //0: not activated, 1: activated, 2: closed
     }
 }

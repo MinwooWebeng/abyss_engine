@@ -41,7 +41,7 @@
 
             var host1_th = new Thread(() =>
             {
-                var err = host1.OpenOutboundConnection(host2.local_aurl);
+                var err = host1.OpenOutboundConnection(host2.local_aurl.Raw);
 
                 var evnt_raw = world1.WaitForEvent();
                 {
@@ -104,7 +104,7 @@
 
             new Thread(() =>
             {
-                var err = host1.OpenOutboundConnection(host2.local_aurl);
+                var err = host1.OpenOutboundConnection(host2.local_aurl.Raw);
                 (world1.WaitForEvent() as AbyssLib.WorldMemberRequest).Accept();
                 var mem = world1.WaitForEvent() as AbyssLib.WorldMember;
                 Console.WriteLine("joined(1)!");

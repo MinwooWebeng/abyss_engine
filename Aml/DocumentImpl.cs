@@ -7,15 +7,15 @@ namespace AbyssCLI.Aml
 {
     internal sealed class DocumentImpl(Contexted root,
         RenderActionWriter renderActionWriter, StreamWriter cerr,
-        ResourceLoader resourceLoader, AbyssURL URL, vec3 body_position)
+        ResourceLoader resourceLoader, AbyssURL url, vec3 body_position)
         : AmlNode(root, renderActionWriter, cerr, resourceLoader)
     {
         protected override async Task ActivateSelfCallback(CancellationToken token)
         {
-            byte[] aml_file = URL.Scheme switch
+            byte[] aml_file = url.Scheme switch
             {
-                AbyssURL.EScheme.Http => await ResourceLoader.GetHttpFileAsync(URL.WebAddress),
-                AbyssURL.EScheme.Abyst => await ResourceLoader.GetAbystFileAsync(URL.String),
+                "http" or "https" => await ResourceLoader.GetHttpFileAsync(url.StandardUri),
+                AbyssURL.EScheme.Abyst => await ResourceLoader.GetAbystFileAsync(url.String),
                 _ => throw new Exception("invalid address scheme"),
             };
             token.ThrowIfCancellationRequested();
@@ -39,7 +39,7 @@ namespace AbyssCLI.Aml
             var body_node = aml_node.SelectSingleNode("body");
             Children.Add(new BodyImpl(this, body_node, body_position));
         }
-        private readonly AbyssURL URL = URL;
+        private readonly AbyssURL url = url;
 
         //valid only after Activation
         public HeadImpl Head => Children[0] as HeadImpl;

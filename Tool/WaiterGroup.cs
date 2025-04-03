@@ -6,25 +6,26 @@
         {
             lock (_waiters)
             {
-                if (!finished)
+                if (finalized)
                 {
-                    result = value;
-                    finished = true;
-                    foreach (var waiter in _waiters)
-                    {
-                        waiter.SetterFinalize(value);
-                    }
-                    _waiters.Clear();
-                    return true;
+                    return false;
                 }
+
+                result = value;
+                finalized = true;
+                foreach (var waiter in _waiters)
+                {
+                    waiter.Finalize(value);
+                }
+                _waiters.Clear();
+                return true;
             }
-            return false;
         }
         public bool TryGetValueOrWaiter(out T value, out Waiter<T> waiter)
         {
             lock (_waiters)
             {
-                if (finished)
+                if (finalized)
                 {
                     value = result;
                     waiter = null;
@@ -33,21 +34,14 @@
 
                 value = default;
                 waiter = new Waiter<T>();
-                waiter.TryClaimSetter(); //always success
                 _waiters.Add(waiter);
                 return false;
             }
         }
         public T GetValue() => result;
-
-        [Obsolete]
-        public void FinalizeValue(T value)
-        {
-            TryFinalizeValue(value);
-        }
-        public bool IsFinalized { get { return finished; } }
+        public bool IsFinalized() => finalized;
         private T result;
-        private bool finished = false; //0: init, 1: loading, 2: loaded (no need to check sema)
+        private bool finalized = false; //0: init, 1: loading, 2: loaded (no need to check sema)
         private readonly HashSet<Waiter<T>> _waiters = [];
     }
 }

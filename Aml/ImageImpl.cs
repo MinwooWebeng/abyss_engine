@@ -75,7 +75,7 @@ namespace AbyssCLI.Aml
         }
         protected override void DeceaseSelfCallback()
         {
-            _resource_waiter?.CancelWithValue(default);
+            _resource_waiter?.Finalize(default);
         }
         protected override void CleanupSelfCallback()
         {
