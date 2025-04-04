@@ -12,19 +12,14 @@ namespace AbyssCLI.Aml
     {
         protected override async Task ActivateSelfCallback(CancellationToken token)
         {
-            byte[] aml_file = url.Scheme switch
-            {
-                "http" or "https" => await ResourceLoader.GetHttpFileAsync(url.StandardUri),
-                AbyssURL.EScheme.Abyst => await ResourceLoader.GetAbystFileAsync(url.String),
-                _ => throw new Exception("invalid address scheme"),
-            };
+            var response = await ResourceLoader.TryHttpRequestAsync(url);
             token.ThrowIfCancellationRequested();
-            if (aml_file == null)
+            if (!response.Item2)
                 throw new Exception("failed to load aml");
 
             //AML parsing
             XmlDocument doc = new();
-            doc.LoadXml(Encoding.UTF8.GetString(aml_file));
+            doc.LoadXml(Encoding.UTF8.GetString(response.Item1));
             // Check for the DOCTYPE
             if (doc.DocumentType == null || doc.DocumentType.Name != "AML")
                 throw new Exception("DOCTYPE mismatch");

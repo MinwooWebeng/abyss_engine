@@ -152,6 +152,29 @@ namespace AbyssCLI
             static extern IntPtr NewSimplePathResolver();
             return new SimplePathResolver(NewSimplePathResolver());
         }
+        static public IntPtr NewSimpleAbystServer(string absolute_path)
+        {
+            byte[] path_bytes;
+            try
+            {
+                path_bytes = Encoding.UTF8.GetBytes(absolute_path);
+            }
+            catch
+            {
+                return IntPtr.Zero;
+            }
+
+            unsafe
+            {
+                [DllImport("abyssnet.dll")]
+                static extern IntPtr NewSimpleAbystServer(byte* path_ptr, int path_len);
+
+                fixed(byte* path_ptr = path_bytes)
+                {
+                    return NewSimpleAbystServer(path_ptr, path_bytes.Length);
+                }
+            }
+        }
         public class Host
         {
             public Host(IntPtr _handle)
@@ -313,16 +336,16 @@ namespace AbyssCLI
             }
             ~Host() => CloseAbyssHandle(handle);
         }
-        static public Host OpenAbyssHost(byte[] root_priv_key_pem, SimplePathResolver path_resolver)
+        static public Host OpenAbyssHost(byte[] root_priv_key_pem, SimplePathResolver path_resolver, IntPtr abyst_server)
         {
             unsafe
             {
                 [DllImport("abyssnet.dll")]
-                static extern IntPtr NewHost(byte* root_priv_key_pem_ptr, int root_priv_key_pem_len, IntPtr h_path_resolver);
+                static extern IntPtr NewHost(byte* root_priv_key_pem_ptr, int root_priv_key_pem_len, IntPtr h_path_resolver, IntPtr h_abyst_server);
 
                 fixed (byte* key_ptr = root_priv_key_pem)
                 {
-                    return new Host(NewHost(key_ptr, root_priv_key_pem.Length, path_resolver.handle));
+                    return new Host(NewHost(key_ptr, root_priv_key_pem.Length, path_resolver.handle, abyst_server));
                 }
             }
         }

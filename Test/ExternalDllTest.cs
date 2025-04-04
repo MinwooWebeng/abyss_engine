@@ -12,7 +12,7 @@
         {
             var priv_key = File.ReadAllBytes("test_key1.pem");
             var path_res = AbyssLib.NewSimplePathResolver();
-            var host = AbyssLib.OpenAbyssHost(priv_key, path_res);
+            var host = AbyssLib.OpenAbyssHost(priv_key, path_res, AbyssLib.NewSimpleAbystServer("D:\\WORKS\\github\\abyss_engine\\testground\\abyst_server"));
             Console.WriteLine(host.IsValid() ? "success" : "fail");
         }
         public static void TestHostJoin()
@@ -23,8 +23,8 @@
             var path_res1 = AbyssLib.NewSimplePathResolver();
             var path_res2 = AbyssLib.NewSimplePathResolver();
 
-            var host1 = AbyssLib.OpenAbyssHost(priv_key1, path_res1);
-            var host2 = AbyssLib.OpenAbyssHost(priv_key2, path_res2);
+            var host1 = AbyssLib.OpenAbyssHost(priv_key1, path_res1, AbyssLib.NewSimpleAbystServer("D:\\WORKS\\github\\abyss_engine\\testground\\abyst_server"));
+            var host2 = AbyssLib.OpenAbyssHost(priv_key2, path_res2, AbyssLib.NewSimpleAbystServer("D:\\WORKS\\github\\abyss_engine\\testground\\abyst_server"));
 
             host1.AppendKnownPeer(host2.root_certificate, host2.handshake_key_certificate);
             host2.AppendKnownPeer(host1.root_certificate, host1.handshake_key_certificate);
@@ -91,8 +91,8 @@
             var path_res1 = AbyssLib.NewSimplePathResolver();
             var path_res2 = AbyssLib.NewSimplePathResolver();
 
-            var host1 = AbyssLib.OpenAbyssHost(priv_key1, path_res1);
-            var host2 = AbyssLib.OpenAbyssHost(priv_key2, path_res2);
+            var host1 = AbyssLib.OpenAbyssHost(priv_key1, path_res1, AbyssLib.NewSimpleAbystServer("D:\\WORKS\\github\\abyss_engine\\testground\\abyst_server"));
+            var host2 = AbyssLib.OpenAbyssHost(priv_key2, path_res2, AbyssLib.NewSimpleAbystServer("D:\\WORKS\\github\\abyss_engine\\testground\\abyst_server"));
 
             host1.AppendKnownPeer(host2.root_certificate, host2.handshake_key_certificate);
             host2.AppendKnownPeer(host1.root_certificate, host1.handshake_key_certificate);

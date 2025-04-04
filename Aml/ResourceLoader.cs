@@ -64,43 +64,45 @@ namespace AbyssCLI.Aml
                 return Tuple.Create<byte[], bool>([], false);
             }
 
-            var httpResponse = await _http_client.GetAsync(url.Raw);
-            if (!httpResponse.IsSuccessStatusCode)
+            return await TryHttpRequestAsync(url);
+        }
+        public async Task<Tuple<byte[], bool>> TryHttpRequestAsync(AbyssURL url)
+        {
+            if (url.Scheme == "http" || url.Scheme == "https")
             {
-                return Tuple.Create<byte[], bool>([], false);
+                var httpResponse = await _http_client.GetAsync(url.Raw);
+                if (!httpResponse.IsSuccessStatusCode)
+                {
+                    return Tuple.Create<byte[], bool>([], false);
+                }
+                return Tuple.Create(await httpResponse.Content.ReadAsByteArrayAsync(), true);
             }
+
+            if (url.Scheme == "abyst" || _abyst_client.IsValid())
+            {
+                var response = _abyst_client.Request(AbyssLib.AbystRequestMethod.GET, url.Path);
+                if (response.IsValid() && response.TryLoadBodyAll())
+                {
+                    return Tuple.Create(response.Body, true);
+                }
+            }
+            return Tuple.Create<byte[], bool>([], false);
         }
         private async Task Loadresource(AbyssURL url, MIME MimeType, WaiterGroup<FileResource> dest)
         {
-            byte[] fileBytes;
-            try
+            var response = await TryHttpRequestAsync(url);
+            if (!response.Item2)
             {
-                switch(url.Scheme)
-                {
-                    case "abyst":
-                        break;
-                    case "http" or "https":
-                        var httpReponse = await _http_client.GetAsync(url.Raw);
-                        fileBytes = await httpReponse.Content.ReadAsByteArrayAsync();
-                        break;
-                    default:
-                        _cerr.WriteLine("Loadresource: invalied url scheme");
-                        dest.TryFinalizeValue(default);
-                        return;
-                }
-            }
-            catch (Exception e)
-            {
-                //TODO: log error.
-                _cerr.WriteLine("invalid address for resource: " + url.String);
-                _cerr.WriteLine(e.Message);
-                _cerr.WriteLine(e.StackTrace);
-                dest.TryFinalizeValue(new FileResource());
+                _cerr.WriteLine("failed to load resource: " + url.Raw);
+                dest.TryFinalizeValue(default);
                 return;
             }
+            byte[] fileBytes = response.Item1;
 
-            if (dest.IsFinalized())
-                return;
+            if (dest.IsFinalized()) //double load. should never happen.
+            {
+                throw new Exception("double load");
+            }
 
             //should never throw from here.
             var component_id = RenderID.ComponentId;
@@ -125,19 +127,5 @@ namespace AbyssCLI.Aml
                 ABIFileInfo = abi_fileinfo,
             });
         }
-        //public async Task<byte[]> GetHttpFileAsync(Uri url)
-        //{
-        //    var response = await _http_client.GetAsync(url);
-        //    return response.IsSuccessStatusCode ? await response.Content.ReadAsByteArrayAsync() : null;
-        //}
-        //public async Task<byte[]> GetAbystFileAsync(string url)
-        //{
-        //    return await Task.Run(() =>
-        //    {
-        //        //var response = _host.HttpGet(url);
-        //        //return response.GetStatus() == 200 ? response.GetBody() : throw new Exception(url + " : " + Encoding.UTF8.GetString(response.GetBody()));
-        //        return Array.Empty<byte>();
-        //    });
-        //}
     }
 }

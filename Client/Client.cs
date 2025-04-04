@@ -40,7 +40,7 @@ namespace AbyssCLI.Client
                 return;
             }
 
-            _host = AbyssLib.OpenAbyssHost(init_msg.Init.RootKey.ToByteArray(), _resolver);
+            _host = AbyssLib.OpenAbyssHost(init_msg.Init.RootKey.ToByteArray(), _resolver, AbyssLib.NewSimpleAbystServer("D:\\WORKS\\github\\abyss_engine\\testground\\abyst_server"));
             if (!_host.IsValid())
             {
                 var err = AbyssLib.GetError();
