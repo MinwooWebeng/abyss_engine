@@ -136,8 +136,11 @@ using System;
 
 namespace AbyssCLI.ABI
 {
-    internal class ` + os.Args[3] + `ActionWriter(System.IO.Stream stream)
+    internal class ` + os.Args[3] + `ActionWriter
     {
+		public ` + os.Args[3] + `ActionWriter(System.IO.Stream stream) {
+			_out_stream = stream;
+		}
 		
 ` + data + `
 
@@ -171,7 +174,7 @@ namespace AbyssCLI.ABI
             }
 		}
 		public bool AutoFlush = false;
-		private readonly System.IO.Stream _out_stream = stream;
+		private readonly System.IO.Stream _out_stream;
 ` +
 		func() string {
 			if is_concurrent {

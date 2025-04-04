@@ -181,7 +181,10 @@ namespace AbyssCLI
             {
                 if (handle == IntPtr.Zero)
                 {
-                    throw new Exception("invalid host handle");
+                    local_aurl = new AbyssURL();
+                    root_certificate = [];
+                    handshake_key_certificate = [];
+                    return;
                 }
                 handle = _handle;
 
