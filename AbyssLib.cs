@@ -113,7 +113,7 @@ namespace AbyssCLI
                 unsafe
                 {
                     [DllImport("abyssnet.dll")]
-                    static extern int SimplePathResolver_SetMapping(IntPtr h, byte* path_ptr, int path_len,byte* world_ID);
+                    static extern int SimplePathResolver_SetMapping(IntPtr h, byte* path_ptr, int path_len, byte* world_ID);
                     fixed (byte* path_ptr = path_bytes)
                     {
                         fixed (byte *world_id_ptr = world_id)
@@ -179,7 +179,7 @@ namespace AbyssCLI
         {
             public Host(IntPtr _handle)
             {
-                if (handle == IntPtr.Zero)
+                if (_handle == IntPtr.Zero)
                 {
                     local_aurl = new AbyssURL();
                     root_certificate = [];

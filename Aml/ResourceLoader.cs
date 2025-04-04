@@ -8,15 +8,31 @@ namespace AbyssCLI.Aml
 {
     //each content must have one MediaLoader
     //TODO: add CORS protection before adding cookie.
-    internal class ResourceLoader(
-        AbyssLib.Host host,
-        StreamWriter cerr,
-        AbyssURL origin)
+    internal class ResourceLoader
     {
-        private readonly AbyssLib.Host _host = host;
-        private readonly AbyssLib.AbystClient _abyst_client = origin.Scheme == "abyst" ? host.GetAbystClient(origin.Id) : new AbyssLib.AbystClient(IntPtr.Zero);
-        private readonly StreamWriter _cerr = cerr;
-        private readonly AbyssURL _origin = origin;
+        public ResourceLoader(AbyssLib.Host host, StreamWriter cerr, AbyssURL origin)
+        {
+            _host = host;
+            if (origin.Scheme == "abyst")
+            {
+                _abyst_client = host.GetAbystClient(origin.Id);
+                if (!_abyst_client.IsValid())
+                {
+                    cerr.WriteLine(origin.Id);
+                    cerr.WriteLine("we failed to get abyst client: " + AbyssLib.GetError().ToString());
+                }
+            }
+            else
+            {
+                _abyst_client = new AbyssLib.AbystClient(IntPtr.Zero);
+            }
+            _cerr = cerr;
+            _origin = origin;
+        }
+        private readonly AbyssLib.Host _host;
+        private readonly AbyssLib.AbystClient _abyst_client;
+        private readonly StreamWriter _cerr;
+        private readonly AbyssURL _origin;
         private readonly string _mmf_path_prefix = "abyst" + RanStr.RandomString(10); //for file sharing with rendering engine.
         private readonly HttpClient _http_client = new();
         private readonly Dictionary<string, WaiterGroup<FileResource>> _media_cache = []; //registered when resource is requested.
@@ -78,7 +94,7 @@ namespace AbyssCLI.Aml
                 return Tuple.Create(await httpResponse.Content.ReadAsByteArrayAsync(), true);
             }
 
-            if (url.Scheme == "abyst" || _abyst_client.IsValid())
+            if (url.Scheme == "abyst" && _abyst_client.IsValid())
             {
                 var response = _abyst_client.Request(AbyssLib.AbystRequestMethod.GET, url.Path);
                 if (response.IsValid() && response.TryLoadBodyAll())

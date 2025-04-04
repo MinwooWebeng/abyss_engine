@@ -43,8 +43,7 @@ namespace AbyssCLI.Client
             _host = AbyssLib.OpenAbyssHost(init_msg.Init.RootKey.ToByteArray(), _resolver, AbyssLib.NewSimpleAbystServer("D:\\WORKS\\github\\abyss_engine\\testground\\abyst_server"));
             if (!_host.IsValid())
             {
-                var err = AbyssLib.GetError();
-                _cerr.WriteLine("host creation failed: " + err.ToString());
+                _cerr.WriteLine("host creation failed: " + AbyssLib.GetError().ToString());
                 return;
             }
             _cout.LocalInfo(_host.local_aurl.Raw);
