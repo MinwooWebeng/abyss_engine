@@ -14,6 +14,7 @@ namespace AbyssCLI.Aml
         AbyssURL origin)
     {
         private readonly AbyssLib.Host _host = host;
+        private readonly AbyssLib.AbystClient _abyst_client = origin.Scheme == "abyst" ? host.GetAbystClient(origin.Id) : new AbyssLib.AbystClient(IntPtr.Zero);
         private readonly StreamWriter _cerr = cerr;
         private readonly AbyssURL _origin = origin;
         private readonly string _mmf_path_prefix = "abyst" + RanStr.RandomString(10); //for file sharing with rendering engine.

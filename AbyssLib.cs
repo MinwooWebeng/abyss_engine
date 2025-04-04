@@ -14,6 +14,7 @@ using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using static AbyssCLI.ABI.UIAction.Types;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 #nullable enable
 namespace AbyssCLI
@@ -669,15 +670,86 @@ namespace AbyssCLI
             public readonly string peer_hash;
             ~WorldMemberLeave() => CloseAbyssHandle(handle);
         }
+        public enum AbystRequestMethod : int
+        {
+            GET = 0,
+        }
         public class AbystClient(IntPtr _handle)
         {
             private readonly IntPtr handle = _handle;
             public bool IsValid() => handle != IntPtr.Zero;
+            public AbystResponse Request(AbystRequestMethod method, string path)
+            {
+                byte[] path_bytes;
+                try
+                {
+                    path_bytes = Encoding.ASCII.GetBytes(path);
+                }
+                catch
+                {
+                    return new AbystResponse(IntPtr.Zero);
+                }
+                unsafe
+                {
+                    [DllImport("abyssnet.dll")]
+                    static extern IntPtr AbystClient_Request(IntPtr h, int method, byte* path_ptr, int path_len);
+
+                    fixed(byte* path_ptr = path_bytes)
+                    {
+                        return new AbystResponse(AbystClient_Request(handle, (int)method, path_ptr, path_bytes.Length));
+                    }
+                }
+            }
             ~AbystClient() => CloseAbyssHandle(handle);
         }
-        public class AbystResponse(IntPtr _handle)
+        public class AbystResponse
         {
+            public AbystResponse(IntPtr _handle)
+            {
+                handle = _handle;
+                if (handle == IntPtr.Zero)
+                {
+                    return;
+                }
 
+                [DllImport("abyssnet.dll")]
+                static extern int AbyssResponse_GetContentLength(IntPtr h);
+
+                ContentLength = AbyssResponse_GetContentLength(handle);
+                if (ContentLength == 0)
+                {
+                    CloseAbyssHandle(handle);
+                    handle = IntPtr.Zero;
+                    return;
+                }
+            }
+            private readonly IntPtr handle;
+            public readonly int ContentLength;
+            public byte[] Body = [];
+            public bool IsValid() => handle != IntPtr.Zero;
+            public bool TryLoadBodyAll()
+            {
+                if (Body.Length != 0)
+                {
+                    return false;
+                }
+                Body = new byte[ContentLength];
+                unsafe
+                {
+                    [DllImport("abyssnet.dll")]
+                    static extern int AbystResponse_ReadBodyAll(IntPtr h, byte* buf_ptr, int buflen);
+
+                    fixed(byte* buf = Body)
+                    {
+                        if (AbystResponse_ReadBodyAll(handle, buf, ContentLength) != ContentLength)
+                        {
+                            return false;
+                        }
+                    }
+                }
+                return true;
+            }
+            ~AbystResponse() => CloseAbyssHandle(handle);
         }
     }
 
