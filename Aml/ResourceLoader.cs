@@ -15,12 +15,12 @@ namespace AbyssCLI.Aml
             _host = host;
             if (origin.Scheme == "abyst")
             {
-                _abyst_client = host.GetAbystClient(origin.Id);
-                if (!_abyst_client.IsValid())
+                var result = host.GetAbystClient(origin.Id);
+                if (result.Item2 != string.Empty)
                 {
-                    cerr.WriteLine(origin.Id);
-                    cerr.WriteLine("we failed to get abyst client: " + AbyssLib.GetError().ToString());
+                    cerr.WriteLine("we failed to get abyst client: " + result.Item2);
                 }
+                _abyst_client = result.Item1;
             }
             else
             {
@@ -73,54 +73,48 @@ namespace AbyssCLI.Aml
 
             return waiting_group.TryGetValueOrWaiter(out resource, out waiter);
         }
-        public async Task<Tuple<byte[], bool>> TryHttpRequestAsync(string url_string)
+        public async Task<HttpResponseMessage> TryHttpRequestAsync(string url_string)
         {
             if (!AbyssURLParser.TryParseFrom(url_string, _origin, out var url))
             {
-                return Tuple.Create<byte[], bool>([], false);
+                return new HttpResponseMessage(System.Net.HttpStatusCode.BadRequest);
             }
 
             return await TryHttpRequestAsync(url);
         }
-        public async Task<Tuple<byte[], bool>> TryHttpRequestAsync(AbyssURL url)
+        public async Task<HttpResponseMessage> TryHttpRequestAsync(AbyssURL url)
         {
             if (url.Scheme == "http" || url.Scheme == "https")
             {
-                var httpResponse = await _http_client.GetAsync(url.Raw);
-                if (!httpResponse.IsSuccessStatusCode)
-                {
-                    return Tuple.Create<byte[], bool>([], false);
-                }
-                return Tuple.Create(await httpResponse.Content.ReadAsByteArrayAsync(), true);
+                return await _http_client.GetAsync(url.Raw);
             }
 
             if (url.Scheme == "abyst" && _abyst_client.IsValid())
             {
-                var response = _abyst_client.Request(AbyssLib.AbystRequestMethod.GET, url.Path);
-                if (response.IsValid() && response.TryLoadBodyAll())
+                var raw_response = _abyst_client.Request(AbyssLib.AbystRequestMethod.GET, url.Path);
+                if (raw_response.TryLoadBodyAll())
                 {
-                    return Tuple.Create(response.Body, true);
+                    return new HttpResponseMessage((System.Net.HttpStatusCode)raw_response.Code)
+                    {
+                        //TODO: support headers
+                        Content = new ByteArrayContent(raw_response.Body)
+                    };
                 }
+                return new HttpResponseMessage(System.Net.HttpStatusCode.UnprocessableContent);
             }
-            return Tuple.Create<byte[], bool>([], false);
+            return new HttpResponseMessage(System.Net.HttpStatusCode.BadRequest);
         }
         private async Task Loadresource(AbyssURL url, MIME MimeType, WaiterGroup<FileResource> dest)
         {
             var response = await TryHttpRequestAsync(url);
-            if (!response.Item2)
+            if (!response.IsSuccessStatusCode)
             {
-                _cerr.WriteLine("failed to load resource: " + url.Raw);
+                _cerr.WriteLine("failed to load resource: " + response.StatusCode.ToString());
                 dest.TryFinalizeValue(default);
                 return;
             }
-            byte[] fileBytes = response.Item1;
+            byte[] fileBytes = await response.Content.ReadAsByteArrayAsync();
 
-            if (dest.IsFinalized()) //double load. should never happen.
-            {
-                throw new Exception("double load");
-            }
-
-            //should never throw from here.
             var component_id = RenderID.ComponentId;
             var mmf_path = _mmf_path_prefix + component_id.ToString();
             var mmf = MemoryMappedFile.CreateNew(mmf_path, fileBytes.Length);
@@ -136,12 +130,15 @@ namespace AbyssCLI.Aml
                 Len = (uint)fileBytes.Length,
             };
 
-            dest.TryFinalizeValue(new FileResource
+            if (!dest.TryFinalizeValue(new FileResource
             {
                 IsValid = true,
                 MMF = mmf,
                 ABIFileInfo = abi_fileinfo,
-            });
+            }))
+            {
+                throw new Exception("double load"); //should never happen.
+            }
         }
     }
 }

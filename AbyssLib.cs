@@ -1,20 +1,7 @@
-﻿using AbyssCLI.Aml;
-using AbyssCLI.Tool;
-using Google.Protobuf;
-using Microsoft.VisualBasic;
-using System;
-using System.ComponentModel;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Reflection.Metadata;
-using System.Reflection.Metadata.Ecma335;
+﻿using AbyssCLI.Tool;
+using Newtonsoft.Json;
 using System.Runtime.InteropServices;
 using System.Text;
-using System.Text.Json;
-using System.Text.Json.Nodes;
-using static AbyssCLI.ABI.UIAction.Types;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 #nullable enable
 namespace AbyssCLI
@@ -313,7 +300,7 @@ namespace AbyssCLI
                     }
                 }
             }
-            public AbystClient GetAbystClient(string peer_hash)
+            public Tuple<AbystClient, string> GetAbystClient(string peer_hash)
             {
                 byte[] peer_hash_bytes;
                 try
@@ -322,18 +309,24 @@ namespace AbyssCLI
                 }
                 catch
                 {
-                    return new AbystClient(IntPtr.Zero);
+                    return Tuple.Create(new AbystClient(IntPtr.Zero), "failed to encode peer hash");
                 }
 
                 unsafe
                 {
                     [DllImport("abyssnet.dll")]
-                    static extern IntPtr Host_GetAbystClientConnection(IntPtr h, byte* peer_hash_ptr, int peer_hash_len, int timeout_ms);
+                    static extern IntPtr Host_GetAbystClientConnection(IntPtr h, byte* peer_hash_ptr, int peer_hash_len, int timeout_ms, IntPtr* err_out);
 
                     fixed(byte* peer_hash_ptr = peer_hash_bytes)
                     {
-                        var abyst_client = Host_GetAbystClientConnection(handle, peer_hash_ptr, peer_hash_bytes.Length, 1000);
-                        return new AbystClient(abyst_client);
+                        IntPtr err_out = IntPtr.Zero;
+                        var abyst_client = Host_GetAbystClientConnection(handle, peer_hash_ptr, peer_hash_bytes.Length, 1000, &err_out);
+                        if (err_out != IntPtr.Zero)
+                        {
+                            var dll_err = new AbyssLib.DLLError(err_out);
+                            return Tuple.Create(new AbystClient(IntPtr.Zero), dll_err.ToString());
+                        }
+                        return Tuple.Create(new AbystClient(abyst_client), string.Empty);
                     }
                 }
             }
@@ -535,7 +528,7 @@ namespace AbyssCLI
             public ErrorCode AppendObjects(Tuple<Guid, string>[] objects_info)
             {
                 var objinfo_marshalled = objects_info.Select(x => new ObjectInfoFormat { ID = BytesToHex(x.Item1.ToByteArray()), Addr = x.Item2 }).ToArray();
-                var data = JsonSerializer.Serialize(objinfo_marshalled);
+                var data = System.Text.Json.JsonSerializer.Serialize(objinfo_marshalled);
                 byte[] data_bytes;
                 try
                 {
@@ -559,7 +552,7 @@ namespace AbyssCLI
             public ErrorCode DeleteObjects(Guid[] object_ids)
             {
                 var objid_marshalled = object_ids.Select(x => BytesToHex(x.ToByteArray()));
-                var data = JsonSerializer.Serialize(objid_marshalled);
+                var data = System.Text.Json.JsonSerializer.Serialize(objid_marshalled);
                 byte[] data_bytes;
                 try
                 {
@@ -617,7 +610,7 @@ namespace AbyssCLI
                             objects = [];
                             return;
                         }
-                        infos = JsonSerializer.Deserialize<ObjectInfoFormat[]>(System.Text.Encoding.ASCII.GetString(buf, res_len));
+                        infos = System.Text.Json.JsonSerializer.Deserialize<ObjectInfoFormat[]>(System.Text.Encoding.ASCII.GetString(buf, res_len));
                     }
 
                     objects = infos == null ? [] : infos.Select(x => Tuple.Create(new Guid(HexToBytes(x.ID)), x.Addr)).ToArray();
@@ -663,7 +656,7 @@ namespace AbyssCLI
                             object_ids = [];
                             return;
                         }
-                        infos = JsonSerializer.Deserialize<string[]>(System.Text.Encoding.ASCII.GetString(buf, res_len));
+                        infos = System.Text.Json.JsonSerializer.Deserialize<string[]>(System.Text.Encoding.ASCII.GetString(buf, res_len));
                     }
 
                     object_ids = infos == null ? [] : infos.Select(x => new Guid(HexToBytes(x))).ToArray();
@@ -706,19 +699,25 @@ namespace AbyssCLI
             public bool IsValid() => handle != IntPtr.Zero;
             public AbystResponse Request(AbystRequestMethod method, string path)
             {
-                byte[] path_bytes;
-                try
-                {
-                    path_bytes = Encoding.ASCII.GetBytes(path);
-                }
-                catch
-                {
-                    return new AbystResponse(IntPtr.Zero);
-                }
                 unsafe
                 {
                     [DllImport("abyssnet.dll")]
                     static extern IntPtr AbystClient_Request(IntPtr h, int method, byte* path_ptr, int path_len);
+
+                    if (path == string.Empty)
+                    {
+                        return new AbystResponse(AbystClient_Request(handle, (int)method, (byte*)0, 0));
+                    }
+
+                    byte[] path_bytes;
+                    try
+                    {
+                        path_bytes = Encoding.ASCII.GetBytes(path);
+                    }
+                    catch
+                    {
+                        return new AbystResponse(IntPtr.Zero);
+                    }
 
                     fixed(byte* path_ptr = path_bytes)
                     {
@@ -735,26 +734,61 @@ namespace AbyssCLI
                 handle = _handle;
                 if (handle == IntPtr.Zero)
                 {
+                    Code = 400;
+                    Status = "Bad Request";
                     return;
                 }
 
-                [DllImport("abyssnet.dll")]
-                static extern int AbyssResponse_GetContentLength(IntPtr h);
-
-                ContentLength = AbyssResponse_GetContentLength(handle);
-                if (ContentLength == 0)
+                unsafe
                 {
-                    CloseAbyssHandle(handle);
-                    handle = IntPtr.Zero;
-                    return;
+                    [DllImport("abyssnet.dll")]
+                    static extern int AbyssResponse_GetHeaders(IntPtr h, byte* buf, int buflen);
+
+                    [DllImport("abyssnet.dll")]
+                    static extern int AbyssResponse_GetContentLength(IntPtr h);
+
+                    fixed (byte* buf = new byte[4096])
+                    {
+                        var header_len = AbyssResponse_GetHeaders(handle, buf, 4096);
+                        if (header_len < 0)
+                        {
+                            Code = 422;
+                            Status = "Unprocessable Entity - " + header_len.ToString();
+                            return;
+                        }
+
+                        try
+                        {
+                            var header = Encoding.ASCII.GetString(buf, header_len);
+
+                            dynamic dynJson = JsonConvert.DeserializeObject(header) ?? throw new Exception();
+                            Code = dynJson["Code"];
+                            Status = dynJson["Status"];
+                            Header = dynJson["Header"];
+                            ContentLength = AbyssResponse_GetContentLength(handle);
+                            return;
+                        }
+                        catch
+                        {
+                            Code = 422;
+                            Status = "my json format does not parse";
+                            return;
+                        }
+                    }
                 }
             }
             private readonly IntPtr handle;
+            public readonly int Code;
+            public readonly string Status;
             public readonly int ContentLength;
+            public readonly Dictionary<string, string[]> Header = [];
             public byte[] Body = [];
-            public bool IsValid() => handle != IntPtr.Zero;
             public bool TryLoadBodyAll()
             {
+                if (ContentLength == 0)
+                {
+                    return true;
+                }
                 if (Body.Length != 0)
                 {
                     return false;

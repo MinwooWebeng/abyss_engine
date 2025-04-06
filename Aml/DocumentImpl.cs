@@ -14,12 +14,12 @@ namespace AbyssCLI.Aml
         {
             var response = await ResourceLoader.TryHttpRequestAsync(url);
             token.ThrowIfCancellationRequested();
-            if (!response.Item2)
-                throw new Exception("failed to load aml");
+            if (!response.IsSuccessStatusCode)
+                throw new Exception("failed to load aml: " + response.StatusCode.ToString() + " " + AbyssLib.GetError().ToString());
 
             //AML parsing
             XmlDocument doc = new();
-            doc.LoadXml(Encoding.UTF8.GetString(response.Item1));
+            doc.LoadXml(Encoding.UTF8.GetString(await response.Content.ReadAsByteArrayAsync(token)));
             // Check for the DOCTYPE
             if (doc.DocumentType == null || doc.DocumentType.Name != "AML")
                 throw new Exception("DOCTYPE mismatch");
