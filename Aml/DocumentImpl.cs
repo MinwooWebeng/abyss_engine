@@ -13,9 +13,11 @@ namespace AbyssCLI.Aml
         protected override async Task ActivateSelfCallback(CancellationToken token)
         {
             var response = await ResourceLoader.TryHttpRequestAsync(url);
-            token.ThrowIfCancellationRequested();
             if (!response.IsSuccessStatusCode)
-                throw new Exception("failed to load aml: " + response.StatusCode.ToString() + " " + AbyssLib.GetError().ToString());
+            {
+                ResponseCode = response.StatusCode;
+                return;
+            }
 
             //AML parsing
             XmlDocument doc = new();
@@ -39,5 +41,7 @@ namespace AbyssCLI.Aml
         //valid only after Activation
         public HeadImpl Head => Children[0] as HeadImpl;
         public BodyImpl Body => Children[1] as BodyImpl;
+
+        public System.Net.HttpStatusCode ResponseCode;
     }
 }

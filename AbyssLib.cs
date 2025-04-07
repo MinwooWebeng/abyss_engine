@@ -1,11 +1,18 @@
 ﻿using AbyssCLI.Tool;
-using Newtonsoft.Json;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Text.Json;
 
 #nullable enable
 namespace AbyssCLI
 {
+    public class AbystResponseHeaderJson
+    {
+        public int Code { get;set; }
+        public string Status { get; set; } = "";
+        public Dictionary<string, string[]> Header { get; set; } = [];
+}
+
     static internal class AbyssLib
     {
         static readonly int _i = Init();
@@ -702,11 +709,17 @@ namespace AbyssCLI
                 unsafe
                 {
                     [DllImport("abyssnet.dll")]
-                    static extern IntPtr AbystClient_Request(IntPtr h, int method, byte* path_ptr, int path_len);
+                    static extern IntPtr AbystClient_Request(IntPtr h, int method, byte* path_ptr, int path_len, IntPtr* err_out);
 
+                    IntPtr err = 0;
                     if (path == string.Empty)
                     {
-                        return new AbystResponse(AbystClient_Request(handle, (int)method, (byte*)0, 0));
+                        var result = new AbystResponse(AbystClient_Request(handle, (int)method, (byte*)0, 0, &err));
+                        if (err !=  IntPtr.Zero)
+                        {
+                            throw new Exception(new AbyssLib.DLLError(err).ToString());
+                        }
+                        return result;
                     }
 
                     byte[] path_bytes;
@@ -721,7 +734,12 @@ namespace AbyssCLI
 
                     fixed(byte* path_ptr = path_bytes)
                     {
-                        return new AbystResponse(AbystClient_Request(handle, (int)method, path_ptr, path_bytes.Length));
+                        var result = new AbystResponse(AbystClient_Request(handle, (int)method, path_ptr, path_bytes.Length, &err));
+                        if (err != IntPtr.Zero)
+                        {
+                            throw new Exception(new AbyssLib.DLLError(err).ToString());
+                        }
+                        return result;
                     }
                 }
             }
@@ -729,6 +747,10 @@ namespace AbyssCLI
         }
         public class AbystResponse
         {
+            static readonly JsonSerializerOptions header_serialize_opt = new()
+            {
+                PropertyNameCaseInsensitive = true
+            };
             public AbystResponse(IntPtr _handle)
             {
                 handle = _handle;
@@ -761,10 +783,10 @@ namespace AbyssCLI
                         {
                             var header = Encoding.ASCII.GetString(buf, header_len);
 
-                            dynamic dynJson = JsonConvert.DeserializeObject(header) ?? throw new Exception();
-                            Code = dynJson["Code"];
-                            Status = dynJson["Status"];
-                            Header = dynJson["Header"];
+                            var dynJson = JsonSerializer.Deserialize<AbystResponseHeaderJson>(header, header_serialize_opt) ?? throw new Exception();
+                            Code = dynJson.Code;
+                            Status = dynJson.Status;
+                            Header = dynJson.Header;
                             ContentLength = AbyssResponse_GetContentLength(handle);
                             return;
                         }
@@ -788,10 +810,6 @@ namespace AbyssCLI
                 if (ContentLength == 0)
                 {
                     return true;
-                }
-                if (Body.Length != 0)
-                {
-                    return false;
                 }
                 Body = new byte[ContentLength];
                 unsafe

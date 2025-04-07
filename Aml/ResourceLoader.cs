@@ -1,8 +1,5 @@
-﻿using AbyssCLI.ABI;
-using AbyssCLI.Tool;
-using Microsoft.VisualBasic;
+﻿using AbyssCLI.Tool;
 using System.IO.MemoryMappedFiles;
-using System.Text;
 
 namespace AbyssCLI.Aml
 {
@@ -12,7 +9,6 @@ namespace AbyssCLI.Aml
     {
         public ResourceLoader(AbyssLib.Host host, StreamWriter cerr, AbyssURL origin)
         {
-            _host = host;
             if (origin.Scheme == "abyst")
             {
                 var result = host.GetAbystClient(origin.Id);
@@ -29,7 +25,6 @@ namespace AbyssCLI.Aml
             _cerr = cerr;
             _origin = origin;
         }
-        private readonly AbyssLib.Host _host;
         private readonly AbyssLib.AbystClient _abyst_client;
         private readonly StreamWriter _cerr;
         private readonly AbyssURL _origin;
@@ -92,15 +87,28 @@ namespace AbyssCLI.Aml
             if (url.Scheme == "abyst" && _abyst_client.IsValid())
             {
                 var raw_response = _abyst_client.Request(AbyssLib.AbystRequestMethod.GET, url.Path);
-                if (raw_response.TryLoadBodyAll())
+                if (!raw_response.TryLoadBodyAll())
                 {
-                    return new HttpResponseMessage((System.Net.HttpStatusCode)raw_response.Code)
-                    {
-                        //TODO: support headers
-                        Content = new ByteArrayContent(raw_response.Body)
-                    };
+                    return new HttpResponseMessage(System.Net.HttpStatusCode.UnprocessableContent);
                 }
-                return new HttpResponseMessage(System.Net.HttpStatusCode.UnprocessableContent);
+
+                var response = new HttpResponseMessage((System.Net.HttpStatusCode)raw_response.Code)
+                {
+                    Content = new ByteArrayContent(raw_response.Body),
+                };
+                foreach (var entry in raw_response.Header)
+                {
+                    switch (entry.Key)
+                    {
+                        case "Content-Length" or "Content-Type":
+                            response.Content.Headers.Add(entry.Key, entry.Value);
+                            break;
+                        default:
+                            response.Headers.Add(entry.Key, entry.Value);
+                            break;
+                    }
+                }
+                return response;
             }
             return new HttpResponseMessage(System.Net.HttpStatusCode.BadRequest);
         }
