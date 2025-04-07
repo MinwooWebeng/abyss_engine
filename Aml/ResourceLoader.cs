@@ -100,7 +100,11 @@ namespace AbyssCLI.Aml
                 {
                     switch (entry.Key)
                     {
-                        case "Content-Length" or "Content-Type":
+                        case "Content-Length" or "Content-Type"
+                        or "Content-Disposition" or "Content-Encoding"
+                        or "Content-Language" or "Content-Location"
+                        or "Content-MD5" or "Expires"
+                        or "Last-Modified":
                             response.Content.Headers.Add(entry.Key, entry.Value);
                             break;
                         default:

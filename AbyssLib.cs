@@ -52,8 +52,8 @@ namespace AbyssCLI
         static private void CloseAbyssHandle(IntPtr handle)
         {
             [DllImport("abyssnet.dll")]
-            static extern void CloseHandle(IntPtr handle);
-            CloseHandle(handle);
+            static extern void CloseAbyssHandle(IntPtr handle);
+            CloseAbyssHandle(handle);
         }
         public class DLLError(IntPtr _error_handle)
         {
