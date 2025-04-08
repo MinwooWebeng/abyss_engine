@@ -13,7 +13,7 @@ namespace AbyssCLI
         public Dictionary<string, string[]> Header { get; set; } = [];
 }
 
-    static internal class AbyssLib
+    static public class AbyssLib
     {
         static readonly int _i = Init();
         public enum ErrorCode: int

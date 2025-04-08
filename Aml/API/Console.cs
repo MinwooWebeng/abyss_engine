@@ -1,6 +1,6 @@
-﻿namespace AbyssCLI.Aml
+﻿namespace AbyssCLI.Aml.API
 {
-    public class JSConsole(StreamWriter target_stream)
+    public class Console(StreamWriter target_stream)
     {
 #pragma warning disable IDE1006 //naming convention
         public void log(string message)

@@ -4,7 +4,7 @@ namespace AbyssCLI.Aml
 {
     internal sealed class HeadImpl : AmlNode
     {
-        public HeadImpl(AmlNode context, XmlNode head_node, DocumentImpl document)
+        public HeadImpl(AmlNode context, XmlNode head_node, AbyssLib.Host host, DocumentImpl document)
             : base(context)
         {
             Id = head_node.Attributes["id"]?.Value;
@@ -13,7 +13,7 @@ namespace AbyssCLI.Aml
             {
                 Children.Add(child.Name switch
                 {
-                    "script" => new ScriptImpl(this, child, document),
+                    "script" => new ScriptImpl(this, child, host, document),
                     _ => throw new Exception("Invalid tag in <head>"),
                 });
             }

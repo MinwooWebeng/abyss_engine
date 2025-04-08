@@ -6,6 +6,7 @@ using System.Xml;
 namespace AbyssCLI.Aml
 {
     internal sealed class DocumentImpl(Contexted root,
+        AbyssLib.Host host,
         RenderActionWriter renderActionWriter, StreamWriter cerr,
         ResourceLoader resourceLoader, AbyssURL url, float[] transform)
         : AmlNode(root, renderActionWriter, cerr, resourceLoader)
@@ -31,11 +32,12 @@ namespace AbyssCLI.Aml
                 throw new Exception("<aml> not found");
 
             XmlNode head_node = aml_node.SelectSingleNode("head");
-            Children.Add(new HeadImpl(this, head_node, this));
+            Children.Add(new HeadImpl(this, head_node, host, this));
 
             var body_node = aml_node.SelectSingleNode("body");
             Children.Add(new BodyImpl(this, body_node, transform));
         }
+        private readonly AbyssLib.Host host = host;
         private readonly AbyssURL url = url;
 
         //valid only after Activation

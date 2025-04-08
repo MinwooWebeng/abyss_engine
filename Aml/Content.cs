@@ -14,6 +14,7 @@ namespace AbyssCLI.Aml
         public Task CloseAsync() => _documentImpl.CloseAsync();
         private readonly DocumentImpl _documentImpl = new(
                 new Tool.Contexted(),
+                host,
                 renderActionWriter,
                 cerr,
                 new ResourceLoader(host, cerr, URL),
