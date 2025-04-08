@@ -477,6 +477,8 @@ namespace AbyssCLI
         {
             public required string ID { get; set; }
             public required string Addr { get; set; }
+
+            public required float[] Transform { get; set; }
         }
         private static string BytesToHex(byte[] input)
         {
@@ -532,9 +534,9 @@ namespace AbyssCLI
                     }
                 }
             }
-            public ErrorCode AppendObjects(Tuple<Guid, string>[] objects_info)
+            public ErrorCode AppendObjects(Tuple<Guid, string, float[]>[] objects_info)
             {
-                var objinfo_marshalled = objects_info.Select(x => new ObjectInfoFormat { ID = BytesToHex(x.Item1.ToByteArray()), Addr = x.Item2 }).ToArray();
+                var objinfo_marshalled = objects_info.Select(x => new ObjectInfoFormat { ID = BytesToHex(x.Item1.ToByteArray()), Addr = x.Item2, Transform = x.Item3 }).ToArray();
                 var data = System.Text.Json.JsonSerializer.Serialize(objinfo_marshalled);
                 byte[] data_bytes;
                 try
@@ -620,12 +622,12 @@ namespace AbyssCLI
                         infos = System.Text.Json.JsonSerializer.Deserialize<ObjectInfoFormat[]>(System.Text.Encoding.ASCII.GetString(buf, res_len));
                     }
 
-                    objects = infos == null ? [] : infos.Select(x => Tuple.Create(new Guid(HexToBytes(x.ID)), x.Addr)).ToArray();
+                    objects = infos == null ? [] : infos.Select(x => Tuple.Create(new Guid(HexToBytes(x.ID)), x.Addr, x.Transform)).ToArray();
                 }
             }
             private readonly IntPtr handle;
             public readonly string peer_hash;
-            public readonly Tuple<Guid, string>[] objects;
+            public readonly Tuple<Guid, string, float[]>[] objects;
             ~MemberObjectAppend() => CloseAbyssHandle(handle);
         }
         public class MemberObjectDelete

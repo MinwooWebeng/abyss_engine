@@ -51,14 +51,16 @@ public void DeleteElement
 public void ElemSetPos
 (
     int element_id,
-    Vec3 pos
+    Vec3 pos,
+    Vec4 rot
 )
 => Write(new RenderAction()
 {
     ElemSetPos = new ElemSetPos
     {
         ElementId = element_id,
-        Pos = pos
+        Pos = pos,
+        Rot = rot
     }
 });
 public void CreateImage

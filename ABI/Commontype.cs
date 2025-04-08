@@ -24,21 +24,21 @@ namespace AbyssCLI.ABI {
     static CommontypeReflection() {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
-            "ChBjb21tb250eXBlLnByb3RvIhwKBFZlYzISCQoBeBgBIAEoARIJCgF5GAIg",
-            "ASgBIicKBFZlYzMSCQoBeBgBIAEoARIJCgF5GAIgASgBEgkKAXoYAyABKAEi",
-            "MgoEUXVhdBIJCgFhGAEgASgBEgkKAWIYAiABKAESCQoBYxgDIAEoARIJCgFk",
-            "GAQgASgBIpcBCgZBbnlWYWwSDgoEYm9vbBgBIAEoCEgAEg0KA2ludBgCIAEo",
+            "ChBjb21tb250eXBlLnByb3RvIhwKBFZlYzISCQoBeBgBIAEoAhIJCgF5GAIg",
+            "ASgCIicKBFZlYzMSCQoBeBgBIAEoAhIJCgF5GAIgASgCEgkKAXoYAyABKAIi",
+            "MgoEVmVjNBIJCgF3GAEgASgCEgkKAXgYAiABKAISCQoBeRgDIAEoAhIJCgF6",
+            "GAQgASgCIpcBCgZBbnlWYWwSDgoEYm9vbBgBIAEoCEgAEg0KA2ludBgCIAEo",
             "BUgAEhAKBmRvdWJsZRgDIAEoAUgAEhAKBnN0cmluZxgEIAEoCUgAEhUKBHZl",
-            "YzIYBSABKAsyBS5WZWMySAASFQoEdmVjMxgGIAEoCzIFLlZlYzNIABIVCgRx",
-            "dWF0GAcgASgLMgUuUXVhdEgAQgUKA3ZhbEIPqgIMQWJ5c3NDTEkuQUJJYgZw",
+            "YzIYBSABKAsyBS5WZWMySAASFQoEdmVjMxgGIAEoCzIFLlZlYzNIABIVCgR2",
+            "ZWM0GAcgASgLMgUuVmVjNEgAQgUKA3ZhbEIPqgIMQWJ5c3NDTEkuQUJJYgZw",
             "cm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
             new pbr::GeneratedClrTypeInfo(typeof(global::AbyssCLI.ABI.Vec2), global::AbyssCLI.ABI.Vec2.Parser, new[]{ "X", "Y" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::AbyssCLI.ABI.Vec3), global::AbyssCLI.ABI.Vec3.Parser, new[]{ "X", "Y", "Z" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::AbyssCLI.ABI.Quat), global::AbyssCLI.ABI.Quat.Parser, new[]{ "A", "B", "C", "D" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::AbyssCLI.ABI.AnyVal), global::AbyssCLI.ABI.AnyVal.Parser, new[]{ "Bool", "Int", "Double", "String", "Vec2", "Vec3", "Quat" }, new[]{ "Val" }, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::AbyssCLI.ABI.Vec4), global::AbyssCLI.ABI.Vec4.Parser, new[]{ "W", "X", "Y", "Z" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::AbyssCLI.ABI.AnyVal), global::AbyssCLI.ABI.AnyVal.Parser, new[]{ "Bool", "Int", "Double", "String", "Vec2", "Vec3", "Vec4" }, new[]{ "Val" }, null, null, null)
           }));
     }
     #endregion
@@ -93,10 +93,10 @@ namespace AbyssCLI.ABI {
 
     /// <summary>Field number for the "x" field.</summary>
     public const int XFieldNumber = 1;
-    private double x_;
+    private float x_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public double X {
+    public float X {
       get { return x_; }
       set {
         x_ = value;
@@ -105,10 +105,10 @@ namespace AbyssCLI.ABI {
 
     /// <summary>Field number for the "y" field.</summary>
     public const int YFieldNumber = 2;
-    private double y_;
+    private float y_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public double Y {
+    public float Y {
       get { return y_; }
       set {
         y_ = value;
@@ -130,8 +130,8 @@ namespace AbyssCLI.ABI {
       if (ReferenceEquals(other, this)) {
         return true;
       }
-      if (!pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.Equals(X, other.X)) return false;
-      if (!pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.Equals(Y, other.Y)) return false;
+      if (!pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.Equals(X, other.X)) return false;
+      if (!pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.Equals(Y, other.Y)) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -139,8 +139,8 @@ namespace AbyssCLI.ABI {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override int GetHashCode() {
       int hash = 1;
-      if (X != 0D) hash ^= pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.GetHashCode(X);
-      if (Y != 0D) hash ^= pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.GetHashCode(Y);
+      if (X != 0F) hash ^= pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.GetHashCode(X);
+      if (Y != 0F) hash ^= pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.GetHashCode(Y);
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -159,13 +159,13 @@ namespace AbyssCLI.ABI {
     #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       output.WriteRawMessage(this);
     #else
-      if (X != 0D) {
-        output.WriteRawTag(9);
-        output.WriteDouble(X);
+      if (X != 0F) {
+        output.WriteRawTag(13);
+        output.WriteFloat(X);
       }
-      if (Y != 0D) {
-        output.WriteRawTag(17);
-        output.WriteDouble(Y);
+      if (Y != 0F) {
+        output.WriteRawTag(21);
+        output.WriteFloat(Y);
       }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
@@ -177,13 +177,13 @@ namespace AbyssCLI.ABI {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
-      if (X != 0D) {
-        output.WriteRawTag(9);
-        output.WriteDouble(X);
+      if (X != 0F) {
+        output.WriteRawTag(13);
+        output.WriteFloat(X);
       }
-      if (Y != 0D) {
-        output.WriteRawTag(17);
-        output.WriteDouble(Y);
+      if (Y != 0F) {
+        output.WriteRawTag(21);
+        output.WriteFloat(Y);
       }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
@@ -195,11 +195,11 @@ namespace AbyssCLI.ABI {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public int CalculateSize() {
       int size = 0;
-      if (X != 0D) {
-        size += 1 + 8;
+      if (X != 0F) {
+        size += 1 + 4;
       }
-      if (Y != 0D) {
-        size += 1 + 8;
+      if (Y != 0F) {
+        size += 1 + 4;
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -213,10 +213,10 @@ namespace AbyssCLI.ABI {
       if (other == null) {
         return;
       }
-      if (other.X != 0D) {
+      if (other.X != 0F) {
         X = other.X;
       }
-      if (other.Y != 0D) {
+      if (other.Y != 0F) {
         Y = other.Y;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
@@ -238,12 +238,12 @@ namespace AbyssCLI.ABI {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
-          case 9: {
-            X = input.ReadDouble();
+          case 13: {
+            X = input.ReadFloat();
             break;
           }
-          case 17: {
-            Y = input.ReadDouble();
+          case 21: {
+            Y = input.ReadFloat();
             break;
           }
         }
@@ -265,12 +265,12 @@ namespace AbyssCLI.ABI {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
             break;
-          case 9: {
-            X = input.ReadDouble();
+          case 13: {
+            X = input.ReadFloat();
             break;
           }
-          case 17: {
-            Y = input.ReadDouble();
+          case 21: {
+            Y = input.ReadFloat();
             break;
           }
         }
@@ -329,10 +329,10 @@ namespace AbyssCLI.ABI {
 
     /// <summary>Field number for the "x" field.</summary>
     public const int XFieldNumber = 1;
-    private double x_;
+    private float x_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public double X {
+    public float X {
       get { return x_; }
       set {
         x_ = value;
@@ -341,10 +341,10 @@ namespace AbyssCLI.ABI {
 
     /// <summary>Field number for the "y" field.</summary>
     public const int YFieldNumber = 2;
-    private double y_;
+    private float y_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public double Y {
+    public float Y {
       get { return y_; }
       set {
         y_ = value;
@@ -353,10 +353,10 @@ namespace AbyssCLI.ABI {
 
     /// <summary>Field number for the "z" field.</summary>
     public const int ZFieldNumber = 3;
-    private double z_;
+    private float z_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public double Z {
+    public float Z {
       get { return z_; }
       set {
         z_ = value;
@@ -378,9 +378,9 @@ namespace AbyssCLI.ABI {
       if (ReferenceEquals(other, this)) {
         return true;
       }
-      if (!pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.Equals(X, other.X)) return false;
-      if (!pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.Equals(Y, other.Y)) return false;
-      if (!pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.Equals(Z, other.Z)) return false;
+      if (!pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.Equals(X, other.X)) return false;
+      if (!pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.Equals(Y, other.Y)) return false;
+      if (!pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.Equals(Z, other.Z)) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -388,9 +388,9 @@ namespace AbyssCLI.ABI {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override int GetHashCode() {
       int hash = 1;
-      if (X != 0D) hash ^= pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.GetHashCode(X);
-      if (Y != 0D) hash ^= pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.GetHashCode(Y);
-      if (Z != 0D) hash ^= pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.GetHashCode(Z);
+      if (X != 0F) hash ^= pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.GetHashCode(X);
+      if (Y != 0F) hash ^= pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.GetHashCode(Y);
+      if (Z != 0F) hash ^= pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.GetHashCode(Z);
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -409,17 +409,17 @@ namespace AbyssCLI.ABI {
     #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       output.WriteRawMessage(this);
     #else
-      if (X != 0D) {
-        output.WriteRawTag(9);
-        output.WriteDouble(X);
+      if (X != 0F) {
+        output.WriteRawTag(13);
+        output.WriteFloat(X);
       }
-      if (Y != 0D) {
-        output.WriteRawTag(17);
-        output.WriteDouble(Y);
+      if (Y != 0F) {
+        output.WriteRawTag(21);
+        output.WriteFloat(Y);
       }
-      if (Z != 0D) {
-        output.WriteRawTag(25);
-        output.WriteDouble(Z);
+      if (Z != 0F) {
+        output.WriteRawTag(29);
+        output.WriteFloat(Z);
       }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
@@ -431,17 +431,17 @@ namespace AbyssCLI.ABI {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
-      if (X != 0D) {
-        output.WriteRawTag(9);
-        output.WriteDouble(X);
+      if (X != 0F) {
+        output.WriteRawTag(13);
+        output.WriteFloat(X);
       }
-      if (Y != 0D) {
-        output.WriteRawTag(17);
-        output.WriteDouble(Y);
+      if (Y != 0F) {
+        output.WriteRawTag(21);
+        output.WriteFloat(Y);
       }
-      if (Z != 0D) {
-        output.WriteRawTag(25);
-        output.WriteDouble(Z);
+      if (Z != 0F) {
+        output.WriteRawTag(29);
+        output.WriteFloat(Z);
       }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
@@ -453,14 +453,14 @@ namespace AbyssCLI.ABI {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public int CalculateSize() {
       int size = 0;
-      if (X != 0D) {
-        size += 1 + 8;
+      if (X != 0F) {
+        size += 1 + 4;
       }
-      if (Y != 0D) {
-        size += 1 + 8;
+      if (Y != 0F) {
+        size += 1 + 4;
       }
-      if (Z != 0D) {
-        size += 1 + 8;
+      if (Z != 0F) {
+        size += 1 + 4;
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -474,13 +474,13 @@ namespace AbyssCLI.ABI {
       if (other == null) {
         return;
       }
-      if (other.X != 0D) {
+      if (other.X != 0F) {
         X = other.X;
       }
-      if (other.Y != 0D) {
+      if (other.Y != 0F) {
         Y = other.Y;
       }
-      if (other.Z != 0D) {
+      if (other.Z != 0F) {
         Z = other.Z;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
@@ -502,16 +502,16 @@ namespace AbyssCLI.ABI {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
-          case 9: {
-            X = input.ReadDouble();
+          case 13: {
+            X = input.ReadFloat();
             break;
           }
-          case 17: {
-            Y = input.ReadDouble();
+          case 21: {
+            Y = input.ReadFloat();
             break;
           }
-          case 25: {
-            Z = input.ReadDouble();
+          case 29: {
+            Z = input.ReadFloat();
             break;
           }
         }
@@ -533,16 +533,16 @@ namespace AbyssCLI.ABI {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
             break;
-          case 9: {
-            X = input.ReadDouble();
+          case 13: {
+            X = input.ReadFloat();
             break;
           }
-          case 17: {
-            Y = input.ReadDouble();
+          case 21: {
+            Y = input.ReadFloat();
             break;
           }
-          case 25: {
-            Z = input.ReadDouble();
+          case 29: {
+            Z = input.ReadFloat();
             break;
           }
         }
@@ -553,16 +553,16 @@ namespace AbyssCLI.ABI {
   }
 
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
-  public sealed partial class Quat : pb::IMessage<Quat>
+  public sealed partial class Vec4 : pb::IMessage<Vec4>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
   {
-    private static readonly pb::MessageParser<Quat> _parser = new pb::MessageParser<Quat>(() => new Quat());
+    private static readonly pb::MessageParser<Vec4> _parser = new pb::MessageParser<Vec4>(() => new Vec4());
     private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public static pb::MessageParser<Quat> Parser { get { return _parser; } }
+    public static pb::MessageParser<Vec4> Parser { get { return _parser; } }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -578,7 +578,7 @@ namespace AbyssCLI.ABI {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public Quat() {
+    public Vec4() {
       OnConstruction();
     }
 
@@ -586,87 +586,87 @@ namespace AbyssCLI.ABI {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public Quat(Quat other) : this() {
-      a_ = other.a_;
-      b_ = other.b_;
-      c_ = other.c_;
-      d_ = other.d_;
+    public Vec4(Vec4 other) : this() {
+      w_ = other.w_;
+      x_ = other.x_;
+      y_ = other.y_;
+      z_ = other.z_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public Quat Clone() {
-      return new Quat(this);
+    public Vec4 Clone() {
+      return new Vec4(this);
     }
 
-    /// <summary>Field number for the "a" field.</summary>
-    public const int AFieldNumber = 1;
-    private double a_;
+    /// <summary>Field number for the "w" field.</summary>
+    public const int WFieldNumber = 1;
+    private float w_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public double A {
-      get { return a_; }
+    public float W {
+      get { return w_; }
       set {
-        a_ = value;
+        w_ = value;
       }
     }
 
-    /// <summary>Field number for the "b" field.</summary>
-    public const int BFieldNumber = 2;
-    private double b_;
+    /// <summary>Field number for the "x" field.</summary>
+    public const int XFieldNumber = 2;
+    private float x_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public double B {
-      get { return b_; }
+    public float X {
+      get { return x_; }
       set {
-        b_ = value;
+        x_ = value;
       }
     }
 
-    /// <summary>Field number for the "c" field.</summary>
-    public const int CFieldNumber = 3;
-    private double c_;
+    /// <summary>Field number for the "y" field.</summary>
+    public const int YFieldNumber = 3;
+    private float y_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public double C {
-      get { return c_; }
+    public float Y {
+      get { return y_; }
       set {
-        c_ = value;
+        y_ = value;
       }
     }
 
-    /// <summary>Field number for the "d" field.</summary>
-    public const int DFieldNumber = 4;
-    private double d_;
+    /// <summary>Field number for the "z" field.</summary>
+    public const int ZFieldNumber = 4;
+    private float z_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public double D {
-      get { return d_; }
+    public float Z {
+      get { return z_; }
       set {
-        d_ = value;
+        z_ = value;
       }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
-      return Equals(other as Quat);
+      return Equals(other as Vec4);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public bool Equals(Quat other) {
+    public bool Equals(Vec4 other) {
       if (ReferenceEquals(other, null)) {
         return false;
       }
       if (ReferenceEquals(other, this)) {
         return true;
       }
-      if (!pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.Equals(A, other.A)) return false;
-      if (!pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.Equals(B, other.B)) return false;
-      if (!pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.Equals(C, other.C)) return false;
-      if (!pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.Equals(D, other.D)) return false;
+      if (!pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.Equals(W, other.W)) return false;
+      if (!pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.Equals(X, other.X)) return false;
+      if (!pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.Equals(Y, other.Y)) return false;
+      if (!pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.Equals(Z, other.Z)) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -674,10 +674,10 @@ namespace AbyssCLI.ABI {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override int GetHashCode() {
       int hash = 1;
-      if (A != 0D) hash ^= pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.GetHashCode(A);
-      if (B != 0D) hash ^= pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.GetHashCode(B);
-      if (C != 0D) hash ^= pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.GetHashCode(C);
-      if (D != 0D) hash ^= pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.GetHashCode(D);
+      if (W != 0F) hash ^= pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.GetHashCode(W);
+      if (X != 0F) hash ^= pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.GetHashCode(X);
+      if (Y != 0F) hash ^= pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.GetHashCode(Y);
+      if (Z != 0F) hash ^= pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.GetHashCode(Z);
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -696,21 +696,21 @@ namespace AbyssCLI.ABI {
     #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       output.WriteRawMessage(this);
     #else
-      if (A != 0D) {
-        output.WriteRawTag(9);
-        output.WriteDouble(A);
+      if (W != 0F) {
+        output.WriteRawTag(13);
+        output.WriteFloat(W);
       }
-      if (B != 0D) {
-        output.WriteRawTag(17);
-        output.WriteDouble(B);
+      if (X != 0F) {
+        output.WriteRawTag(21);
+        output.WriteFloat(X);
       }
-      if (C != 0D) {
-        output.WriteRawTag(25);
-        output.WriteDouble(C);
+      if (Y != 0F) {
+        output.WriteRawTag(29);
+        output.WriteFloat(Y);
       }
-      if (D != 0D) {
-        output.WriteRawTag(33);
-        output.WriteDouble(D);
+      if (Z != 0F) {
+        output.WriteRawTag(37);
+        output.WriteFloat(Z);
       }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
@@ -722,21 +722,21 @@ namespace AbyssCLI.ABI {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
-      if (A != 0D) {
-        output.WriteRawTag(9);
-        output.WriteDouble(A);
+      if (W != 0F) {
+        output.WriteRawTag(13);
+        output.WriteFloat(W);
       }
-      if (B != 0D) {
-        output.WriteRawTag(17);
-        output.WriteDouble(B);
+      if (X != 0F) {
+        output.WriteRawTag(21);
+        output.WriteFloat(X);
       }
-      if (C != 0D) {
-        output.WriteRawTag(25);
-        output.WriteDouble(C);
+      if (Y != 0F) {
+        output.WriteRawTag(29);
+        output.WriteFloat(Y);
       }
-      if (D != 0D) {
-        output.WriteRawTag(33);
-        output.WriteDouble(D);
+      if (Z != 0F) {
+        output.WriteRawTag(37);
+        output.WriteFloat(Z);
       }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
@@ -748,17 +748,17 @@ namespace AbyssCLI.ABI {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public int CalculateSize() {
       int size = 0;
-      if (A != 0D) {
-        size += 1 + 8;
+      if (W != 0F) {
+        size += 1 + 4;
       }
-      if (B != 0D) {
-        size += 1 + 8;
+      if (X != 0F) {
+        size += 1 + 4;
       }
-      if (C != 0D) {
-        size += 1 + 8;
+      if (Y != 0F) {
+        size += 1 + 4;
       }
-      if (D != 0D) {
-        size += 1 + 8;
+      if (Z != 0F) {
+        size += 1 + 4;
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -768,21 +768,21 @@ namespace AbyssCLI.ABI {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public void MergeFrom(Quat other) {
+    public void MergeFrom(Vec4 other) {
       if (other == null) {
         return;
       }
-      if (other.A != 0D) {
-        A = other.A;
+      if (other.W != 0F) {
+        W = other.W;
       }
-      if (other.B != 0D) {
-        B = other.B;
+      if (other.X != 0F) {
+        X = other.X;
       }
-      if (other.C != 0D) {
-        C = other.C;
+      if (other.Y != 0F) {
+        Y = other.Y;
       }
-      if (other.D != 0D) {
-        D = other.D;
+      if (other.Z != 0F) {
+        Z = other.Z;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -803,20 +803,20 @@ namespace AbyssCLI.ABI {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
-          case 9: {
-            A = input.ReadDouble();
+          case 13: {
+            W = input.ReadFloat();
             break;
           }
-          case 17: {
-            B = input.ReadDouble();
+          case 21: {
+            X = input.ReadFloat();
             break;
           }
-          case 25: {
-            C = input.ReadDouble();
+          case 29: {
+            Y = input.ReadFloat();
             break;
           }
-          case 33: {
-            D = input.ReadDouble();
+          case 37: {
+            Z = input.ReadFloat();
             break;
           }
         }
@@ -838,20 +838,20 @@ namespace AbyssCLI.ABI {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
             break;
-          case 9: {
-            A = input.ReadDouble();
+          case 13: {
+            W = input.ReadFloat();
             break;
           }
-          case 17: {
-            B = input.ReadDouble();
+          case 21: {
+            X = input.ReadFloat();
             break;
           }
-          case 25: {
-            C = input.ReadDouble();
+          case 29: {
+            Y = input.ReadFloat();
             break;
           }
-          case 33: {
-            D = input.ReadDouble();
+          case 37: {
+            Z = input.ReadFloat();
             break;
           }
         }
@@ -915,8 +915,8 @@ namespace AbyssCLI.ABI {
         case ValOneofCase.Vec3:
           Vec3 = other.Vec3.Clone();
           break;
-        case ValOneofCase.Quat:
-          Quat = other.Quat.Clone();
+        case ValOneofCase.Vec4:
+          Vec4 = other.Vec4.Clone();
           break;
       }
 
@@ -1057,15 +1057,15 @@ namespace AbyssCLI.ABI {
       }
     }
 
-    /// <summary>Field number for the "quat" field.</summary>
-    public const int QuatFieldNumber = 7;
+    /// <summary>Field number for the "vec4" field.</summary>
+    public const int Vec4FieldNumber = 7;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public global::AbyssCLI.ABI.Quat Quat {
-      get { return valCase_ == ValOneofCase.Quat ? (global::AbyssCLI.ABI.Quat) val_ : null; }
+    public global::AbyssCLI.ABI.Vec4 Vec4 {
+      get { return valCase_ == ValOneofCase.Vec4 ? (global::AbyssCLI.ABI.Vec4) val_ : null; }
       set {
         val_ = value;
-        valCase_ = value == null ? ValOneofCase.None : ValOneofCase.Quat;
+        valCase_ = value == null ? ValOneofCase.None : ValOneofCase.Vec4;
       }
     }
 
@@ -1079,7 +1079,7 @@ namespace AbyssCLI.ABI {
       String = 4,
       Vec2 = 5,
       Vec3 = 6,
-      Quat = 7,
+      Vec4 = 7,
     }
     private ValOneofCase valCase_ = ValOneofCase.None;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1116,7 +1116,7 @@ namespace AbyssCLI.ABI {
       if (String != other.String) return false;
       if (!object.Equals(Vec2, other.Vec2)) return false;
       if (!object.Equals(Vec3, other.Vec3)) return false;
-      if (!object.Equals(Quat, other.Quat)) return false;
+      if (!object.Equals(Vec4, other.Vec4)) return false;
       if (ValCase != other.ValCase) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
@@ -1131,7 +1131,7 @@ namespace AbyssCLI.ABI {
       if (HasString) hash ^= String.GetHashCode();
       if (valCase_ == ValOneofCase.Vec2) hash ^= Vec2.GetHashCode();
       if (valCase_ == ValOneofCase.Vec3) hash ^= Vec3.GetHashCode();
-      if (valCase_ == ValOneofCase.Quat) hash ^= Quat.GetHashCode();
+      if (valCase_ == ValOneofCase.Vec4) hash ^= Vec4.GetHashCode();
       hash ^= (int) valCase_;
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
@@ -1175,9 +1175,9 @@ namespace AbyssCLI.ABI {
         output.WriteRawTag(50);
         output.WriteMessage(Vec3);
       }
-      if (valCase_ == ValOneofCase.Quat) {
+      if (valCase_ == ValOneofCase.Vec4) {
         output.WriteRawTag(58);
-        output.WriteMessage(Quat);
+        output.WriteMessage(Vec4);
       }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
@@ -1213,9 +1213,9 @@ namespace AbyssCLI.ABI {
         output.WriteRawTag(50);
         output.WriteMessage(Vec3);
       }
-      if (valCase_ == ValOneofCase.Quat) {
+      if (valCase_ == ValOneofCase.Vec4) {
         output.WriteRawTag(58);
-        output.WriteMessage(Quat);
+        output.WriteMessage(Vec4);
       }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
@@ -1245,8 +1245,8 @@ namespace AbyssCLI.ABI {
       if (valCase_ == ValOneofCase.Vec3) {
         size += 1 + pb::CodedOutputStream.ComputeMessageSize(Vec3);
       }
-      if (valCase_ == ValOneofCase.Quat) {
-        size += 1 + pb::CodedOutputStream.ComputeMessageSize(Quat);
+      if (valCase_ == ValOneofCase.Vec4) {
+        size += 1 + pb::CodedOutputStream.ComputeMessageSize(Vec4);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -1285,11 +1285,11 @@ namespace AbyssCLI.ABI {
           }
           Vec3.MergeFrom(other.Vec3);
           break;
-        case ValOneofCase.Quat:
-          if (Quat == null) {
-            Quat = new global::AbyssCLI.ABI.Quat();
+        case ValOneofCase.Vec4:
+          if (Vec4 == null) {
+            Vec4 = new global::AbyssCLI.ABI.Vec4();
           }
-          Quat.MergeFrom(other.Quat);
+          Vec4.MergeFrom(other.Vec4);
           break;
       }
 
@@ -1347,12 +1347,12 @@ namespace AbyssCLI.ABI {
             break;
           }
           case 58: {
-            global::AbyssCLI.ABI.Quat subBuilder = new global::AbyssCLI.ABI.Quat();
-            if (valCase_ == ValOneofCase.Quat) {
-              subBuilder.MergeFrom(Quat);
+            global::AbyssCLI.ABI.Vec4 subBuilder = new global::AbyssCLI.ABI.Vec4();
+            if (valCase_ == ValOneofCase.Vec4) {
+              subBuilder.MergeFrom(Vec4);
             }
             input.ReadMessage(subBuilder);
-            Quat = subBuilder;
+            Vec4 = subBuilder;
             break;
           }
         }
@@ -1409,12 +1409,12 @@ namespace AbyssCLI.ABI {
             break;
           }
           case 58: {
-            global::AbyssCLI.ABI.Quat subBuilder = new global::AbyssCLI.ABI.Quat();
-            if (valCase_ == ValOneofCase.Quat) {
-              subBuilder.MergeFrom(Quat);
+            global::AbyssCLI.ABI.Vec4 subBuilder = new global::AbyssCLI.ABI.Vec4();
+            if (valCase_ == ValOneofCase.Vec4) {
+              subBuilder.MergeFrom(Vec4);
             }
             input.ReadMessage(subBuilder);
-            Quat = subBuilder;
+            Vec4 = subBuilder;
             break;
           }
         }

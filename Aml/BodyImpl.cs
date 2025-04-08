@@ -4,12 +4,11 @@ namespace AbyssCLI.Aml
 {
     internal sealed class BodyImpl : AmlNode
     {
-        public BodyImpl(AmlNode context, XmlNode xml_node, vec3 body_position)
+        public BodyImpl(AmlNode context, XmlNode xml_node, float[] transform)
             : base(context)
         {
             _root_elem = RenderID.ElementId;
-
-            _body_position = xml_node.Attributes["pos"]!= null ? Aml.AmlValueParser.ParseVec3(xml_node.Attributes["pos"].Value) : body_position;
+            _transform = transform;
             foreach (XmlNode child in xml_node?.ChildNodes)
             {
                 Children.Add(child.Name switch
@@ -23,12 +22,20 @@ namespace AbyssCLI.Aml
         protected override Task ActivateSelfCallback(CancellationToken token)
         {
             RenderActionWriter.CreateElement(0, _root_elem);
-            RenderActionWriter.ElemSetPos(_root_elem, new ABI.Vec3
-            {
-                X = _body_position.x,
-                Y = _body_position.y,
-                Z = _body_position.z
-            });
+            RenderActionWriter.ElemSetPos(
+                _root_elem, 
+                new ABI.Vec3{
+                    X = _transform[0],
+                    Y = _transform[1],
+                    Z = _transform[2],
+                }, 
+                new ABI.Vec4
+                {
+                    W = _transform[3],
+                    X = _transform[4],
+                    Y = _transform[5],
+                    Z = _transform[6],
+                });
             return Task.CompletedTask;
         }
         protected override void DeceaseSelfCallback()
@@ -40,9 +47,8 @@ namespace AbyssCLI.Aml
             RenderActionWriter.DeleteElement(_root_elem);
         }
         public static string Tag => "body";
-        public vec3 Pos => _body_position;
 
         private readonly int _root_elem;
-        private readonly vec3 _body_position;
+        private readonly float[] _transform;
     }
 }

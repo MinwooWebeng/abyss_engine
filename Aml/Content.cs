@@ -5,9 +5,10 @@ using static AbyssCLI.AbyssLib;
 namespace AbyssCLI.Aml
 {
     internal class Content(AbyssLib.Host host, RenderActionWriter renderActionWriter, StreamWriter cerr,
-        AbyssURL URL, vec3 initial_position)
+        AbyssURL URL, float[] Transform)
     {
         public AbyssURL URL = URL;
+        public float[] Transform = Transform;
         public void Activate() => _documentImpl.Activate();
         public void Close() => _documentImpl.Close();
         public Task CloseAsync() => _documentImpl.CloseAsync();
@@ -17,6 +18,6 @@ namespace AbyssCLI.Aml
                 cerr,
                 new ResourceLoader(host, cerr, URL),
                 URL,
-                initial_position);
+                Transform);
     }
 }

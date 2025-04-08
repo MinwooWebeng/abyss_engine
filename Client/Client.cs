@@ -131,7 +131,7 @@ namespace AbyssCLI.Client
                 return;
             }
 
-            _current_world.ShareObject(content_url);
+            _current_world.ShareObject(content_url, [args.Pos.X, args.Pos.Y, args.Pos.Z, args.Rot.W, args.Rot.X, args.Rot.Y, args.Rot.Z]);
         }
         private UIAction ReadProtoMessage()
         {

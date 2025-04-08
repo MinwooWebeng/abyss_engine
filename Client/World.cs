@@ -16,13 +16,14 @@ namespace AbyssCLI.Client
         private readonly object _lock = new();
         private readonly Thread _world_th;
 
+        private static readonly float[] _defaultTransform = [0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f];
         public World(AbyssLib.Host host, AbyssLib.World world, RenderActionWriter renderActionWriter, StreamWriter cerr, AbyssURL URL)
         {
             _host = host;
             _world = world;
             _renderActionWriter = renderActionWriter;
             _cerr = cerr;
-            _environment = new(host, renderActionWriter, cerr, URL, new vec3());
+            _environment = new(host, renderActionWriter, cerr, URL, _defaultTransform);
             _environment.Activate();
 
             _world_th = new Thread(() =>
@@ -54,10 +55,10 @@ namespace AbyssCLI.Client
             });
             _world_th.Start();
         }
-        public Guid ShareObject(AbyssURL url)
+        public Guid ShareObject(AbyssURL url, float[] transform)
         {
             var guid = Guid.NewGuid();
-            var content = new Aml.Content(_host, _renderActionWriter, _cerr, url, vec3.zero);
+            var content = new Aml.Content(_host, _renderActionWriter, _cerr, url, transform);
             content.Activate();
 
             lock (_lock)
@@ -65,7 +66,7 @@ namespace AbyssCLI.Client
                 _local_contents[guid] = content;
                 foreach (var entry in _members)
                 {
-                    entry.Value.Item1.AppendObjects([Tuple.Create(guid, url.Raw)]);
+                    entry.Value.Item1.AppendObjects([Tuple.Create(guid, url.Raw, transform)]);
                 }
             }
             return guid;
@@ -122,7 +123,7 @@ namespace AbyssCLI.Client
                     return;
                 }
                 member.AppendObjects(_local_contents
-                    .Select(kvp => Tuple.Create(kvp.Key, kvp.Value.URL.Raw))
+                    .Select(kvp => Tuple.Create(kvp.Key, kvp.Value.URL.Raw, kvp.Value.Transform))
                     .ToArray());
             }
         }
@@ -150,7 +151,7 @@ namespace AbyssCLI.Client
                 
                 foreach (var obj in parsed_objects)
                 {
-                    var content = new Aml.Content(_host, _renderActionWriter, _cerr, obj.Item2, vec3.zero);
+                    var content = new Aml.Content(_host, _renderActionWriter, _cerr, obj.Item2, _defaultTransform);
                     if (!member.Item2.TryAdd(obj.Item1, content))
                     {
                         _cerr.WriteLine("uid collision of objects appended from peer");

@@ -110,7 +110,7 @@
                 Console.WriteLine("joined(1)!");
 
                 var obj_id = Guid.NewGuid();
-                mem.AppendObjects([Tuple.Create(obj_id, "thats.com/carrot.aml")]);
+                mem.AppendObjects([Tuple.Create(obj_id, "thats.com/carrot.aml", new float[] { 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f })]);
                 Console.WriteLine("Object appended!");
 
                 Thread.Sleep(500);

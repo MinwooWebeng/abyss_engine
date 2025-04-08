@@ -32,6 +32,7 @@ message RenderAction {
 	message ElemSetPos {
 		int32 element_id = 1;
 		Vec3 pos = 2;
+		Vec4 rot = 3;
 	}
 
 	//components

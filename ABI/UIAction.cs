@@ -24,23 +24,24 @@ namespace AbyssCLI.ABI {
     static UIActionReflection() {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
-            "Cg5VSUFjdGlvbi5wcm90bxoQY29tbW9udHlwZS5wcm90byLoAgoIVUlBY3Rp",
+            "Cg5VSUFjdGlvbi5wcm90bxoQY29tbW9udHlwZS5wcm90byKQAwoIVUlBY3Rp",
             "b24SHgoEaW5pdBgBIAEoCzIOLlVJQWN0aW9uLkluaXRIABIeCgRraWxsGAIg",
             "ASgLMg4uVUlBY3Rpb24uS2lsbEgAEikKCm1vdmVfd29ybGQYAyABKAsyEy5V",
             "SUFjdGlvbi5Nb3ZlV29ybGRIABIvCg1zaGFyZV9jb250ZW50GAQgASgLMhYu",
             "VUlBY3Rpb24uU2hhcmVDb250ZW50SAASLQoMY29ubmVjdF9wZWVyGAogASgL",
             "MhUuVUlBY3Rpb24uQ29ubmVjdFBlZXJIABoYCgRJbml0EhAKCHJvb3Rfa2V5",
             "GAEgASgMGhQKBEtpbGwSDAoEY29kZRgBIAEoBRoeCglNb3ZlV29ybGQSEQoJ",
-            "d29ybGRfdXJsGAEgASgJGhsKDFNoYXJlQ29udGVudBILCgN1cmwYAiABKAka",
-            "GwoLQ29ubmVjdFBlZXISDAoEYXVybBgBIAEoCUIHCgVpbm5lckIPqgIMQWJ5",
-            "c3NDTEkuQUJJYgZwcm90bzM="));
+            "d29ybGRfdXJsGAEgASgJGkMKDFNoYXJlQ29udGVudBILCgN1cmwYAiABKAkS",
+            "EgoDcG9zGAMgASgLMgUuVmVjMxISCgNyb3QYBCABKAsyBS5WZWM0GhsKC0Nv",
+            "bm5lY3RQZWVyEgwKBGF1cmwYASABKAlCBwoFaW5uZXJCD6oCDEFieXNzQ0xJ",
+            "LkFCSWIGcHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::AbyssCLI.ABI.CommontypeReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
             new pbr::GeneratedClrTypeInfo(typeof(global::AbyssCLI.ABI.UIAction), global::AbyssCLI.ABI.UIAction.Parser, new[]{ "Init", "Kill", "MoveWorld", "ShareContent", "ConnectPeer" }, new[]{ "Inner" }, null, null, new pbr::GeneratedClrTypeInfo[] { new pbr::GeneratedClrTypeInfo(typeof(global::AbyssCLI.ABI.UIAction.Types.Init), global::AbyssCLI.ABI.UIAction.Types.Init.Parser, new[]{ "RootKey" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::AbyssCLI.ABI.UIAction.Types.Kill), global::AbyssCLI.ABI.UIAction.Types.Kill.Parser, new[]{ "Code" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::AbyssCLI.ABI.UIAction.Types.MoveWorld), global::AbyssCLI.ABI.UIAction.Types.MoveWorld.Parser, new[]{ "WorldUrl" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::AbyssCLI.ABI.UIAction.Types.ShareContent), global::AbyssCLI.ABI.UIAction.Types.ShareContent.Parser, new[]{ "Url" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::AbyssCLI.ABI.UIAction.Types.ShareContent), global::AbyssCLI.ABI.UIAction.Types.ShareContent.Parser, new[]{ "Url", "Pos", "Rot" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::AbyssCLI.ABI.UIAction.Types.ConnectPeer), global::AbyssCLI.ABI.UIAction.Types.ConnectPeer.Parser, new[]{ "Aurl" }, null, null, null, null)})
           }));
     }
@@ -1137,6 +1138,8 @@ namespace AbyssCLI.ABI {
         [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public ShareContent(ShareContent other) : this() {
           url_ = other.url_;
+          pos_ = other.pos_ != null ? other.pos_.Clone() : null;
+          rot_ = other.rot_ != null ? other.rot_.Clone() : null;
           _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
         }
 
@@ -1158,6 +1161,30 @@ namespace AbyssCLI.ABI {
           }
         }
 
+        /// <summary>Field number for the "pos" field.</summary>
+        public const int PosFieldNumber = 3;
+        private global::AbyssCLI.ABI.Vec3 pos_;
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+        public global::AbyssCLI.ABI.Vec3 Pos {
+          get { return pos_; }
+          set {
+            pos_ = value;
+          }
+        }
+
+        /// <summary>Field number for the "rot" field.</summary>
+        public const int RotFieldNumber = 4;
+        private global::AbyssCLI.ABI.Vec4 rot_;
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+        public global::AbyssCLI.ABI.Vec4 Rot {
+          get { return rot_; }
+          set {
+            rot_ = value;
+          }
+        }
+
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
         [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public override bool Equals(object other) {
@@ -1174,6 +1201,8 @@ namespace AbyssCLI.ABI {
             return true;
           }
           if (Url != other.Url) return false;
+          if (!object.Equals(Pos, other.Pos)) return false;
+          if (!object.Equals(Rot, other.Rot)) return false;
           return Equals(_unknownFields, other._unknownFields);
         }
 
@@ -1182,6 +1211,8 @@ namespace AbyssCLI.ABI {
         public override int GetHashCode() {
           int hash = 1;
           if (Url.Length != 0) hash ^= Url.GetHashCode();
+          if (pos_ != null) hash ^= Pos.GetHashCode();
+          if (rot_ != null) hash ^= Rot.GetHashCode();
           if (_unknownFields != null) {
             hash ^= _unknownFields.GetHashCode();
           }
@@ -1204,6 +1235,14 @@ namespace AbyssCLI.ABI {
             output.WriteRawTag(18);
             output.WriteString(Url);
           }
+          if (pos_ != null) {
+            output.WriteRawTag(26);
+            output.WriteMessage(Pos);
+          }
+          if (rot_ != null) {
+            output.WriteRawTag(34);
+            output.WriteMessage(Rot);
+          }
           if (_unknownFields != null) {
             _unknownFields.WriteTo(output);
           }
@@ -1218,6 +1257,14 @@ namespace AbyssCLI.ABI {
             output.WriteRawTag(18);
             output.WriteString(Url);
           }
+          if (pos_ != null) {
+            output.WriteRawTag(26);
+            output.WriteMessage(Pos);
+          }
+          if (rot_ != null) {
+            output.WriteRawTag(34);
+            output.WriteMessage(Rot);
+          }
           if (_unknownFields != null) {
             _unknownFields.WriteTo(ref output);
           }
@@ -1230,6 +1277,12 @@ namespace AbyssCLI.ABI {
           int size = 0;
           if (Url.Length != 0) {
             size += 1 + pb::CodedOutputStream.ComputeStringSize(Url);
+          }
+          if (pos_ != null) {
+            size += 1 + pb::CodedOutputStream.ComputeMessageSize(Pos);
+          }
+          if (rot_ != null) {
+            size += 1 + pb::CodedOutputStream.ComputeMessageSize(Rot);
           }
           if (_unknownFields != null) {
             size += _unknownFields.CalculateSize();
@@ -1245,6 +1298,18 @@ namespace AbyssCLI.ABI {
           }
           if (other.Url.Length != 0) {
             Url = other.Url;
+          }
+          if (other.pos_ != null) {
+            if (pos_ == null) {
+              Pos = new global::AbyssCLI.ABI.Vec3();
+            }
+            Pos.MergeFrom(other.Pos);
+          }
+          if (other.rot_ != null) {
+            if (rot_ == null) {
+              Rot = new global::AbyssCLI.ABI.Vec4();
+            }
+            Rot.MergeFrom(other.Rot);
           }
           _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
         }
@@ -1269,6 +1334,20 @@ namespace AbyssCLI.ABI {
                 Url = input.ReadString();
                 break;
               }
+              case 26: {
+                if (pos_ == null) {
+                  Pos = new global::AbyssCLI.ABI.Vec3();
+                }
+                input.ReadMessage(Pos);
+                break;
+              }
+              case 34: {
+                if (rot_ == null) {
+                  Rot = new global::AbyssCLI.ABI.Vec4();
+                }
+                input.ReadMessage(Rot);
+                break;
+              }
             }
           }
         #endif
@@ -1290,6 +1369,20 @@ namespace AbyssCLI.ABI {
                 break;
               case 18: {
                 Url = input.ReadString();
+                break;
+              }
+              case 26: {
+                if (pos_ == null) {
+                  Pos = new global::AbyssCLI.ABI.Vec3();
+                }
+                input.ReadMessage(Pos);
+                break;
+              }
+              case 34: {
+                if (rot_ == null) {
+                  Rot = new global::AbyssCLI.ABI.Vec4();
+                }
+                input.ReadMessage(Rot);
                 break;
               }
             }

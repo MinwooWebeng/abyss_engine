@@ -26,7 +26,7 @@ namespace AbyssCLI.ABI {
           string.Concat(
             "ChJSZW5kZXJBY3Rpb24ucHJvdG8aCm1pbWUucHJvdG8aEGNvbW1vbnR5cGUu",
             "cHJvdG8iSAoERmlsZRITCgRtaW1lGAEgASgOMgUuTUlNRRIRCgltbWFwX25h",
-            "bWUYAiABKAkSCwoDb2ZmGAMgASgNEgsKA2xlbhgEIAEoDSLdEgoMUmVuZGVy",
+            "bWUYAiABKAkSCwoDb2ZmGAMgASgNEgsKA2xlbhgEIAEoDSLxEgoMUmVuZGVy",
             "QWN0aW9uEjUKDmNyZWF0ZV9lbGVtZW50GAEgASgLMhsuUmVuZGVyQWN0aW9u",
             "LkNyZWF0ZUVsZW1lbnRIABIxCgxtb3ZlX2VsZW1lbnQYAiABKAsyGS5SZW5k",
             "ZXJBY3Rpb24uTW92ZUVsZW1lbnRIABI1Cg5kZWxldGVfZWxlbWVudBgDIAEo",
@@ -56,31 +56,32 @@ namespace AbyssCLI.ABI {
             "dGlvbi5JbmZvQ29udGVudERlbGV0ZWRIABo2Cg1DcmVhdGVFbGVtZW50EhEK",
             "CXBhcmVudF9pZBgBIAEoBRISCgplbGVtZW50X2lkGAIgASgFGjgKC01vdmVF",
             "bGVtZW50EhIKCmVsZW1lbnRfaWQYASABKAUSFQoNbmV3X3BhcmVudF9pZBgC",
-            "IAEoBRojCg1EZWxldGVFbGVtZW50EhIKCmVsZW1lbnRfaWQYASABKAUaNAoK",
+            "IAEoBRojCg1EZWxldGVFbGVtZW50EhIKCmVsZW1lbnRfaWQYASABKAUaSAoK",
             "RWxlbVNldFBvcxISCgplbGVtZW50X2lkGAEgASgFEhIKA3BvcxgCIAEoCzIF",
-            "LlZlYzMaNAoLQ3JlYXRlSW1hZ2USEAoIaW1hZ2VfaWQYASABKAUSEwoEZmls",
-            "ZRgCIAEoCzIFLkZpbGUaHwoLRGVsZXRlSW1hZ2USEAoIaW1hZ2VfaWQYASAB",
-            "KAUaOwoPQ3JlYXRlTWF0ZXJpYWxWEhMKC21hdGVyaWFsX2lkGAEgASgFEhMK",
-            "C3NoYWRlcl9uYW1lGAIgASgJGjsKD0NyZWF0ZU1hdGVyaWFsRhITCgttYXRl",
-            "cmlhbF9pZBgBIAEoBRITCgRmaWxlGAIgASgLMgUuRmlsZRpUChFNYXRlcmlh",
-            "bFNldFBhcmFtVhITCgttYXRlcmlhbF9pZBgBIAEoBRISCgpwYXJhbV9uYW1l",
-            "GAIgASgJEhYKBXBhcmFtGAMgASgLMgcuQW55VmFsGlIKEU1hdGVyaWFsU2V0",
-            "UGFyYW1DEhMKC21hdGVyaWFsX2lkGAEgASgFEhIKCnBhcmFtX25hbWUYAiAB",
-            "KAkSFAoMY29tcG9uZW50X2lkGAMgASgFGiUKDkRlbGV0ZU1hdGVyaWFsEhMK",
-            "C21hdGVyaWFsX2lkGAEgASgFGjgKEENyZWF0ZVN0YXRpY01lc2gSDwoHbWVz",
-            "aF9pZBgBIAEoBRITCgRmaWxlGAIgASgLMgUuRmlsZRpUChVTdGF0aWNNZXNo",
-            "U2V0TWF0ZXJpYWwSDwoHbWVzaF9pZBgBIAEoBRIVCg1tYXRlcmlhbF9zbG90",
-            "GAIgASgFEhMKC21hdGVyaWFsX2lkGAMgASgFGjsKFEVsZW1BdHRhY2hTdGF0",
-            "aWNNZXNoEhIKCmVsZW1lbnRfaWQYASABKAUSDwoHbWVzaF9pZBgCIAEoBRoj",
-            "ChBEZWxldGVTdGF0aWNNZXNoEg8KB21lc2hfaWQYASABKAUaPAoPQ3JlYXRl",
-            "QW5pbWF0aW9uEhQKDGFuaW1hdGlvbl9pZBgBIAEoBRITCgRmaWxlGAIgASgL",
-            "MgUuRmlsZRonCg9EZWxldGVBbmltYXRpb24SFAoMYW5pbWF0aW9uX2lkGAEg",
-            "ASgFGhkKCUxvY2FsSW5mbxIMCgRhdXJsGAEgASgJGmcKEUluZm9Db250ZW50",
-            "U2hhcmVkEhQKDGNvbnRlbnRfdXVpZBgBIAEoCRITCgtjb250ZW50X3VybBgC",
-            "IAEoCRITCgtzaGFyZXJfaGFzaBgDIAEoCRISCgp3b3JsZF91dWlkGAQgASgJ",
-            "GlMKEkluZm9Db250ZW50RGVsZXRlZBIUCgxjb250ZW50X3V1aWQYASABKAkS",
-            "EwoLc2hhcmVyX2hhc2gYAyABKAkSEgoKd29ybGRfdXVpZBgEIAEoCUIHCgVp",
-            "bm5lckIPqgIMQWJ5c3NDTEkuQUJJYgZwcm90bzM="));
+            "LlZlYzMSEgoDcm90GAMgASgLMgUuVmVjNBo0CgtDcmVhdGVJbWFnZRIQCghp",
+            "bWFnZV9pZBgBIAEoBRITCgRmaWxlGAIgASgLMgUuRmlsZRofCgtEZWxldGVJ",
+            "bWFnZRIQCghpbWFnZV9pZBgBIAEoBRo7Cg9DcmVhdGVNYXRlcmlhbFYSEwoL",
+            "bWF0ZXJpYWxfaWQYASABKAUSEwoLc2hhZGVyX25hbWUYAiABKAkaOwoPQ3Jl",
+            "YXRlTWF0ZXJpYWxGEhMKC21hdGVyaWFsX2lkGAEgASgFEhMKBGZpbGUYAiAB",
+            "KAsyBS5GaWxlGlQKEU1hdGVyaWFsU2V0UGFyYW1WEhMKC21hdGVyaWFsX2lk",
+            "GAEgASgFEhIKCnBhcmFtX25hbWUYAiABKAkSFgoFcGFyYW0YAyABKAsyBy5B",
+            "bnlWYWwaUgoRTWF0ZXJpYWxTZXRQYXJhbUMSEwoLbWF0ZXJpYWxfaWQYASAB",
+            "KAUSEgoKcGFyYW1fbmFtZRgCIAEoCRIUCgxjb21wb25lbnRfaWQYAyABKAUa",
+            "JQoORGVsZXRlTWF0ZXJpYWwSEwoLbWF0ZXJpYWxfaWQYASABKAUaOAoQQ3Jl",
+            "YXRlU3RhdGljTWVzaBIPCgdtZXNoX2lkGAEgASgFEhMKBGZpbGUYAiABKAsy",
+            "BS5GaWxlGlQKFVN0YXRpY01lc2hTZXRNYXRlcmlhbBIPCgdtZXNoX2lkGAEg",
+            "ASgFEhUKDW1hdGVyaWFsX3Nsb3QYAiABKAUSEwoLbWF0ZXJpYWxfaWQYAyAB",
+            "KAUaOwoURWxlbUF0dGFjaFN0YXRpY01lc2gSEgoKZWxlbWVudF9pZBgBIAEo",
+            "BRIPCgdtZXNoX2lkGAIgASgFGiMKEERlbGV0ZVN0YXRpY01lc2gSDwoHbWVz",
+            "aF9pZBgBIAEoBRo8Cg9DcmVhdGVBbmltYXRpb24SFAoMYW5pbWF0aW9uX2lk",
+            "GAEgASgFEhMKBGZpbGUYAiABKAsyBS5GaWxlGicKD0RlbGV0ZUFuaW1hdGlv",
+            "bhIUCgxhbmltYXRpb25faWQYASABKAUaGQoJTG9jYWxJbmZvEgwKBGF1cmwY",
+            "ASABKAkaZwoRSW5mb0NvbnRlbnRTaGFyZWQSFAoMY29udGVudF91dWlkGAEg",
+            "ASgJEhMKC2NvbnRlbnRfdXJsGAIgASgJEhMKC3NoYXJlcl9oYXNoGAMgASgJ",
+            "EhIKCndvcmxkX3V1aWQYBCABKAkaUwoSSW5mb0NvbnRlbnREZWxldGVkEhQK",
+            "DGNvbnRlbnRfdXVpZBgBIAEoCRITCgtzaGFyZXJfaGFzaBgDIAEoCRISCgp3",
+            "b3JsZF91dWlkGAQgASgJQgcKBWlubmVyQg+qAgxBYnlzc0NMSS5BQkliBnBy",
+            "b3RvMw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::MimeReflection.Descriptor, global::AbyssCLI.ABI.CommontypeReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
@@ -88,7 +89,7 @@ namespace AbyssCLI.ABI {
             new pbr::GeneratedClrTypeInfo(typeof(global::AbyssCLI.ABI.RenderAction), global::AbyssCLI.ABI.RenderAction.Parser, new[]{ "CreateElement", "MoveElement", "DeleteElement", "ElemSetPos", "CreateImage", "DeleteImage", "CreateMaterialV", "CreateMaterialF", "MaterialSetParamV", "MaterialSetParamC", "DeleteMaterial", "CreateStaticMesh", "StaticMeshSetMaterial", "ElemAttachStaticMesh", "DeleteStaticMesh", "CreateAnimation", "DeleteAnimation", "LocalInfo", "InfoContentShared", "InfoContentDeleted" }, new[]{ "Inner" }, null, null, new pbr::GeneratedClrTypeInfo[] { new pbr::GeneratedClrTypeInfo(typeof(global::AbyssCLI.ABI.RenderAction.Types.CreateElement), global::AbyssCLI.ABI.RenderAction.Types.CreateElement.Parser, new[]{ "ParentId", "ElementId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::AbyssCLI.ABI.RenderAction.Types.MoveElement), global::AbyssCLI.ABI.RenderAction.Types.MoveElement.Parser, new[]{ "ElementId", "NewParentId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::AbyssCLI.ABI.RenderAction.Types.DeleteElement), global::AbyssCLI.ABI.RenderAction.Types.DeleteElement.Parser, new[]{ "ElementId" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::AbyssCLI.ABI.RenderAction.Types.ElemSetPos), global::AbyssCLI.ABI.RenderAction.Types.ElemSetPos.Parser, new[]{ "ElementId", "Pos" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::AbyssCLI.ABI.RenderAction.Types.ElemSetPos), global::AbyssCLI.ABI.RenderAction.Types.ElemSetPos.Parser, new[]{ "ElementId", "Pos", "Rot" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::AbyssCLI.ABI.RenderAction.Types.CreateImage), global::AbyssCLI.ABI.RenderAction.Types.CreateImage.Parser, new[]{ "ImageId", "File" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::AbyssCLI.ABI.RenderAction.Types.DeleteImage), global::AbyssCLI.ABI.RenderAction.Types.DeleteImage.Parser, new[]{ "ImageId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::AbyssCLI.ABI.RenderAction.Types.CreateMaterialV), global::AbyssCLI.ABI.RenderAction.Types.CreateMaterialV.Parser, new[]{ "MaterialId", "ShaderName" }, null, null, null, null),
@@ -2383,6 +2384,7 @@ namespace AbyssCLI.ABI {
         public ElemSetPos(ElemSetPos other) : this() {
           elementId_ = other.elementId_;
           pos_ = other.pos_ != null ? other.pos_.Clone() : null;
+          rot_ = other.rot_ != null ? other.rot_.Clone() : null;
           _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
         }
 
@@ -2416,6 +2418,18 @@ namespace AbyssCLI.ABI {
           }
         }
 
+        /// <summary>Field number for the "rot" field.</summary>
+        public const int RotFieldNumber = 3;
+        private global::AbyssCLI.ABI.Vec4 rot_;
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+        public global::AbyssCLI.ABI.Vec4 Rot {
+          get { return rot_; }
+          set {
+            rot_ = value;
+          }
+        }
+
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
         [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public override bool Equals(object other) {
@@ -2433,6 +2447,7 @@ namespace AbyssCLI.ABI {
           }
           if (ElementId != other.ElementId) return false;
           if (!object.Equals(Pos, other.Pos)) return false;
+          if (!object.Equals(Rot, other.Rot)) return false;
           return Equals(_unknownFields, other._unknownFields);
         }
 
@@ -2442,6 +2457,7 @@ namespace AbyssCLI.ABI {
           int hash = 1;
           if (ElementId != 0) hash ^= ElementId.GetHashCode();
           if (pos_ != null) hash ^= Pos.GetHashCode();
+          if (rot_ != null) hash ^= Rot.GetHashCode();
           if (_unknownFields != null) {
             hash ^= _unknownFields.GetHashCode();
           }
@@ -2468,6 +2484,10 @@ namespace AbyssCLI.ABI {
             output.WriteRawTag(18);
             output.WriteMessage(Pos);
           }
+          if (rot_ != null) {
+            output.WriteRawTag(26);
+            output.WriteMessage(Rot);
+          }
           if (_unknownFields != null) {
             _unknownFields.WriteTo(output);
           }
@@ -2486,6 +2506,10 @@ namespace AbyssCLI.ABI {
             output.WriteRawTag(18);
             output.WriteMessage(Pos);
           }
+          if (rot_ != null) {
+            output.WriteRawTag(26);
+            output.WriteMessage(Rot);
+          }
           if (_unknownFields != null) {
             _unknownFields.WriteTo(ref output);
           }
@@ -2501,6 +2525,9 @@ namespace AbyssCLI.ABI {
           }
           if (pos_ != null) {
             size += 1 + pb::CodedOutputStream.ComputeMessageSize(Pos);
+          }
+          if (rot_ != null) {
+            size += 1 + pb::CodedOutputStream.ComputeMessageSize(Rot);
           }
           if (_unknownFields != null) {
             size += _unknownFields.CalculateSize();
@@ -2522,6 +2549,12 @@ namespace AbyssCLI.ABI {
               Pos = new global::AbyssCLI.ABI.Vec3();
             }
             Pos.MergeFrom(other.Pos);
+          }
+          if (other.rot_ != null) {
+            if (rot_ == null) {
+              Rot = new global::AbyssCLI.ABI.Vec4();
+            }
+            Rot.MergeFrom(other.Rot);
           }
           _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
         }
@@ -2553,6 +2586,13 @@ namespace AbyssCLI.ABI {
                 input.ReadMessage(Pos);
                 break;
               }
+              case 26: {
+                if (rot_ == null) {
+                  Rot = new global::AbyssCLI.ABI.Vec4();
+                }
+                input.ReadMessage(Rot);
+                break;
+              }
             }
           }
         #endif
@@ -2581,6 +2621,13 @@ namespace AbyssCLI.ABI {
                   Pos = new global::AbyssCLI.ABI.Vec3();
                 }
                 input.ReadMessage(Pos);
+                break;
+              }
+              case 26: {
+                if (rot_ == null) {
+                  Rot = new global::AbyssCLI.ABI.Vec4();
+                }
+                input.ReadMessage(Rot);
                 break;
               }
             }
