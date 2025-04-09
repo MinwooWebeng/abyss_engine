@@ -7,14 +7,14 @@ namespace AbyssCLI.Aml
     //TODO: add CORS protection before adding cookie.
     internal class ResourceLoader
     {
-        public ResourceLoader(AbyssLib.Host host, StreamWriter cerr, AbyssURL origin)
+        public ResourceLoader(AbyssLib.Host host, AbyssURL origin)
         {
             if (origin.Scheme == "abyst")
             {
                 var result = host.GetAbystClient(origin.Id);
                 if (result.Item2 != string.Empty)
                 {
-                    cerr.WriteLine("we failed to get abyst client: " + result.Item2);
+                    Client.Client.Cerr.WriteLine("we failed to get abyst client: " + result.Item2);
                 }
                 _abyst_client = result.Item1;
             }
@@ -22,13 +22,13 @@ namespace AbyssCLI.Aml
             {
                 _abyst_client = new AbyssLib.AbystClient(IntPtr.Zero);
             }
-            _cerr = cerr;
-            _origin = origin;
+            _mmf_path_prefix = "abyst_" + origin.Id[..8] + "_";
+            Origin = origin;
         }
+        public readonly AbyssURL Origin;
+
         private readonly AbyssLib.AbystClient _abyst_client;
-        private readonly StreamWriter _cerr;
-        private readonly AbyssURL _origin;
-        private readonly string _mmf_path_prefix = "abyst" + RanStr.RandomString(10); //for file sharing with rendering engine.
+        private readonly string _mmf_path_prefix; //for file sharing with rendering engine.
         private readonly HttpClient _http_client = new();
         private readonly Dictionary<string, WaiterGroup<FileResource>> _media_cache = []; //registered when resource is requested.
         public class FileResource
@@ -39,7 +39,7 @@ namespace AbyssCLI.Aml
         }
         public bool TryGetFileOrWaiter(string url_string, MIME MimeType, out FileResource resource, out Waiter<FileResource> waiter)
         {
-            if(!AbyssURLParser.TryParseFrom(url_string, _origin, out var url))
+            if(!AbyssURLParser.TryParseFrom(url_string, Origin, out var url))
             {
                 resource = new FileResource { IsValid = false };
                 waiter = null;
@@ -70,7 +70,7 @@ namespace AbyssCLI.Aml
         }
         public async Task<HttpResponseMessage> TryHttpRequestAsync(string url_string)
         {
-            if (!AbyssURLParser.TryParseFrom(url_string, _origin, out var url))
+            if (!AbyssURLParser.TryParseFrom(url_string, Origin, out var url))
             {
                 return new HttpResponseMessage(System.Net.HttpStatusCode.BadRequest);
             }
@@ -121,7 +121,7 @@ namespace AbyssCLI.Aml
             var response = await TryHttpRequestAsync(url);
             if (!response.IsSuccessStatusCode)
             {
-                _cerr.WriteLine("failed to load resource: " + response.StatusCode.ToString());
+                Client.Client.Cerr.WriteLine("failed to load resource(" + url.Raw + "): " + response.StatusCode.ToString());
                 dest.TryFinalizeValue(default);
                 return;
             }

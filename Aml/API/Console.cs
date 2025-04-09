@@ -3,9 +3,20 @@
     public class Console(StreamWriter target_stream)
     {
 #pragma warning disable IDE1006 //naming convention
-        public void log(string message)
+        public void log(object subject)
         {
-            target_stream.WriteLine(message);
+            switch (subject)
+            {
+                case int integer:
+                    target_stream.WriteLine(integer);
+                    break;
+                case string text:
+                    target_stream.WriteLine(text);
+                    break;
+                default:
+                    target_stream.WriteLine(subject.ToString());
+                    break;
+            }
         }
 #pragma warning restore IDE1006
 

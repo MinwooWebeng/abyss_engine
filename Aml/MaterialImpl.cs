@@ -32,10 +32,10 @@ namespace AbyssCLI.Aml
         protected override Task ActivateSelfCallback(CancellationToken token)
         {
             var component_id = RenderID.ComponentId;
-            RenderActionWriter.CreateMaterialV(component_id, Shader);
+            Client.Client.RenderWriter.CreateMaterialV(component_id, Shader);
             if (!MaterialWaiterGroup.TryFinalizeValue(component_id))
             {
-                RenderActionWriter.DeleteMaterial(component_id);
+                Client.Client.RenderWriter.DeleteMaterial(component_id);
                 return Task.CompletedTask;
             }
 
@@ -47,7 +47,7 @@ namespace AbyssCLI.Aml
             if (mesh_id == 0) //target mesh is not prepared
                 return Task.CompletedTask;
 
-            RenderActionWriter.StaticMeshSetMaterial(mesh_id, Pos, component_id);
+            Client.Client.RenderWriter.StaticMeshSetMaterial(mesh_id, Pos, component_id);
             return Task.CompletedTask;
         }
         protected override void DeceaseSelfCallback()
@@ -59,7 +59,7 @@ namespace AbyssCLI.Aml
         {
             var component_id = MaterialWaiterGroup.GetValue();
             if (component_id != 0)
-                RenderActionWriter.DeleteMaterial(component_id);
+                Client.Client.RenderWriter.DeleteMaterial(component_id);
         }
         public static string Tag => "material";
         public string Id { get; }

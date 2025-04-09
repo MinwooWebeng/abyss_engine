@@ -28,13 +28,13 @@ namespace AbyssCLI.Aml
         }
         protected override Task ActivateSelfCallback(CancellationToken token)
         {
-            RenderActionWriter.CreateElement(_render_parent, _render_elem);
-            RenderActionWriter.ElemSetPos(_render_elem, new ABI.Vec3() { X = Pos.x, Y = Pos.y, Z = Pos.z }, new ABI.Vec4 { W = Rot.w, X = Rot.x, Y = Rot.y, Z = Rot.z});
+            Client.Client.RenderWriter.CreateElement(_render_parent, _render_elem);
+            Client.Client.RenderWriter.ElemSetPos(_render_elem, new ABI.Vec3() { X = Pos.x, Y = Pos.y, Z = Pos.z }, new ABI.Vec4 { W = Rot.w, X = Rot.x, Y = Rot.y, Z = Rot.z});
             return Task.CompletedTask;
         }
         protected override void DeceaseSelfCallback()
         {
-            RenderActionWriter.MoveElement(_render_elem, -1);
+            Client.Client.RenderWriter.MoveElement(_render_elem, -1);
             if (Id != null)
             {
                 ElementDictionary.Remove(Id, out _);
@@ -42,7 +42,7 @@ namespace AbyssCLI.Aml
         }
         protected override void CleanupSelfCallback()
         {
-            RenderActionWriter.DeleteElement(_render_elem);
+            Client.Client.RenderWriter.DeleteElement(_render_elem);
         }
 
         public static string Tag => "o";

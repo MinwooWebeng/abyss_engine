@@ -1,5 +1,4 @@
-﻿using AbyssCLI.ABI;
-using AbyssCLI.Tool;
+﻿using AbyssCLI.Tool;
 using System.Text;
 using System.Xml;
 
@@ -7,9 +6,8 @@ namespace AbyssCLI.Aml
 {
     internal sealed class DocumentImpl(Contexted root,
         AbyssLib.Host host,
-        RenderActionWriter renderActionWriter, StreamWriter cerr,
         ResourceLoader resourceLoader, AbyssURL url, float[] transform)
-        : AmlNode(root, renderActionWriter, cerr, resourceLoader)
+        : AmlNode(root, resourceLoader)
     {
         protected override async Task ActivateSelfCallback(CancellationToken token)
         {

@@ -4,7 +4,6 @@ class Program
 {
     public static void Main()
     {
-        Client client = new();
-        client.Run();
+        Client.Run();
     }
 }

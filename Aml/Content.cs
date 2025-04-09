@@ -1,11 +1,8 @@
-﻿using AbyssCLI.ABI;
-using AbyssCLI.Tool;
-using static AbyssCLI.AbyssLib;
+﻿using AbyssCLI.Tool;
 
 namespace AbyssCLI.Aml
 {
-    internal class Content(AbyssLib.Host host, RenderActionWriter renderActionWriter, StreamWriter cerr,
-        AbyssURL URL, float[] Transform)
+    internal class Content(AbyssLib.Host host, AbyssURL URL, float[] Transform)
     {
         public AbyssURL URL = URL;
         public float[] Transform = Transform;
@@ -15,9 +12,7 @@ namespace AbyssCLI.Aml
         private readonly DocumentImpl _documentImpl = new(
                 new Tool.Contexted(),
                 host,
-                renderActionWriter,
-                cerr,
-                new ResourceLoader(host, cerr, URL),
+                new ResourceLoader(host, URL),
                 URL,
                 Transform);
     }

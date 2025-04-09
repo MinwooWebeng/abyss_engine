@@ -1,16 +1,13 @@
-﻿using AbyssCLI.ABI;
-using AbyssCLI.Tool;
+﻿using AbyssCLI.Tool;
 using System.Collections.Concurrent;
 
 namespace AbyssCLI.Aml
 {
     internal class AmlNode : Contexted
     {
-        protected AmlNode(Contexted root, RenderActionWriter renderActionWriter, StreamWriter cerr, ResourceLoader resourceLoader)
+        protected AmlNode(Contexted root, ResourceLoader resourceLoader)
             : base(root)
         {
-            RenderActionWriter = renderActionWriter;
-            ErrorStream = cerr;
             ResourceLoader = resourceLoader;
 
             Children = [];
@@ -19,8 +16,6 @@ namespace AbyssCLI.Aml
         protected AmlNode(AmlNode base_context)
             : base(base_context)
         {
-            RenderActionWriter = base_context.RenderActionWriter;
-            ErrorStream = base_context.ErrorStream;
             ResourceLoader = base_context.ResourceLoader;
 
             Parent = base_context;
@@ -41,7 +36,7 @@ namespace AbyssCLI.Aml
         protected sealed override void ErrorCallback(Exception e)
         {
             if (e is not OperationCanceledException)
-                ErrorStream.WriteLine(e.Message + ": " + e.StackTrace);
+                Client.Client.Cerr.WriteLine(e.Message + ": " + e.StackTrace);
         }
         protected sealed override void DeceaseCallback()
         {
@@ -74,8 +69,6 @@ namespace AbyssCLI.Aml
 
         //TODO: 
         public readonly ResourceLoader ResourceLoader;
-        public readonly StreamWriter ErrorStream;
-        public readonly RenderActionWriter RenderActionWriter;
         public readonly ConcurrentDictionary<string, AmlNode> ElementDictionary;
 
         protected readonly AmlNode Parent;

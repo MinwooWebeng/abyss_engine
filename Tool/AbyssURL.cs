@@ -45,17 +45,44 @@ namespace AbyssCLI.Tool
                 }
             }
         }
+        private static string CalculateRelativePath(string basePath, string targetPath)
+        {
+            // Step 1: Check if the target path starts with "/"
+            if (targetPath.StartsWith('/'))
+                return targetPath;
+
+            // Step 2: Check if the target path starts with "./"
+            if (targetPath.StartsWith("./"))
+                return CalculateRelativePath(basePath, targetPath[2..]);
+
+            // Step 3: Check if the target path starts with "../"
+            if (targetPath.StartsWith("../"))
+            {
+                // Remove the last part of the base path
+                int lastSlashIndex = basePath.LastIndexOf('/');
+                if (lastSlashIndex == 0)
+                    throw new InvalidOperationException("Base path has no parent directory.");
+
+                return CalculateRelativePath(basePath[..lastSlashIndex], targetPath[3..]);
+            }
+
+            return basePath[..(basePath.LastIndexOf('/') + 1)] + targetPath;
+        }
         public static bool TryParseFrom(string _input, AbyssURL origin, out AbyssURL result)
         {
             string input = _input.Trim();
             if (!input.Contains(':'))
             {
-                if (origin.Scheme != "abyss" && origin.Scheme != "abyst")
+                if (origin.Scheme == "abyss")
                 {
-                    result = default;
-                    return false;
+                    return AbyssURLParser.TryParse("abyst:" + origin.Id + "/" + input.Trim().TrimStart('/'), out result);
                 }
-                return AbyssURLParser.TryParse("abyst:" + origin.Id + "/" + input.Trim().TrimStart('/'), out result);
+                else if (origin.Scheme == "abyst")
+                {
+                    return AbyssURLParser.TryParse("abyst:" + origin.Id + CalculateRelativePath('/' + origin.Path, input), out result);
+                }
+                result = default;
+                return false;
             }
 
             return AbyssURLParser.TryParse(input, out result);

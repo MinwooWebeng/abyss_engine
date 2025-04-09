@@ -69,8 +69,8 @@ namespace AbyssCLI.Aml
                 return Task.CompletedTask;
 
             _component_id = RenderID.ComponentId;
-            RenderActionWriter.CreateImage(_component_id, _resource.ABIFileInfo);
-            RenderActionWriter.MaterialSetParamC(material_id, Role, _component_id);
+            Client.Client.RenderWriter.CreateImage(_component_id, _resource.ABIFileInfo);
+            Client.Client.RenderWriter.MaterialSetParamC(material_id, Role, _component_id);
             return Task.CompletedTask;
         }
         protected override void DeceaseSelfCallback()
@@ -80,7 +80,7 @@ namespace AbyssCLI.Aml
         protected override void CleanupSelfCallback()
         {
             if (_component_id != 0)
-                RenderActionWriter.DeleteImage(_component_id);
+                Client.Client.RenderWriter.DeleteImage(_component_id);
         }
         public static string Tag => "img";
         public string Id { get; }

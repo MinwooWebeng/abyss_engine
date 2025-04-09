@@ -1,14 +1,11 @@
-﻿using AbyssCLI.ABI;
-using AbyssCLI.Aml;
-using AbyssCLI.Tool;
+﻿using AbyssCLI.Tool;
 
 namespace AbyssCLI.Client
 {
-    internal class World
+    public class World
     {
         private readonly AbyssLib.Host _host;
         private readonly AbyssLib.World _world;
-        private readonly RenderActionWriter _renderActionWriter;
         private readonly StreamWriter _cerr;
         private readonly Aml.Content _environment;
         private readonly Dictionary<string, Tuple<AbyssLib.WorldMember, Dictionary<Guid, Aml.Content>>> _members = []; //peer hash - [uuid - content]
@@ -17,13 +14,11 @@ namespace AbyssCLI.Client
         private readonly Thread _world_th;
 
         private static readonly float[] _defaultTransform = [0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f];
-        public World(AbyssLib.Host host, AbyssLib.World world, RenderActionWriter renderActionWriter, StreamWriter cerr, AbyssURL URL)
+        public World(AbyssLib.Host host, AbyssLib.World world, AbyssURL URL)
         {
             _host = host;
             _world = world;
-            _renderActionWriter = renderActionWriter;
-            _cerr = cerr;
-            _environment = new(host, renderActionWriter, cerr, URL, _defaultTransform);
+            _environment = new(host, URL, _defaultTransform);
             _environment.Activate();
 
             _world_th = new Thread(() =>
@@ -58,7 +53,7 @@ namespace AbyssCLI.Client
         public Guid ShareObject(AbyssURL url, float[] transform)
         {
             var guid = Guid.NewGuid();
-            var content = new Aml.Content(_host, _renderActionWriter, _cerr, url, transform);
+            var content = new Aml.Content(_host, url, transform);
             content.Activate();
 
             lock (_lock)
@@ -151,7 +146,7 @@ namespace AbyssCLI.Client
                 
                 foreach (var obj in parsed_objects)
                 {
-                    var content = new Aml.Content(_host, _renderActionWriter, _cerr, obj.Item2, _defaultTransform);
+                    var content = new Aml.Content(_host, obj.Item2, _defaultTransform);
                     if (!member.Item2.TryAdd(obj.Item1, content))
                     {
                         _cerr.WriteLine("uid collision of objects appended from peer");

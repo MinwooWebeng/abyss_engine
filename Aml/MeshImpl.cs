@@ -52,13 +52,13 @@ namespace AbyssCLI.Aml
                         throw new Exception("failed to load " + Source + " in <mesh" + (Id == null ? "" : (":" + Id)) + ">");
 
                     var component_id = RenderID.ComponentId;
-                    RenderActionWriter.CreateStaticMesh(component_id, resource.ABIFileInfo);
+                    Client.Client.RenderWriter.CreateStaticMesh(component_id, resource.ABIFileInfo);
                     if (!MeshWaiterGroup.TryFinalizeValue(component_id))
                     { //decease called
-                        RenderActionWriter.DeleteStaticMesh(component_id);
+                        Client.Client.RenderWriter.DeleteStaticMesh(component_id);
                         return Task.CompletedTask;
                     }
-                    RenderActionWriter.ElemAttachStaticMesh(_render_parent, component_id);
+                    Client.Client.RenderWriter.ElemAttachStaticMesh(_render_parent, component_id);
                     return Task.CompletedTask;
                 default:
                     throw new Exception("unsupported type in <mesh" + (Id == null ? "" : (":" + Id)) + ">");
@@ -73,7 +73,7 @@ namespace AbyssCLI.Aml
         {
             var component_id = MeshWaiterGroup.GetValue();
             if (component_id != 0)
-                RenderActionWriter.DeleteStaticMesh(component_id);
+                Client.Client.RenderWriter.DeleteStaticMesh(component_id);
         }
         public static string Tag => "mesh";
         public string Id { get; }
