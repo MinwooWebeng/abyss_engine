@@ -1,11 +1,12 @@
 ﻿using AbyssCLI.Tool;
+using Google.Protobuf.WellKnownTypes;
 using System.IO.MemoryMappedFiles;
 
 namespace AbyssCLI.Aml
 {
     //each content must have one MediaLoader
     //TODO: add CORS protection before adding cookie.
-    internal class ResourceLoader
+    public class ResourceLoader
     {
         public ResourceLoader(AbyssLib.Host host, AbyssURL origin)
         {
@@ -29,7 +30,7 @@ namespace AbyssCLI.Aml
 
         private readonly AbyssLib.AbystClient _abyst_client;
         private readonly string _mmf_path_prefix; //for file sharing with rendering engine.
-        private readonly HttpClient _http_client = new();
+        private readonly HttpClient _http_client = new(); //TODO: TLS client auth
         private readonly Dictionary<string, WaiterGroup<FileResource>> _media_cache = []; //registered when resource is requested.
         public class FileResource
         {
@@ -68,16 +69,25 @@ namespace AbyssCLI.Aml
 
             return waiting_group.TryGetValueOrWaiter(out resource, out waiter);
         }
-        public async Task<HttpResponseMessage> TryHttpRequestAsync(string url_string)
+        public async Task<HttpResponseMessage> TryHttpGetAsync(string url_string)
         {
             if (!AbyssURLParser.TryParseFrom(url_string, Origin, out var url))
             {
                 return new HttpResponseMessage(System.Net.HttpStatusCode.BadRequest);
             }
 
-            return await TryHttpRequestAsync(url);
+            return await TryHttpGetAsync(url);
         }
-        public async Task<HttpResponseMessage> TryHttpRequestAsync(AbyssURL url)
+        public async Task<HttpResponseMessage> TryHttpPostAsync(string url_string, HttpContent content)
+        {
+            if (!AbyssURLParser.TryParseFrom(url_string, Origin, out var url))
+            {
+                return new HttpResponseMessage(System.Net.HttpStatusCode.BadRequest);
+            }
+
+            return await TryHttpPostAsync(url, content);
+        }
+        public async Task<HttpResponseMessage> TryHttpGetAsync(AbyssURL url)
         {
             if (url.Scheme == "http" || url.Scheme == "https")
             {
@@ -116,9 +126,17 @@ namespace AbyssCLI.Aml
             }
             return new HttpResponseMessage(System.Net.HttpStatusCode.BadRequest);
         }
+        public async Task<HttpResponseMessage> TryHttpPostAsync(AbyssURL url, HttpContent content)
+        {
+            if (url.Scheme == "http" || url.Scheme == "https")
+            {
+                return await _http_client.PostAsync(url.Raw, content);
+            }
+            return new HttpResponseMessage(System.Net.HttpStatusCode.BadRequest);
+        }
         private async Task Loadresource(AbyssURL url, MIME MimeType, WaiterGroup<FileResource> dest)
         {
-            var response = await TryHttpRequestAsync(url);
+            var response = await TryHttpGetAsync(url);
             if (!response.IsSuccessStatusCode)
             {
                 Client.Client.Cerr.WriteLine("failed to load resource(" + url.Raw + "): " + response.StatusCode.ToString());
@@ -152,5 +170,11 @@ namespace AbyssCLI.Aml
                 throw new Exception("double load"); //should never happen.
             }
         }
+    }
+    public class RequestOptions
+    {
+        public string Method;
+        public HttpContent Content;
+        public byte[] Body;
     }
 }

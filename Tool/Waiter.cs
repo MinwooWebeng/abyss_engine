@@ -1,6 +1,6 @@
 ﻿namespace AbyssCLI.Tool
 {
-    internal class Waiter<T>
+    public class Waiter<T>
     {
         //every method is safe to call multiple times
         public void Finalize(T value)

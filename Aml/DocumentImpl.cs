@@ -9,9 +9,10 @@ namespace AbyssCLI.Aml
         ResourceLoader resourceLoader, AbyssURL url, float[] transform)
         : AmlNode(root, resourceLoader)
     {
+        public static readonly float[] _defaultTransform = [0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f];
         protected override async Task ActivateSelfCallback(CancellationToken token)
         {
-            var response = await ResourceLoader.TryHttpRequestAsync(url);
+            var response = await ResourceLoader.TryHttpGetAsync(url);
             if (!response.IsSuccessStatusCode)
             {
                 ResponseCode = response.StatusCode;
@@ -30,10 +31,24 @@ namespace AbyssCLI.Aml
                 throw new Exception("<aml> not found");
 
             XmlNode head_node = aml_node.SelectSingleNode("head");
-            Children.Add(new HeadImpl(this, head_node, host, this));
+            if (head_node == null)
+            {
+                Children.Add(new HeadImpl(this, doc.CreateNode(XmlNodeType.Element, "head", null), host, this));
+            }
+            else
+            {
+                Children.Add(new HeadImpl(this, head_node, host, this));
+            }
 
             var body_node = aml_node.SelectSingleNode("body");
-            Children.Add(new BodyImpl(this, body_node, transform));
+            if (body_node == null)
+            {
+                Children.Add(new BodyImpl(this, doc.CreateNode(XmlNodeType.Element, "body", null), _defaultTransform));
+            }
+            else
+            {
+                Children.Add(new BodyImpl(this, body_node, transform));
+            }
         }
         private readonly AbyssLib.Host host = host;
         private readonly AbyssURL url = url;

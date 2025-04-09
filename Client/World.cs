@@ -13,12 +13,11 @@ namespace AbyssCLI.Client
         private readonly object _lock = new();
         private readonly Thread _world_th;
 
-        private static readonly float[] _defaultTransform = [0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f];
         public World(AbyssLib.Host host, AbyssLib.World world, AbyssURL URL)
         {
             _host = host;
             _world = world;
-            _environment = new(host, URL, _defaultTransform);
+            _environment = new(host, URL, Aml.DocumentImpl._defaultTransform);
             _environment.Activate();
 
             _world_th = new Thread(() =>
@@ -146,7 +145,7 @@ namespace AbyssCLI.Client
                 
                 foreach (var obj in parsed_objects)
                 {
-                    var content = new Aml.Content(_host, obj.Item2, _defaultTransform);
+                    var content = new Aml.Content(_host, obj.Item2, Aml.DocumentImpl._defaultTransform);
                     if (!member.Item2.TryAdd(obj.Item1, content))
                     {
                         _cerr.WriteLine("uid collision of objects appended from peer");

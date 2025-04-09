@@ -1,4 +1,5 @@
-﻿using Microsoft.ClearScript;
+﻿using Google.Protobuf.WellKnownTypes;
+using Microsoft.ClearScript;
 using Microsoft.ClearScript.JavaScript;
 using Microsoft.ClearScript.V8;
 using System.Xml;
@@ -15,11 +16,19 @@ namespace AbyssCLI.Aml
                     MaxOldSpaceSize = 32 * 1024 * 1024
                 }
             );
-            _engine.AddHostObject("host", new API.Host(ResourceLoader.Origin));
-            _engine.AddHostObject("document", new API.Document(_document));
-            _engine.AddHostObject("console", new API.Console(Client.Client.Cerr));
-            _engine.AddHostObject("fetch", new Func<string>(() => "hi"));
-            _engine.AddHostObject("sleep", new Func<int, object>((int ms) => JavaScriptExtensions.ToPromise(Task.Delay(ms))));
+            _engine.Script.host = new API.Host(ResourceLoader.Origin);
+            _engine.Script.document = new API.Document(_document);
+            _engine.Script.console = new API.Console(Client.Client.Cerr);
+            _engine.Script.sleep = new Func<int, object>((int ms) => JavaScriptExtensions.ToPromise(Task.Delay(ms)));
+
+            var fetch_api = new API.WebFetchApi(ResourceLoader);
+            _engine.Script.__fetch_s = new Func<string, object>(
+                (string resource) => JavaScriptExtensions.ToPromise(fetch_api.FetchAsync(resource))
+            );
+            _engine.Script.__fetch_d = new Func<string, object, object>(
+                (string resource, object options) => JavaScriptExtensions.ToPromise(fetch_api.FetchAsync(resource, options))
+            );
+            _engine.Execute("function fetch(...args){if(args.length===1){return __fetch_s(args[0]);}else if(args.length===2){return __fetch_d(args[0],args[1]);}throw new Error('fetch() requires either 1 or 2 arguments.');}; ");
 
             token.ThrowIfCancellationRequested();
             try
