@@ -18,12 +18,13 @@ namespace AbyssCLI.Aml
                     Client.Client.Cerr.WriteLine("we failed to get abyst client: " + result.Item2);
                 }
                 _abyst_client = result.Item1;
+                _mmf_path_prefix = "abyst_" + origin.Id[..8] + "_";
             }
             else
             {
                 _abyst_client = new AbyssLib.AbystClient(IntPtr.Zero);
+                _mmf_path_prefix = "abyst_" + origin.StandardUri.Host.Replace('.', '_').Replace(':', '_') + "_";
             }
-            _mmf_path_prefix = "abyst_" + origin.Id[..8] + "_";
             Origin = origin;
         }
         public readonly AbyssURL Origin;

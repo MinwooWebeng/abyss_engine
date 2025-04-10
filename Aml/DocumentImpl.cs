@@ -16,6 +16,7 @@ namespace AbyssCLI.Aml
             if (!response.IsSuccessStatusCode)
             {
                 ResponseCode = response.StatusCode;
+                Client.Client.Cerr.WriteLine(ResponseCode.ToString());
                 return;
             }
 

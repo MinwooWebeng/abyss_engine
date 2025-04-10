@@ -9,7 +9,6 @@ namespace AbyssCLI.Aml.API
         // Fetch the content from a URL
         public async Task<Response> FetchAsync(string resource)
         {
-            Client.Client.Cerr.WriteLine("fetching");
             return await FetchAsync(resource, new RequestInit
             {
                 method = "GET",
@@ -24,7 +23,6 @@ namespace AbyssCLI.Aml.API
                 method = _options.method,
                 body = _options.body,
             };
-            Client.Client.Cerr.WriteLine("fetching " + options.method);
             return options.method switch
             {
                 "GET" => new Response(await _resource_loader.TryHttpGetAsync(resource)),
