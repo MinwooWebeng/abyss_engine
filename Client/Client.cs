@@ -101,9 +101,14 @@ namespace AbyssCLI.Client
                 if (url.Scheme == "abyss")
                 {
                     net_world = Host.JoinWorld(url.Raw);
+                    if (!net_world.IsValid())
+                    {
+                        Cerr.WriteLine("failed to join world: " + url.Raw);
+                        return;
+                    }
                     if (!AbyssURLParser.TryParse(net_world.url, out world_url) || world_url.Scheme == "abyss")
                     {
-                        Cerr.WriteLine("invalid world url");
+                        Cerr.WriteLine("invalid world url: " + world_url.Raw);
                         net_world.Leave();
                         return;
                     }
@@ -120,8 +125,16 @@ namespace AbyssCLI.Client
                 }
 
                 _resolver.DeleteMapping("");
-                _current_world.Leave();
-                _current_world = new World(Host, net_world, world_url);
+                _current_world?.Leave();
+                try
+                {
+                    _current_world = new World(Host, net_world, world_url);
+                }
+                catch (Exception ex)
+                {
+                    Cerr.WriteLine("world creation failed: " + ex.Message);
+                    _current_world = null;
+                }
                 _resolver.SetMapping("", net_world.world_id);
             }
         }

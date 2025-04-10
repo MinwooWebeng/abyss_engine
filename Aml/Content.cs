@@ -8,13 +8,7 @@ namespace AbyssCLI.Aml
         public float[] Transform = Transform;
         public void Activate()
         {
-            try
-            {
-                _documentImpl.Activate();
-            } catch (Exception ex)
-            {
-                Client.Client.Cerr.WriteLine(ex.Message.Replace('\n', ' '));
-            }
+            _documentImpl.Activate();
         }
         public void Close() => _documentImpl.Close();
         public Task CloseAsync() => _documentImpl.CloseAsync();

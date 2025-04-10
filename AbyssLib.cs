@@ -51,6 +51,12 @@ namespace AbyssCLI
         }
         static private void CloseAbyssHandle(IntPtr handle)
         {
+            if (handle == IntPtr.Zero)
+            {
+                //TODO: need to find the root cause of this.
+                return;
+            }
+
             [DllImport("abyssnet.dll")]
             static extern void CloseAbyssHandle(IntPtr handle);
             CloseAbyssHandle(handle);
