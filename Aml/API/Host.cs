@@ -21,17 +21,14 @@ namespace AbyssCLI.Aml.API
         {
             return System.Text.Encoding.ASCII.GetString(Client.Client.Host.handshake_key_certificate);
         }
-        public bool register_peer(string root_cert, string handshake_key_cert)
+        public void register_peer(string root_cert, string handshake_key_cert)
         {
-            try
+            var root_cert_bytes = System.Text.Encoding.ASCII.GetBytes(root_cert);
+            var handshake_key_cert_bytes = System.Text.Encoding.ASCII.GetBytes(handshake_key_cert);
+            var err = Client.Client.Host.AppendKnownPeer(root_cert_bytes, handshake_key_cert_bytes);
+            if (!err.Empty)
             {
-                var root_cert_bytes = System.Text.Encoding.ASCII.GetBytes(root_cert);
-                var handshake_key_cert_bytes = System.Text.Encoding.ASCII.GetBytes(handshake_key_cert);
-                return Client.Client.Host.AppendKnownPeer(root_cert_bytes, handshake_key_cert_bytes) == 0;
-            }
-            catch
-            {
-                return false;
+                throw new Exception(err.Message); //this should never happen.
             }
         }
         public void connect(string abyss_url)

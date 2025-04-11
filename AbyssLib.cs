@@ -1,7 +1,9 @@
 ﻿using AbyssCLI.Tool;
 using System.Runtime.InteropServices;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.Json;
+using Google.Protobuf;
 
 #nullable enable
 namespace AbyssCLI
@@ -15,7 +17,6 @@ namespace AbyssCLI
 
     static public class AbyssLib
     {
-        static readonly int _i = Init();
         public enum ErrorCode: int
         {
             SUCCESS = 0,
@@ -52,21 +53,29 @@ namespace AbyssCLI
         static private void CloseAbyssHandle(IntPtr handle)
         {
             if (handle == IntPtr.Zero)
-            {
-                //TODO: need to find the root cause of this.
                 return;
-            }
 
             [DllImport("abyssnet.dll")]
             static extern void CloseAbyssHandle(IntPtr handle);
             CloseAbyssHandle(handle);
         }
-        public class DLLError(IntPtr _error_handle)
+        public class DLLError
         {
-            private readonly IntPtr error_handle = _error_handle;
-
-            public override string ToString()
+            public DLLError(IntPtr error_handle,
+                [CallerFilePath] string file = "",
+                [CallerLineNumber] int line = 0,
+                [CallerMemberName] string member = "")
             {
+                _error_handle = error_handle;
+                if (error_handle == IntPtr.Zero)
+                {
+                    Empty = true;
+                    Message = string.Empty;
+                    return;
+                }
+
+                Empty = false;
+                var caller_info = $" (at {System.IO.Path.GetFileName(file)}:{line} in {member}())";
                 unsafe
                 {
                     [DllImport("abyssnet.dll")]
@@ -82,13 +91,34 @@ namespace AbyssCLI
                         var len = GetErrorBody(error_handle, dBytes, buf.Length);
                         if (len != buf.Length)
                         {
-                            throw new Exception("AbyssDLL: buffer write failure");
+                            Message = "DLLError: fatal DLL corruption: failed to get error body" + caller_info;
+                            return;
                         }
-                        return Encoding.UTF8.GetString(buf);
+
+                        try
+                        {
+                            Message = "DLLError: " + Encoding.UTF8.GetString(buf) + caller_info;
+                        }
+                        catch (Exception ex)
+                        {
+                            Message = "DLLError: fatal DLL corruption: failed to parse error body: " + ex.Message + caller_info;
+                        }
                     }
-                }
+                };
             }
-            ~DLLError() => CloseAbyssHandle(error_handle);
+            public DLLError(string message,
+                [CallerFilePath] string file = "",
+                [CallerLineNumber] int line = 0,
+                [CallerMemberName] string member = "")
+            {
+                Empty = false;
+                Message = message + $" (at {System.IO.Path.GetFileName(file)}:{line} in {member}())";
+                return;
+            }
+            private readonly IntPtr _error_handle;
+            public bool Empty;
+            public readonly string Message;
+            ~DLLError() => CloseAbyssHandle(_error_handle);
         }
         static public DLLError GetError()
         {
@@ -99,26 +129,28 @@ namespace AbyssCLI
         public class SimplePathResolver(IntPtr _handle)
         {
             public readonly IntPtr handle = _handle;
-            public ErrorCode SetMapping(string path, byte[] world_id)
+            public DLLError TrySetMapping(string path, byte[] world_id)
             {
                 byte[] path_bytes;
                 try
                 {
                     path_bytes = Encoding.ASCII.GetBytes(path);
                 }
-                catch
+                catch (Exception ex)
                 {
-                    return ErrorCode.INVALID_ARGUMENTS;
+                    return new DLLError(ex.Message);
                 }
                 unsafe
                 {
                     [DllImport("abyssnet.dll")]
-                    static extern int SimplePathResolver_SetMapping(IntPtr h, byte* path_ptr, int path_len, byte* world_ID);
+                    static extern void SimplePathResolver_SetMapping(IntPtr h, byte* path_ptr, int path_len, byte* world_ID, IntPtr* err_out);
                     fixed (byte* path_ptr = path_bytes)
                     {
                         fixed (byte *world_id_ptr = world_id)
                         {
-                            return (ErrorCode)SimplePathResolver_SetMapping(handle, path_ptr, path_bytes.Length, world_id_ptr);
+                            IntPtr err_out = IntPtr.Zero;
+                            SimplePathResolver_SetMapping(handle, path_ptr, path_bytes.Length, world_id_ptr, &err_out);
+                            return new DLLError(err_out);
                         }
                     }
                 }
@@ -179,6 +211,7 @@ namespace AbyssCLI
         {
             public Host(IntPtr _handle)
             {
+                handle = _handle;
                 if (_handle == IntPtr.Zero)
                 {
                     local_aurl = new AbyssURL();
@@ -186,7 +219,6 @@ namespace AbyssCLI
                     handshake_key_certificate = [];
                     return;
                 }
-                handle = _handle;
 
                 unsafe
                 {
@@ -229,18 +261,20 @@ namespace AbyssCLI
             public readonly byte[] root_certificate;
             public readonly byte[] handshake_key_certificate;
             public bool IsValid() { return handle != IntPtr.Zero; }
-            public ErrorCode AppendKnownPeer(byte[] root_cert, byte[] hs_key_cert)
+            public DLLError AppendKnownPeer(byte[] root_cert, byte[] hs_key_cert)
             {
                 unsafe
                 {
                     [DllImport("abyssnet.dll")]
-                    static extern int Host_AppendKnownPeer(IntPtr h, byte* root_cert_buf, int root_cert_len, byte* hs_key_cert_buf, int hs_key_cert_len);
+                    static extern void Host_AppendKnownPeer(IntPtr h, byte* root_cert_buf, int root_cert_len, byte* hs_key_cert_buf, int hs_key_cert_len, IntPtr* err_out);
 
                     fixed (byte* rbuf = root_cert)
                     {
                         fixed (byte* kbuf = hs_key_cert)
                         {
-                            return (ErrorCode)Host_AppendKnownPeer(handle, rbuf, root_cert.Length, kbuf, hs_key_cert.Length);
+                            IntPtr err_out = IntPtr.Zero;
+                            Host_AppendKnownPeer(handle, rbuf, root_cert.Length, kbuf, hs_key_cert.Length, &err_out);
+                            return new DLLError(err_out);
                         }
                     }
                 }
@@ -313,16 +347,16 @@ namespace AbyssCLI
                     }
                 }
             }
-            public Tuple<AbystClient, string> GetAbystClient(string peer_hash)
+            public Tuple<AbystClient, DLLError> GetAbystClient(string peer_hash)
             {
                 byte[] peer_hash_bytes;
                 try
                 {
                     peer_hash_bytes = Encoding.ASCII.GetBytes(peer_hash);
                 }
-                catch
+                catch (Exception ex)
                 {
-                    return Tuple.Create(new AbystClient(IntPtr.Zero), "failed to encode peer hash");
+                    return Tuple.Create(new AbystClient(IntPtr.Zero), new DLLError(ex.Message));
                 }
 
                 unsafe
@@ -333,13 +367,8 @@ namespace AbyssCLI
                     fixed(byte* peer_hash_ptr = peer_hash_bytes)
                     {
                         IntPtr err_out = IntPtr.Zero;
-                        var abyst_client = Host_GetAbystClientConnection(handle, peer_hash_ptr, peer_hash_bytes.Length, 1000, &err_out);
-                        if (err_out != IntPtr.Zero)
-                        {
-                            var dll_err = new AbyssLib.DLLError(err_out);
-                            return Tuple.Create(new AbystClient(IntPtr.Zero), dll_err.ToString());
-                        }
-                        return Tuple.Create(new AbystClient(abyst_client), string.Empty);
+                        var abyst_client = Host_GetAbystClientConnection(handle, peer_hash_ptr, peer_hash_bytes.Length, 10000, &err_out);
+                        return Tuple.Create(new AbystClient(abyst_client), new DLLError(err_out));
                     }
                 }
             }
@@ -725,7 +754,7 @@ namespace AbyssCLI
                         var result = new AbystResponse(AbystClient_Request(handle, (int)method, (byte*)0, 0, &err));
                         if (err !=  IntPtr.Zero)
                         {
-                            throw new Exception(new AbyssLib.DLLError(err).ToString());
+                            throw new Exception(new DLLError(err).ToString());
                         }
                         return result;
                     }
@@ -745,7 +774,7 @@ namespace AbyssCLI
                         var result = new AbystResponse(AbystClient_Request(handle, (int)method, path_ptr, path_bytes.Length, &err));
                         if (err != IntPtr.Zero)
                         {
-                            throw new Exception(new AbyssLib.DLLError(err).ToString());
+                            throw new Exception(new DLLError(err).ToString());
                         }
                         return result;
                     }

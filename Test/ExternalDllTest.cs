@@ -35,7 +35,7 @@
                 Console.WriteLine("failed to open world");
                 return;
             }
-            path_res1.SetMapping("/cat", world1.world_id);
+            path_res1.TrySetMapping("/cat", world1.world_id);
 
             Thread.Sleep(1000);
 
@@ -98,7 +98,7 @@
             host2.AppendKnownPeer(host1.root_certificate, host1.handshake_key_certificate);
 
             var world1 = host1.OpenWorld("plain.world");
-            path_res1.SetMapping("/cat", world1.world_id);
+            path_res1.TrySetMapping("/cat", world1.world_id);
 
             Thread.Sleep(1000);
 

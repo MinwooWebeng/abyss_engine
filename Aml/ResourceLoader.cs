@@ -13,7 +13,7 @@ namespace AbyssCLI.Aml
             if (origin.Scheme == "abyst")
             {
                 var result = host.GetAbystClient(origin.Id);
-                if (result.Item2 != string.Empty)
+                if (result.Item2.Empty)
                 {
                     Client.Client.Cerr.WriteLine("we failed to get abyst client: " + result.Item2);
                 }

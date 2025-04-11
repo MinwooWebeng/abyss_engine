@@ -16,23 +16,22 @@ namespace AbyssCLI.Client
         private static AbyssLib.SimplePathResolver _resolver;
         private static World _current_world;
         private static readonly object _world_move_lock = new();
+        public static void Init()
+        {
+            if (AbyssLib.Init() != 0)
+            {
+                throw new Exception("failed to initialize abyssnet.dll");
+            }
+        }
         public static void Run()
         {
             _resolver = AbyssLib.NewSimplePathResolver();
-            UIAction init_msg;
-            try
+
+            //Host Initialization
+            var init_msg = ReadProtoMessage();
+            if (init_msg.InnerCase != UIAction.InnerOneofCase.Init)
             {
-                //Host Initialization
-                init_msg = ReadProtoMessage();
-                if (init_msg.InnerCase != UIAction.InnerOneofCase.Init)
-                {
-                    throw new Exception("fatal: host not initialized");
-                }
-            }
-            catch (Exception ex)
-            {
-                Cerr.WriteLine(ex.ToString());
-                return;
+                throw new Exception("host not initialized");
             }
 
             Host = AbyssLib.OpenAbyssHost(init_msg.Init.RootKey.ToByteArray(), _resolver, AbyssLib.NewSimpleAbystServer("D:\\WORKS\\github\\abyss_engine\\testground\\abyst_server"));
@@ -51,16 +50,12 @@ namespace AbyssCLI.Client
             }
             var net_world = Host.OpenWorld(default_world_url_raw);
             _current_world = new World(Host, net_world, default_world_url);
-            _resolver.SetMapping("", net_world.world_id);
+            if (!_resolver.TrySetMapping("", net_world.world_id).Empty)
+            {
+                throw new Exception("faild to set path for initial world at default path");
+            }
 
-            try
-            {
-                while (UIActionHandle()) { }
-            }
-            catch (Exception ex)
-            {
-                Cerr.WriteLine(ex.ToString());
-            }
+            while (UIActionHandle()) { }
         }
         public static void MoveWorld(AbyssURL url) => MainWorldSwap(url);
         private static bool UIActionHandle()
@@ -135,7 +130,10 @@ namespace AbyssCLI.Client
                     Cerr.WriteLine("world creation failed: " + ex.Message);
                     _current_world = null;
                 }
-                _resolver.SetMapping("", net_world.world_id);
+                if(!_resolver.TrySetMapping("", net_world.world_id).Empty)
+                {
+                    throw new Exception("failed to set world path mapping");
+                }
             }
         }
         private static void OnShareContent(UIAction.Types.ShareContent args)
