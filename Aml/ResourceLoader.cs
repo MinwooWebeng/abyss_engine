@@ -13,9 +13,12 @@ namespace AbyssCLI.Aml
             if (origin.Scheme == "abyst")
             {
                 var result = host.GetAbystClient(origin.Id);
-                if (result.Item2.Empty)
+                if (!result.Item2.Empty)
                 {
-                    Client.Client.Cerr.WriteLine("we failed to get abyst client: " + result.Item2);
+                    Client.Client.Cerr.WriteLine("failed to get abyst client (" + origin.Raw + ") : " + result.Item2.Message);
+                    IsValid = false;
+                    _abyst_client = new AbyssLib.AbystClient(IntPtr.Zero);
+                    return;
                 }
                 _abyst_client = result.Item1;
                 _mmf_path_prefix = "abyst_" + origin.Id[..8] + "_";
@@ -26,7 +29,9 @@ namespace AbyssCLI.Aml
                 _mmf_path_prefix = "abyst_" + origin.StandardUri.Host.Replace('.', '_').Replace(':', '_') + "_";
             }
             Origin = origin;
+            IsValid = true;
         }
+        public readonly bool IsValid;
         public readonly AbyssURL Origin;
 
         private readonly AbyssLib.AbystClient _abyst_client;

@@ -12,6 +12,12 @@ namespace AbyssCLI.Aml
         public static readonly float[] _defaultTransform = [0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f];
         protected override async Task ActivateSelfCallback(CancellationToken token)
         {
+            if (!ResourceLoader.IsValid)
+            {
+                Client.Client.Cerr.WriteLine("invalid origin: failed to construct ResourceLoader");
+                return;
+            }
+
             var response = await ResourceLoader.TryHttpGetAsync(url);
             if (!response.IsSuccessStatusCode)
             {
