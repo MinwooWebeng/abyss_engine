@@ -5,7 +5,7 @@ using System;
 
 namespace AbyssCLI.ABI
 {
-    internal class UIActionWriter
+    public class UIActionWriter
     {
 		public UIActionWriter(System.IO.Stream stream) {
 			_out_stream = stream;
@@ -13,13 +13,15 @@ namespace AbyssCLI.ABI
 		
 public void Init
 (
-    ByteString root_key
+    ByteString root_key,
+    string name
 )
 => Write(new UIAction()
 {
     Init = new Init
     {
-        RootKey = root_key
+        RootKey = root_key,
+        Name = name
     }
 });
 public void Kill

@@ -1,4 +1,5 @@
-﻿using AbyssCLI.Tool;
+﻿using AbyssCLI.Aml;
+using AbyssCLI.Tool;
 using System.Text.RegularExpressions;
 
 namespace AbyssCLI.Client
@@ -125,9 +126,13 @@ namespace AbyssCLI.Client
                     Client.Cerr.WriteLine("failed to append peer; old peer session pends");
                     return;
                 }
-                member.AppendObjects(_local_contents
+                var list_of_local_contents = _local_contents
                     .Select(kvp => Tuple.Create(kvp.Key, kvp.Value.URL.Raw, kvp.Value.Transform))
-                    .ToArray());
+                    .ToArray();
+                if (list_of_local_contents.Length != 0)
+                {
+                    member.AppendObjects(list_of_local_contents);
+                }
             }
         }
         private void OnMemberObjectAppend(AbyssLib.MemberObjectAppend evnt)
@@ -139,7 +144,7 @@ namespace AbyssCLI.Client
                     {
                         Client.Cerr.WriteLine("failed to parse object url: " + gst.Item2);
                     }
-                    return Tuple.Create(gst.Item1, abyss_url);
+                    return Tuple.Create(gst.Item1, abyss_url, gst.Item3);
                 })
                 .Where(gst => gst.Item2 != null)
                 .ToList();
@@ -157,7 +162,7 @@ namespace AbyssCLI.Client
                     Aml.Content content;
                     try
                     {
-                        content = new Aml.Content(_host, obj.Item2, Aml.DocumentImpl._defaultTransform);
+                        content = new Aml.Content(_host, obj.Item2, obj.Item3);
                     }
                     catch (Exception ex)
                     {

@@ -81,8 +81,24 @@ namespace AbyssCLI.Tool
                 {
                     return AbyssURLParser.TryParse("abyst:" + origin.Id + CalculateRelativePath('/' + origin.Path, input), out result);
                 }
-                result = default;
-                return false;
+
+                //web address
+                try
+                {
+                    var parsed_uri = new Uri(origin.StandardUri, input);
+                    result = new AbyssURL
+                    {
+                        Raw = parsed_uri.ToString(),
+                        Scheme = parsed_uri.Scheme,
+                        StandardUri = parsed_uri,
+                    };
+                    return true;
+                }
+                catch
+                {
+                    result = default;
+                    return false;
+                }
             }
 
             return AbyssURLParser.TryParse(input, out result);

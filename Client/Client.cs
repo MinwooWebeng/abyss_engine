@@ -34,7 +34,12 @@ namespace AbyssCLI.Client
                 throw new Exception("host not initialized");
             }
 
-            Host = AbyssLib.OpenAbyssHost(init_msg.Init.RootKey.ToByteArray(), _resolver, AbyssLib.NewSimpleAbystServer("D:\\WORKS\\github\\abyss_engine\\testground\\abyst_server"));
+            var abyst_server_path = "C:\\Users\\minwoo\\Desktop\\ABYST\\" + init_msg.Init.Name;
+            if (!Directory.Exists(abyst_server_path))
+            {
+                Directory.CreateDirectory(abyst_server_path);
+            }
+            Host = AbyssLib.OpenAbyssHost(init_msg.Init.RootKey.ToByteArray(), _resolver, AbyssLib.NewSimpleAbystServer(abyst_server_path));
             if (!Host.IsValid())
             {
                 Cerr.WriteLine("host creation failed: " + AbyssLib.GetError().ToString());

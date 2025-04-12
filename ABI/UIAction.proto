@@ -7,6 +7,7 @@ option csharp_namespace = "AbyssCLI.ABI";
 message UIAction {
 	message Init {
 		bytes root_key = 1;
+		string name = 2;
 	}
 	message Kill {
 		int32 code = 1;

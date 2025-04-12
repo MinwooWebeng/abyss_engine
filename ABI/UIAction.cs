@@ -24,21 +24,21 @@ namespace AbyssCLI.ABI {
     static UIActionReflection() {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
-            "Cg5VSUFjdGlvbi5wcm90bxoQY29tbW9udHlwZS5wcm90byKQAwoIVUlBY3Rp",
+            "Cg5VSUFjdGlvbi5wcm90bxoQY29tbW9udHlwZS5wcm90byKeAwoIVUlBY3Rp",
             "b24SHgoEaW5pdBgBIAEoCzIOLlVJQWN0aW9uLkluaXRIABIeCgRraWxsGAIg",
             "ASgLMg4uVUlBY3Rpb24uS2lsbEgAEikKCm1vdmVfd29ybGQYAyABKAsyEy5V",
             "SUFjdGlvbi5Nb3ZlV29ybGRIABIvCg1zaGFyZV9jb250ZW50GAQgASgLMhYu",
             "VUlBY3Rpb24uU2hhcmVDb250ZW50SAASLQoMY29ubmVjdF9wZWVyGAogASgL",
-            "MhUuVUlBY3Rpb24uQ29ubmVjdFBlZXJIABoYCgRJbml0EhAKCHJvb3Rfa2V5",
-            "GAEgASgMGhQKBEtpbGwSDAoEY29kZRgBIAEoBRoeCglNb3ZlV29ybGQSEQoJ",
-            "d29ybGRfdXJsGAEgASgJGkMKDFNoYXJlQ29udGVudBILCgN1cmwYAiABKAkS",
-            "EgoDcG9zGAMgASgLMgUuVmVjMxISCgNyb3QYBCABKAsyBS5WZWM0GhsKC0Nv",
-            "bm5lY3RQZWVyEgwKBGF1cmwYASABKAlCBwoFaW5uZXJCD6oCDEFieXNzQ0xJ",
-            "LkFCSWIGcHJvdG8z"));
+            "MhUuVUlBY3Rpb24uQ29ubmVjdFBlZXJIABomCgRJbml0EhAKCHJvb3Rfa2V5",
+            "GAEgASgMEgwKBG5hbWUYAiABKAkaFAoES2lsbBIMCgRjb2RlGAEgASgFGh4K",
+            "CU1vdmVXb3JsZBIRCgl3b3JsZF91cmwYASABKAkaQwoMU2hhcmVDb250ZW50",
+            "EgsKA3VybBgCIAEoCRISCgNwb3MYAyABKAsyBS5WZWMzEhIKA3JvdBgEIAEo",
+            "CzIFLlZlYzQaGwoLQ29ubmVjdFBlZXISDAoEYXVybBgBIAEoCUIHCgVpbm5l",
+            "ckIPqgIMQWJ5c3NDTEkuQUJJYgZwcm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::AbyssCLI.ABI.CommontypeReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::AbyssCLI.ABI.UIAction), global::AbyssCLI.ABI.UIAction.Parser, new[]{ "Init", "Kill", "MoveWorld", "ShareContent", "ConnectPeer" }, new[]{ "Inner" }, null, null, new pbr::GeneratedClrTypeInfo[] { new pbr::GeneratedClrTypeInfo(typeof(global::AbyssCLI.ABI.UIAction.Types.Init), global::AbyssCLI.ABI.UIAction.Types.Init.Parser, new[]{ "RootKey" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::AbyssCLI.ABI.UIAction), global::AbyssCLI.ABI.UIAction.Parser, new[]{ "Init", "Kill", "MoveWorld", "ShareContent", "ConnectPeer" }, new[]{ "Inner" }, null, null, new pbr::GeneratedClrTypeInfo[] { new pbr::GeneratedClrTypeInfo(typeof(global::AbyssCLI.ABI.UIAction.Types.Init), global::AbyssCLI.ABI.UIAction.Types.Init.Parser, new[]{ "RootKey", "Name" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::AbyssCLI.ABI.UIAction.Types.Kill), global::AbyssCLI.ABI.UIAction.Types.Kill.Parser, new[]{ "Code" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::AbyssCLI.ABI.UIAction.Types.MoveWorld), global::AbyssCLI.ABI.UIAction.Types.MoveWorld.Parser, new[]{ "WorldUrl" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::AbyssCLI.ABI.UIAction.Types.ShareContent), global::AbyssCLI.ABI.UIAction.Types.ShareContent.Parser, new[]{ "Url", "Pos", "Rot" }, null, null, null, null),
@@ -541,6 +541,7 @@ namespace AbyssCLI.ABI {
         [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public Init(Init other) : this() {
           rootKey_ = other.rootKey_;
+          name_ = other.name_;
           _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
         }
 
@@ -562,6 +563,18 @@ namespace AbyssCLI.ABI {
           }
         }
 
+        /// <summary>Field number for the "name" field.</summary>
+        public const int NameFieldNumber = 2;
+        private string name_ = "";
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+        public string Name {
+          get { return name_; }
+          set {
+            name_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+          }
+        }
+
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
         [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public override bool Equals(object other) {
@@ -578,6 +591,7 @@ namespace AbyssCLI.ABI {
             return true;
           }
           if (RootKey != other.RootKey) return false;
+          if (Name != other.Name) return false;
           return Equals(_unknownFields, other._unknownFields);
         }
 
@@ -586,6 +600,7 @@ namespace AbyssCLI.ABI {
         public override int GetHashCode() {
           int hash = 1;
           if (RootKey.Length != 0) hash ^= RootKey.GetHashCode();
+          if (Name.Length != 0) hash ^= Name.GetHashCode();
           if (_unknownFields != null) {
             hash ^= _unknownFields.GetHashCode();
           }
@@ -608,6 +623,10 @@ namespace AbyssCLI.ABI {
             output.WriteRawTag(10);
             output.WriteBytes(RootKey);
           }
+          if (Name.Length != 0) {
+            output.WriteRawTag(18);
+            output.WriteString(Name);
+          }
           if (_unknownFields != null) {
             _unknownFields.WriteTo(output);
           }
@@ -622,6 +641,10 @@ namespace AbyssCLI.ABI {
             output.WriteRawTag(10);
             output.WriteBytes(RootKey);
           }
+          if (Name.Length != 0) {
+            output.WriteRawTag(18);
+            output.WriteString(Name);
+          }
           if (_unknownFields != null) {
             _unknownFields.WriteTo(ref output);
           }
@@ -634,6 +657,9 @@ namespace AbyssCLI.ABI {
           int size = 0;
           if (RootKey.Length != 0) {
             size += 1 + pb::CodedOutputStream.ComputeBytesSize(RootKey);
+          }
+          if (Name.Length != 0) {
+            size += 1 + pb::CodedOutputStream.ComputeStringSize(Name);
           }
           if (_unknownFields != null) {
             size += _unknownFields.CalculateSize();
@@ -649,6 +675,9 @@ namespace AbyssCLI.ABI {
           }
           if (other.RootKey.Length != 0) {
             RootKey = other.RootKey;
+          }
+          if (other.Name.Length != 0) {
+            Name = other.Name;
           }
           _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
         }
@@ -673,6 +702,10 @@ namespace AbyssCLI.ABI {
                 RootKey = input.ReadBytes();
                 break;
               }
+              case 18: {
+                Name = input.ReadString();
+                break;
+              }
             }
           }
         #endif
@@ -694,6 +727,10 @@ namespace AbyssCLI.ABI {
                 break;
               case 10: {
                 RootKey = input.ReadBytes();
+                break;
+              }
+              case 18: {
+                Name = input.ReadString();
                 break;
               }
             }

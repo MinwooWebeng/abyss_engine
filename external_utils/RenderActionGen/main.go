@@ -136,7 +136,7 @@ using System;
 
 namespace AbyssCLI.ABI
 {
-    internal class ` + os.Args[3] + `ActionWriter
+    public class ` + os.Args[3] + `ActionWriter
     {
 		public ` + os.Args[3] + `ActionWriter(System.IO.Stream stream) {
 			_out_stream = stream;

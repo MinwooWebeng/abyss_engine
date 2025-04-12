@@ -175,6 +175,7 @@ namespace AbyssCLI.Aml
             {
                 throw new Exception("double load"); //should never happen.
             }
+            //Client.Client.Cerr.WriteLine($"[INFO] resource size {fileBytes.Length} from {url.Raw}");
         }
     }
     public class RequestOptions
