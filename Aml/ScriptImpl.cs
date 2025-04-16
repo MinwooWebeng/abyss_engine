@@ -18,7 +18,7 @@ namespace AbyssCLI.Aml
             );
             _engine.Script.host = new API.Host(ResourceLoader.Origin);
             _engine.Script.document = new API.Document(_document);
-            _engine.Script.console = new API.Console(Client.Client.Cerr);
+            _engine.Script.console = new API.Console();
             _engine.Script.sleep = new Func<int, object>((int ms) => JavaScriptExtensions.ToPromise(Task.Delay(ms)));
 
             var fetch_api = new API.WebFetchApi(ResourceLoader);
@@ -37,7 +37,7 @@ namespace AbyssCLI.Aml
             }
             catch (ScriptEngineException ex)
             {
-                Client.Client.Cerr.WriteLine("javascript error:" + ex.Message);
+                Client.Client.CerrWriteLine("javascript error:" + ex.Message);
             }
             return Task.CompletedTask;
         }

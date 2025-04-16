@@ -39,7 +39,7 @@ namespace AbyssCLI.Aml.API
         {
             if (!AbyssURLParser.TryParseFrom(url, _path, out var url_parsed))
             {
-                Client.Client.Cerr.WriteLine("move_world: failed to parse url");
+                Client.Client.CerrWriteLine("move_world: failed to parse url");
                 return;
             }
             Client.Client.MoveWorld(url_parsed);

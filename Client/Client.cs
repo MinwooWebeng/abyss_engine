@@ -6,10 +6,17 @@ namespace AbyssCLI.Client
     public static class Client
     {
         public static readonly RenderActionWriter RenderWriter = new(Stream.Synchronized(Console.OpenStandardOutput()));
-        public static readonly StreamWriter Cerr = new(Stream.Synchronized(Console.OpenStandardError()))
+        private static readonly StreamWriter _cerr = new(Stream.Synchronized(Console.OpenStandardError()))
         {
             AutoFlush = true
         };
+        public static void CerrWriteLine(string message)
+        {
+            lock(_cerr)
+            {
+                _cerr.WriteLine(message);
+            }
+        }
         public static AbyssLib.Host Host { get; private set; }
 
         private static readonly BinaryReader _cin = new(Console.OpenStandardInput());
@@ -34,7 +41,7 @@ namespace AbyssCLI.Client
                 throw new Exception("host not initialized");
             }
 
-            var abyst_server_path = "C:\\Users\\minwoo\\Desktop\\ABYST\\" + init_msg.Init.Name;
+            var abyst_server_path = Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "\\ABYST\\" + init_msg.Init.Name;
             if (!Directory.Exists(abyst_server_path))
             {
                 Directory.CreateDirectory(abyst_server_path);
@@ -42,7 +49,7 @@ namespace AbyssCLI.Client
             Host = AbyssLib.OpenAbyssHost(init_msg.Init.RootKey.ToByteArray(), _resolver, AbyssLib.NewSimpleAbystServer(abyst_server_path));
             if (!Host.IsValid())
             {
-                Cerr.WriteLine("host creation failed: " + AbyssLib.GetError().ToString());
+                CerrWriteLine("host creation failed: " + AbyssLib.GetError().ToString());
                 return;
             }
             RenderWriter.LocalInfo(Host.local_aurl.Raw);
@@ -50,7 +57,7 @@ namespace AbyssCLI.Client
             var default_world_url_raw = "abyst:" + Host.local_aurl.Id;
             if (!AbyssURLParser.TryParse(default_world_url_raw, out AbyssURL default_world_url))
             {
-                Cerr.WriteLine("default world url parsing failed");
+                CerrWriteLine("default world url parsing failed");
                 return;
             }
             var net_world = Host.OpenWorld(default_world_url_raw);
@@ -73,7 +80,7 @@ namespace AbyssCLI.Client
                 case UIAction.InnerOneofCase.ConnectPeer:
                     if (Host.OpenOutboundConnection(message.ConnectPeer.Aurl) != 0)
                     {
-                        Cerr.WriteLine("failed to open outbound connection: " + message.ConnectPeer.Aurl);
+                        CerrWriteLine("failed to open outbound connection: " + message.ConnectPeer.Aurl);
                     }
                     return true;
                 case UIAction.InnerOneofCase.Kill:
@@ -86,7 +93,7 @@ namespace AbyssCLI.Client
         private static void OnMoveWorld(UIAction.Types.MoveWorld args)
         {
             if (!AbyssURLParser.TryParseFrom(args.WorldUrl, Host.local_aurl, out var aurl)) {
-                Cerr.WriteLine("MoveWorld: failed to parse world url");
+                CerrWriteLine("MoveWorld: failed to parse world url");
                 return;
             }
 
@@ -103,12 +110,12 @@ namespace AbyssCLI.Client
                     net_world = Host.JoinWorld(url.Raw);
                     if (!net_world.IsValid())
                     {
-                        Cerr.WriteLine("failed to join world: " + url.Raw);
+                        CerrWriteLine("failed to join world: " + url.Raw);
                         return;
                     }
                     if (!AbyssURLParser.TryParse(net_world.url, out world_url) || world_url.Scheme == "abyss")
                     {
-                        Cerr.WriteLine("invalid world url: " + world_url.Raw);
+                        CerrWriteLine("invalid world url: " + world_url.Raw);
                         net_world.Leave();
                         return;
                     }
@@ -120,7 +127,7 @@ namespace AbyssCLI.Client
                 }
                 if (!net_world.IsValid())
                 {
-                    Cerr.WriteLine("MoveWorld: failed to open world");
+                    CerrWriteLine("MoveWorld: failed to open world");
                     return;
                 }
 
@@ -132,7 +139,7 @@ namespace AbyssCLI.Client
                 }
                 catch (Exception ex)
                 {
-                    Cerr.WriteLine("world creation failed: " + ex.Message);
+                    CerrWriteLine("world creation failed: " + ex.Message);
                     _current_world = null;
                 }
                 if(!_resolver.TrySetMapping("", net_world.world_id).Empty)
@@ -145,7 +152,7 @@ namespace AbyssCLI.Client
         {
             if (!AbyssURLParser.TryParseFrom(args.Url, Host.local_aurl, out var content_url))
             {
-                Cerr.WriteLine("OnShareContent: failed to parse address: " + args.Url);
+                CerrWriteLine("OnShareContent: failed to parse address: " + args.Url);
                 return;
             }
 

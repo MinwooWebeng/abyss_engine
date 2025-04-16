@@ -60,7 +60,7 @@ namespace AbyssCLI.Client
             }
             catch (Exception ex)
             {
-                Client.Cerr.WriteLine("shared object construction failed: " + ex.Message);
+                Client.CerrWriteLine("shared object construction failed: " + ex.Message);
                 return Guid.Empty;
             }
             content.Activate();
@@ -90,13 +90,13 @@ namespace AbyssCLI.Client
         }
         public void Leave()
         {
+            _environment.Close();
             if (_world.Leave() != 0)
             {
-                Client.Cerr.WriteLine("failed to leave world");
+                Client.CerrWriteLine("failed to leave world");
             }
             _world_th.Join();
 
-            _environment.Close();
             foreach (var member in _members)
             {
                 foreach (var content in member.Value.Item2.Values)
@@ -123,7 +123,7 @@ namespace AbyssCLI.Client
             {
                 if (!_members.TryAdd(member.hash, Tuple.Create(member, new Dictionary<Guid, Aml.Content>())))
                 {
-                    Client.Cerr.WriteLine("failed to append peer; old peer session pends");
+                    Client.CerrWriteLine("failed to append peer; old peer session pends");
                     return;
                 }
                 var list_of_local_contents = _local_contents
@@ -142,7 +142,7 @@ namespace AbyssCLI.Client
                 {
                     if (!AbyssURLParser.TryParse(gst.Item2, out var abyss_url))
                     {
-                        Client.Cerr.WriteLine("failed to parse object url: " + gst.Item2);
+                        Client.CerrWriteLine("failed to parse object url: " + gst.Item2);
                     }
                     return Tuple.Create(gst.Item1, abyss_url, gst.Item3);
                 })
@@ -153,7 +153,7 @@ namespace AbyssCLI.Client
             {
                 if (!_members.TryGetValue(evnt.peer_hash, out var member))
                 {
-                    Client.Cerr.WriteLine("failed to find member");
+                    Client.CerrWriteLine("failed to find member");
                     return;
                 }
                 
@@ -166,13 +166,13 @@ namespace AbyssCLI.Client
                     }
                     catch (Exception ex)
                     {
-                        Client.Cerr.WriteLine("peer shared object construction failed: " + ex.Message);
+                        Client.CerrWriteLine("peer shared object construction failed: " + ex.Message);
                         continue;
                     }
 
                     if (!member.Item2.TryAdd(obj.Item1, content))
                     {
-                        Client.Cerr.WriteLine("uid collision of objects appended from peer");
+                        Client.CerrWriteLine("uid collision of objects appended from peer");
                         continue;
                     }
 
@@ -186,7 +186,7 @@ namespace AbyssCLI.Client
             {
                 if (!_members.TryGetValue(evnt.peer_hash, out var member))
                 {
-                    Client.Cerr.WriteLine("failed to find member");
+                    Client.CerrWriteLine("failed to find member");
                     return;
                 }
 
@@ -194,7 +194,7 @@ namespace AbyssCLI.Client
                 {
                     if (!member.Item2.Remove(id, out var content))
                     {
-                        Client.Cerr.WriteLine("peer tried to delete unshared objects");
+                        Client.CerrWriteLine("peer tried to delete unshared objects");
                         continue;
                     }
                     content.Close();
@@ -207,7 +207,7 @@ namespace AbyssCLI.Client
             {
                 if (!_members.Remove(peer_hash, out var value))
                 {
-                    Client.Cerr.WriteLine("non-existing peer leaved");
+                    Client.CerrWriteLine("non-existing peer leaved");
                     return;
                 }
 

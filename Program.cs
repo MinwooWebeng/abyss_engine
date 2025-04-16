@@ -9,11 +9,11 @@ class Program
         {
             Client.Init();
             Client.Run();
-            Client.Cerr.WriteLine("AbyssCLI terminated peacefully");
+            Client.CerrWriteLine("AbyssCLI terminated peacefully");
         }
         catch (Exception ex)
         {
-            Client.Cerr.WriteLine("***FATAL::ABYSS_CLI TERMINATED***\n" + ex.ToString());
+            Client.CerrWriteLine("***FATAL::ABYSS_CLI TERMINATED***\n" + ex.ToString());
         }
     }
 }

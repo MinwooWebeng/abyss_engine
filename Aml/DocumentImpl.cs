@@ -14,7 +14,7 @@ namespace AbyssCLI.Aml
         {
             if (!ResourceLoader.IsValid)
             {
-                Client.Client.Cerr.WriteLine("invalid origin: failed to construct ResourceLoader");
+                Client.Client.CerrWriteLine("invalid origin: failed to construct ResourceLoader");
                 return;
             }
 
@@ -22,7 +22,7 @@ namespace AbyssCLI.Aml
             if (!response.IsSuccessStatusCode)
             {
                 ResponseCode = response.StatusCode;
-                Client.Client.Cerr.WriteLine(ResponseCode.ToString());
+                Client.Client.CerrWriteLine(ResponseCode.ToString());
                 return;
             }
 
@@ -30,7 +30,7 @@ namespace AbyssCLI.Aml
             XmlDocument doc = new();
             doc.LoadXml(Encoding.UTF8.GetString(await response.Content.ReadAsByteArrayAsync(token)));
             // Check for the DOCTYPE
-            if (doc.DocumentType == null || doc.DocumentType.Name != "AML")
+            if (doc.DocumentType == null || (doc.DocumentType.Name != "AML" && doc.DocumentType.Name != "AML"))
                 throw new Exception("DOCTYPE mismatch");
 
             XmlNode aml_node = doc.SelectSingleNode("/aml");

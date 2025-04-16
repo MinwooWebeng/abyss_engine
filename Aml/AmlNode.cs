@@ -36,7 +36,7 @@ namespace AbyssCLI.Aml
         protected sealed override void ErrorCallback(Exception e)
         {
             if (e is not OperationCanceledException)
-                Client.Client.Cerr.WriteLine(e.Message);
+                Client.Client.CerrWriteLine(e.Message);
         }
         protected sealed override void DeceaseCallback()
         {

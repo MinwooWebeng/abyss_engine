@@ -1,5 +1,6 @@
 ﻿using AbyssCLI.Tool;
 using Google.Protobuf.WellKnownTypes;
+using System.Data;
 using System.IO.MemoryMappedFiles;
 
 namespace AbyssCLI.Aml
@@ -15,19 +16,18 @@ namespace AbyssCLI.Aml
                 var result = host.GetAbystClient(origin.Id);
                 if (!result.Item2.Empty)
                 {
-                    Client.Client.Cerr.WriteLine("failed to get abyst client (" + origin.Raw + ") : " + result.Item2.Message);
+                    Client.Client.CerrWriteLine("failed to get abyst client (" + origin.Raw + ") : " + result.Item2.Message);
                     IsValid = false;
                     _abyst_client = new AbyssLib.AbystClient(IntPtr.Zero);
                     return;
                 }
                 _abyst_client = result.Item1;
-                _mmf_path_prefix = "abyst_" + origin.Id[..8] + "_";
             }
             else
             {
                 _abyst_client = new AbyssLib.AbystClient(IntPtr.Zero);
-                _mmf_path_prefix = "abyst_" + origin.StandardUri.Host.Replace('.', '_').Replace(':', '_') + "_";
             }
+            _mmf_path_prefix = "abyst_" + host.local_aurl.Id[..8] + "_";
             Origin = origin;
             IsValid = true;
         }
@@ -46,6 +46,7 @@ namespace AbyssCLI.Aml
         }
         public bool TryGetFileOrWaiter(string url_string, MIME MimeType, out FileResource resource, out Waiter<FileResource> waiter)
         {
+            //Client.Client.CerrWriteLine("ResourceLoader req: " + url_string);
             if(!AbyssURLParser.TryParseFrom(url_string, Origin, out var url))
             {
                 resource = new FileResource { IsValid = false };
@@ -142,40 +143,48 @@ namespace AbyssCLI.Aml
         }
         private async Task Loadresource(AbyssURL url, MIME MimeType, WaiterGroup<FileResource> dest)
         {
-            var response = await TryHttpGetAsync(url);
-            if (!response.IsSuccessStatusCode)
+            try
             {
-                Client.Client.Cerr.WriteLine("failed to load resource(" + url.Raw + "): " + response.StatusCode.ToString());
-                dest.TryFinalizeValue(default);
-                return;
-            }
-            byte[] fileBytes = await response.Content.ReadAsByteArrayAsync();
+                var response = await TryHttpGetAsync(url);
+                if (!response.IsSuccessStatusCode)
+                {
+                    Client.Client.CerrWriteLine("failed to load resource(" + url.Raw + "): " + response.StatusCode.ToString());
+                    dest.TryFinalizeValue(default);
+                    return;
+                }
+                byte[] fileBytes = await response.Content.ReadAsByteArrayAsync();
 
-            var component_id = RenderID.ComponentId;
-            var mmf_path = _mmf_path_prefix + component_id.ToString();
-            var mmf = MemoryMappedFile.CreateNew(mmf_path, fileBytes.Length);
-            var accessor = mmf.CreateViewAccessor();
-            accessor.WriteArray(0, fileBytes, 0, fileBytes.Length);
-            accessor.Flush();
-            accessor.Dispose();
-            var abi_fileinfo = new ABI.File()
-            {
-                Mime = MimeType,
-                MmapName = mmf_path,
-                Off = 0,
-                Len = (uint)fileBytes.Length,
-            };
+                var component_id = RenderID.ComponentId;
+                var mmf_path = _mmf_path_prefix + component_id.ToString();
+                var mmf = MemoryMappedFile.CreateNew(mmf_path, fileBytes.Length);
+                var accessor = mmf.CreateViewAccessor();
+                accessor.WriteArray(0, fileBytes, 0, fileBytes.Length);
+                accessor.Flush();
+                accessor.Dispose();
 
-            if (!dest.TryFinalizeValue(new FileResource
-            {
-                IsValid = true,
-                MMF = mmf,
-                ABIFileInfo = abi_fileinfo,
-            }))
-            {
-                throw new Exception("double load"); //should never happen.
+                var abi_fileinfo = new ABI.File()
+                {
+                    Mime = MimeType,
+                    MmapName = mmf_path,
+                    Off = 0,
+                    Len = (uint)fileBytes.Length,
+                };
+
+                if (!dest.TryFinalizeValue(new FileResource
+                {
+                    IsValid = true,
+                    MMF = mmf,
+                    ABIFileInfo = abi_fileinfo,
+                }))
+                {
+                    Client.Client.CerrWriteLine("ResourceLoader double load:" + url.Raw);
+                    throw new Exception("double load"); //should never happen.
+                }
             }
-            //Client.Client.Cerr.WriteLine($"[INFO] resource size {fileBytes.Length} from {url.Raw}");
+            catch (Exception ex)
+            {
+                Client.Client.CerrWriteLine(ex.ToString());
+            }
         }
     }
     public class RequestOptions

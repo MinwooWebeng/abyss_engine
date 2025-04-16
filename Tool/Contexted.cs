@@ -13,6 +13,11 @@
                 base_context.CancellationTokenSource.Token);
             _root_context = CancellationTokenSource.Token;
         }
+        public CancellationTokenSource CancellationTokenSource { get; private set; }
+        private readonly CancellationToken _root_context;
+        private readonly Semaphore _decease_sema = new(0, 1);
+        private readonly Semaphore _cleanup_sema = new(0, 1);
+        private int _state = 0; //0: non-activated, 1: activated, 2:decease called, 3: cleanup called
         public Task Activate()
         {
             return Task.Run(async () =>
@@ -108,10 +113,5 @@
         // it must override CleanupAsyncCallback
         // it is safe to override CleanupAsyncCallback alone
 
-        public CancellationTokenSource CancellationTokenSource { get; private set; }
-        private readonly CancellationToken _root_context;
-        private readonly Semaphore _decease_sema = new(0, 1);
-        private readonly Semaphore _cleanup_sema = new(0, 1);
-        private int _state = 0; //0: non-activated, 1: activated, 2:decease called, 3: cleanup called
     }
 }
