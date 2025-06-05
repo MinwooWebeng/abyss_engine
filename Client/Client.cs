@@ -1,5 +1,6 @@
 ﻿using AbyssCLI.ABI;
 using AbyssCLI.Tool;
+using Google.Protobuf;
 
 namespace AbyssCLI.Client
 {
@@ -156,7 +157,7 @@ namespace AbyssCLI.Client
                 return;
             }
 
-            _current_world.ShareObject(content_url, [args.Pos.X, args.Pos.Y, args.Pos.Z, args.Rot.W, args.Rot.X, args.Rot.Y, args.Rot.Z]);
+            _current_world.TryShareObject(new Guid(args.Uuid.ToByteArray()), content_url, [args.Pos.X, args.Pos.Y, args.Pos.Z, args.Rot.W, args.Rot.X, args.Rot.Y, args.Rot.Z]);
         }
         private static UIAction ReadProtoMessage()
         {

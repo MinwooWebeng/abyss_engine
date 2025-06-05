@@ -24,24 +24,24 @@ namespace AbyssCLI.ABI {
     static UIActionReflection() {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
-            "Cg5VSUFjdGlvbi5wcm90bxoQY29tbW9udHlwZS5wcm90byKeAwoIVUlBY3Rp",
+            "Cg5VSUFjdGlvbi5wcm90bxoQY29tbW9udHlwZS5wcm90byKsAwoIVUlBY3Rp",
             "b24SHgoEaW5pdBgBIAEoCzIOLlVJQWN0aW9uLkluaXRIABIeCgRraWxsGAIg",
             "ASgLMg4uVUlBY3Rpb24uS2lsbEgAEikKCm1vdmVfd29ybGQYAyABKAsyEy5V",
             "SUFjdGlvbi5Nb3ZlV29ybGRIABIvCg1zaGFyZV9jb250ZW50GAQgASgLMhYu",
             "VUlBY3Rpb24uU2hhcmVDb250ZW50SAASLQoMY29ubmVjdF9wZWVyGAogASgL",
             "MhUuVUlBY3Rpb24uQ29ubmVjdFBlZXJIABomCgRJbml0EhAKCHJvb3Rfa2V5",
             "GAEgASgMEgwKBG5hbWUYAiABKAkaFAoES2lsbBIMCgRjb2RlGAEgASgFGh4K",
-            "CU1vdmVXb3JsZBIRCgl3b3JsZF91cmwYASABKAkaQwoMU2hhcmVDb250ZW50",
-            "EgsKA3VybBgCIAEoCRISCgNwb3MYAyABKAsyBS5WZWMzEhIKA3JvdBgEIAEo",
-            "CzIFLlZlYzQaGwoLQ29ubmVjdFBlZXISDAoEYXVybBgBIAEoCUIHCgVpbm5l",
-            "ckIPqgIMQWJ5c3NDTEkuQUJJYgZwcm90bzM="));
+            "CU1vdmVXb3JsZBIRCgl3b3JsZF91cmwYASABKAkaUQoMU2hhcmVDb250ZW50",
+            "EgwKBHV1aWQYASABKAwSCwoDdXJsGAIgASgJEhIKA3BvcxgDIAEoCzIFLlZl",
+            "YzMSEgoDcm90GAQgASgLMgUuVmVjNBobCgtDb25uZWN0UGVlchIMCgRhdXJs",
+            "GAEgASgJQgcKBWlubmVyQg+qAgxBYnlzc0NMSS5BQkliBnByb3RvMw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::AbyssCLI.ABI.CommontypeReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
             new pbr::GeneratedClrTypeInfo(typeof(global::AbyssCLI.ABI.UIAction), global::AbyssCLI.ABI.UIAction.Parser, new[]{ "Init", "Kill", "MoveWorld", "ShareContent", "ConnectPeer" }, new[]{ "Inner" }, null, null, new pbr::GeneratedClrTypeInfo[] { new pbr::GeneratedClrTypeInfo(typeof(global::AbyssCLI.ABI.UIAction.Types.Init), global::AbyssCLI.ABI.UIAction.Types.Init.Parser, new[]{ "RootKey", "Name" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::AbyssCLI.ABI.UIAction.Types.Kill), global::AbyssCLI.ABI.UIAction.Types.Kill.Parser, new[]{ "Code" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::AbyssCLI.ABI.UIAction.Types.MoveWorld), global::AbyssCLI.ABI.UIAction.Types.MoveWorld.Parser, new[]{ "WorldUrl" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::AbyssCLI.ABI.UIAction.Types.ShareContent), global::AbyssCLI.ABI.UIAction.Types.ShareContent.Parser, new[]{ "Url", "Pos", "Rot" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::AbyssCLI.ABI.UIAction.Types.ShareContent), global::AbyssCLI.ABI.UIAction.Types.ShareContent.Parser, new[]{ "Uuid", "Url", "Pos", "Rot" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::AbyssCLI.ABI.UIAction.Types.ConnectPeer), global::AbyssCLI.ABI.UIAction.Types.ConnectPeer.Parser, new[]{ "Aurl" }, null, null, null, null)})
           }));
     }
@@ -1174,6 +1174,7 @@ namespace AbyssCLI.ABI {
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
         [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public ShareContent(ShareContent other) : this() {
+          uuid_ = other.uuid_;
           url_ = other.url_;
           pos_ = other.pos_ != null ? other.pos_.Clone() : null;
           rot_ = other.rot_ != null ? other.rot_.Clone() : null;
@@ -1184,6 +1185,18 @@ namespace AbyssCLI.ABI {
         [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public ShareContent Clone() {
           return new ShareContent(this);
+        }
+
+        /// <summary>Field number for the "uuid" field.</summary>
+        public const int UuidFieldNumber = 1;
+        private pb::ByteString uuid_ = pb::ByteString.Empty;
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+        public pb::ByteString Uuid {
+          get { return uuid_; }
+          set {
+            uuid_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+          }
         }
 
         /// <summary>Field number for the "url" field.</summary>
@@ -1237,6 +1250,7 @@ namespace AbyssCLI.ABI {
           if (ReferenceEquals(other, this)) {
             return true;
           }
+          if (Uuid != other.Uuid) return false;
           if (Url != other.Url) return false;
           if (!object.Equals(Pos, other.Pos)) return false;
           if (!object.Equals(Rot, other.Rot)) return false;
@@ -1247,6 +1261,7 @@ namespace AbyssCLI.ABI {
         [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public override int GetHashCode() {
           int hash = 1;
+          if (Uuid.Length != 0) hash ^= Uuid.GetHashCode();
           if (Url.Length != 0) hash ^= Url.GetHashCode();
           if (pos_ != null) hash ^= Pos.GetHashCode();
           if (rot_ != null) hash ^= Rot.GetHashCode();
@@ -1268,6 +1283,10 @@ namespace AbyssCLI.ABI {
         #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
           output.WriteRawMessage(this);
         #else
+          if (Uuid.Length != 0) {
+            output.WriteRawTag(10);
+            output.WriteBytes(Uuid);
+          }
           if (Url.Length != 0) {
             output.WriteRawTag(18);
             output.WriteString(Url);
@@ -1290,6 +1309,10 @@ namespace AbyssCLI.ABI {
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
         [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+          if (Uuid.Length != 0) {
+            output.WriteRawTag(10);
+            output.WriteBytes(Uuid);
+          }
           if (Url.Length != 0) {
             output.WriteRawTag(18);
             output.WriteString(Url);
@@ -1312,6 +1335,9 @@ namespace AbyssCLI.ABI {
         [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public int CalculateSize() {
           int size = 0;
+          if (Uuid.Length != 0) {
+            size += 1 + pb::CodedOutputStream.ComputeBytesSize(Uuid);
+          }
           if (Url.Length != 0) {
             size += 1 + pb::CodedOutputStream.ComputeStringSize(Url);
           }
@@ -1332,6 +1358,9 @@ namespace AbyssCLI.ABI {
         public void MergeFrom(ShareContent other) {
           if (other == null) {
             return;
+          }
+          if (other.Uuid.Length != 0) {
+            Uuid = other.Uuid;
           }
           if (other.Url.Length != 0) {
             Url = other.Url;
@@ -1367,6 +1396,10 @@ namespace AbyssCLI.ABI {
               default:
                 _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
                 break;
+              case 10: {
+                Uuid = input.ReadBytes();
+                break;
+              }
               case 18: {
                 Url = input.ReadString();
                 break;
@@ -1404,6 +1437,10 @@ namespace AbyssCLI.ABI {
               default:
                 _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
                 break;
+              case 10: {
+                Uuid = input.ReadBytes();
+                break;
+              }
               case 18: {
                 Url = input.ReadString();
                 break;

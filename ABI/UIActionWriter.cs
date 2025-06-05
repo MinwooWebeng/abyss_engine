@@ -48,6 +48,7 @@ public void MoveWorld
 });
 public void ShareContent
 (
+    ByteString uuid,
     string url,
     Vec3 pos,
     Vec4 rot
@@ -56,6 +57,7 @@ public void ShareContent
 {
     ShareContent = new ShareContent
     {
+        Uuid = uuid,
         Url = url,
         Pos = pos,
         Rot = rot

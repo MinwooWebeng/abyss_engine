@@ -19,6 +19,7 @@ message UIAction {
 
 	// Address Bar Input
 	message ShareContent {
+		bytes uuid = 1;
 		string url = 2;
 		Vec3 pos = 3;
 		Vec4 rot = 4;

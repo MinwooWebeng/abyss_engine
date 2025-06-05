@@ -50,9 +50,8 @@ namespace AbyssCLI.Client
             });
             _world_th.Start();
         }
-        public Guid ShareObject(AbyssURL url, float[] transform)
+        public bool TryShareObject(Guid uuid, AbyssURL url, float[] transform)
         {
-            var guid = Guid.NewGuid();
             Aml.Content content;
             try
             {
@@ -61,19 +60,19 @@ namespace AbyssCLI.Client
             catch (Exception ex)
             {
                 Client.CerrWriteLine("shared object construction failed: " + ex.Message);
-                return Guid.Empty;
+                return false;
             }
             content.Activate();
 
             lock (_lock)
             {
-                _local_contents[guid] = content;
+                _local_contents[uuid] = content;
                 foreach (var entry in _members)
                 {
-                    entry.Value.Item1.AppendObjects([Tuple.Create(guid, url.Raw, transform)]);
+                    entry.Value.Item1.AppendObjects([Tuple.Create(uuid, url.Raw, transform)]);
                 }
             }
-            return guid;
+            return true;
         }
         public void RemoveObject(Guid guid)
         {
