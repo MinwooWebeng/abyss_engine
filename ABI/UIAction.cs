@@ -24,24 +24,27 @@ namespace AbyssCLI.ABI {
     static UIActionReflection() {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
-            "Cg5VSUFjdGlvbi5wcm90bxoQY29tbW9udHlwZS5wcm90byKsAwoIVUlBY3Rp",
+            "Cg5VSUFjdGlvbi5wcm90bxoQY29tbW9udHlwZS5wcm90byKBBAoIVUlBY3Rp",
             "b24SHgoEaW5pdBgBIAEoCzIOLlVJQWN0aW9uLkluaXRIABIeCgRraWxsGAIg",
             "ASgLMg4uVUlBY3Rpb24uS2lsbEgAEikKCm1vdmVfd29ybGQYAyABKAsyEy5V",
             "SUFjdGlvbi5Nb3ZlV29ybGRIABIvCg1zaGFyZV9jb250ZW50GAQgASgLMhYu",
-            "VUlBY3Rpb24uU2hhcmVDb250ZW50SAASLQoMY29ubmVjdF9wZWVyGAogASgL",
-            "MhUuVUlBY3Rpb24uQ29ubmVjdFBlZXJIABomCgRJbml0EhAKCHJvb3Rfa2V5",
-            "GAEgASgMEgwKBG5hbWUYAiABKAkaFAoES2lsbBIMCgRjb2RlGAEgASgFGh4K",
-            "CU1vdmVXb3JsZBIRCgl3b3JsZF91cmwYASABKAkaUQoMU2hhcmVDb250ZW50",
-            "EgwKBHV1aWQYASABKAwSCwoDdXJsGAIgASgJEhIKA3BvcxgDIAEoCzIFLlZl",
-            "YzMSEgoDcm90GAQgASgLMgUuVmVjNBobCgtDb25uZWN0UGVlchIMCgRhdXJs",
-            "GAEgASgJQgcKBWlubmVyQg+qAgxBYnlzc0NMSS5BQkliBnByb3RvMw=="));
+            "VUlBY3Rpb24uU2hhcmVDb250ZW50SAASMwoPdW5zaGFyZV9jb250ZW50GAUg",
+            "ASgLMhguVUlBY3Rpb24uVW5zaGFyZUNvbnRlbnRIABItCgxjb25uZWN0X3Bl",
+            "ZXIYCiABKAsyFS5VSUFjdGlvbi5Db25uZWN0UGVlckgAGiYKBEluaXQSEAoI",
+            "cm9vdF9rZXkYASABKAwSDAoEbmFtZRgCIAEoCRoUCgRLaWxsEgwKBGNvZGUY",
+            "ASABKAUaHgoJTW92ZVdvcmxkEhEKCXdvcmxkX3VybBgBIAEoCRpRCgxTaGFy",
+            "ZUNvbnRlbnQSDAoEdXVpZBgBIAEoDBILCgN1cmwYAiABKAkSEgoDcG9zGAMg",
+            "ASgLMgUuVmVjMxISCgNyb3QYBCABKAsyBS5WZWM0Gh4KDlVuc2hhcmVDb250",
+            "ZW50EgwKBHV1aWQYASABKAwaGwoLQ29ubmVjdFBlZXISDAoEYXVybBgBIAEo",
+            "CUIHCgVpbm5lckIPqgIMQWJ5c3NDTEkuQUJJYgZwcm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::AbyssCLI.ABI.CommontypeReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::AbyssCLI.ABI.UIAction), global::AbyssCLI.ABI.UIAction.Parser, new[]{ "Init", "Kill", "MoveWorld", "ShareContent", "ConnectPeer" }, new[]{ "Inner" }, null, null, new pbr::GeneratedClrTypeInfo[] { new pbr::GeneratedClrTypeInfo(typeof(global::AbyssCLI.ABI.UIAction.Types.Init), global::AbyssCLI.ABI.UIAction.Types.Init.Parser, new[]{ "RootKey", "Name" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::AbyssCLI.ABI.UIAction), global::AbyssCLI.ABI.UIAction.Parser, new[]{ "Init", "Kill", "MoveWorld", "ShareContent", "UnshareContent", "ConnectPeer" }, new[]{ "Inner" }, null, null, new pbr::GeneratedClrTypeInfo[] { new pbr::GeneratedClrTypeInfo(typeof(global::AbyssCLI.ABI.UIAction.Types.Init), global::AbyssCLI.ABI.UIAction.Types.Init.Parser, new[]{ "RootKey", "Name" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::AbyssCLI.ABI.UIAction.Types.Kill), global::AbyssCLI.ABI.UIAction.Types.Kill.Parser, new[]{ "Code" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::AbyssCLI.ABI.UIAction.Types.MoveWorld), global::AbyssCLI.ABI.UIAction.Types.MoveWorld.Parser, new[]{ "WorldUrl" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::AbyssCLI.ABI.UIAction.Types.ShareContent), global::AbyssCLI.ABI.UIAction.Types.ShareContent.Parser, new[]{ "Uuid", "Url", "Pos", "Rot" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::AbyssCLI.ABI.UIAction.Types.UnshareContent), global::AbyssCLI.ABI.UIAction.Types.UnshareContent.Parser, new[]{ "Uuid" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::AbyssCLI.ABI.UIAction.Types.ConnectPeer), global::AbyssCLI.ABI.UIAction.Types.ConnectPeer.Parser, new[]{ "Aurl" }, null, null, null, null)})
           }));
     }
@@ -96,6 +99,9 @@ namespace AbyssCLI.ABI {
           break;
         case InnerOneofCase.ShareContent:
           ShareContent = other.ShareContent.Clone();
+          break;
+        case InnerOneofCase.UnshareContent:
+          UnshareContent = other.UnshareContent.Clone();
           break;
         case InnerOneofCase.ConnectPeer:
           ConnectPeer = other.ConnectPeer.Clone();
@@ -159,6 +165,18 @@ namespace AbyssCLI.ABI {
       }
     }
 
+    /// <summary>Field number for the "unshare_content" field.</summary>
+    public const int UnshareContentFieldNumber = 5;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public global::AbyssCLI.ABI.UIAction.Types.UnshareContent UnshareContent {
+      get { return innerCase_ == InnerOneofCase.UnshareContent ? (global::AbyssCLI.ABI.UIAction.Types.UnshareContent) inner_ : null; }
+      set {
+        inner_ = value;
+        innerCase_ = value == null ? InnerOneofCase.None : InnerOneofCase.UnshareContent;
+      }
+    }
+
     /// <summary>Field number for the "connect_peer" field.</summary>
     public const int ConnectPeerFieldNumber = 10;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -179,6 +197,7 @@ namespace AbyssCLI.ABI {
       Kill = 2,
       MoveWorld = 3,
       ShareContent = 4,
+      UnshareContent = 5,
       ConnectPeer = 10,
     }
     private InnerOneofCase innerCase_ = InnerOneofCase.None;
@@ -214,6 +233,7 @@ namespace AbyssCLI.ABI {
       if (!object.Equals(Kill, other.Kill)) return false;
       if (!object.Equals(MoveWorld, other.MoveWorld)) return false;
       if (!object.Equals(ShareContent, other.ShareContent)) return false;
+      if (!object.Equals(UnshareContent, other.UnshareContent)) return false;
       if (!object.Equals(ConnectPeer, other.ConnectPeer)) return false;
       if (InnerCase != other.InnerCase) return false;
       return Equals(_unknownFields, other._unknownFields);
@@ -227,6 +247,7 @@ namespace AbyssCLI.ABI {
       if (innerCase_ == InnerOneofCase.Kill) hash ^= Kill.GetHashCode();
       if (innerCase_ == InnerOneofCase.MoveWorld) hash ^= MoveWorld.GetHashCode();
       if (innerCase_ == InnerOneofCase.ShareContent) hash ^= ShareContent.GetHashCode();
+      if (innerCase_ == InnerOneofCase.UnshareContent) hash ^= UnshareContent.GetHashCode();
       if (innerCase_ == InnerOneofCase.ConnectPeer) hash ^= ConnectPeer.GetHashCode();
       hash ^= (int) innerCase_;
       if (_unknownFields != null) {
@@ -263,6 +284,10 @@ namespace AbyssCLI.ABI {
         output.WriteRawTag(34);
         output.WriteMessage(ShareContent);
       }
+      if (innerCase_ == InnerOneofCase.UnshareContent) {
+        output.WriteRawTag(42);
+        output.WriteMessage(UnshareContent);
+      }
       if (innerCase_ == InnerOneofCase.ConnectPeer) {
         output.WriteRawTag(82);
         output.WriteMessage(ConnectPeer);
@@ -293,6 +318,10 @@ namespace AbyssCLI.ABI {
         output.WriteRawTag(34);
         output.WriteMessage(ShareContent);
       }
+      if (innerCase_ == InnerOneofCase.UnshareContent) {
+        output.WriteRawTag(42);
+        output.WriteMessage(UnshareContent);
+      }
       if (innerCase_ == InnerOneofCase.ConnectPeer) {
         output.WriteRawTag(82);
         output.WriteMessage(ConnectPeer);
@@ -318,6 +347,9 @@ namespace AbyssCLI.ABI {
       }
       if (innerCase_ == InnerOneofCase.ShareContent) {
         size += 1 + pb::CodedOutputStream.ComputeMessageSize(ShareContent);
+      }
+      if (innerCase_ == InnerOneofCase.UnshareContent) {
+        size += 1 + pb::CodedOutputStream.ComputeMessageSize(UnshareContent);
       }
       if (innerCase_ == InnerOneofCase.ConnectPeer) {
         size += 1 + pb::CodedOutputStream.ComputeMessageSize(ConnectPeer);
@@ -358,6 +390,12 @@ namespace AbyssCLI.ABI {
             ShareContent = new global::AbyssCLI.ABI.UIAction.Types.ShareContent();
           }
           ShareContent.MergeFrom(other.ShareContent);
+          break;
+        case InnerOneofCase.UnshareContent:
+          if (UnshareContent == null) {
+            UnshareContent = new global::AbyssCLI.ABI.UIAction.Types.UnshareContent();
+          }
+          UnshareContent.MergeFrom(other.UnshareContent);
           break;
         case InnerOneofCase.ConnectPeer:
           if (ConnectPeer == null) {
@@ -422,6 +460,15 @@ namespace AbyssCLI.ABI {
             ShareContent = subBuilder;
             break;
           }
+          case 42: {
+            global::AbyssCLI.ABI.UIAction.Types.UnshareContent subBuilder = new global::AbyssCLI.ABI.UIAction.Types.UnshareContent();
+            if (innerCase_ == InnerOneofCase.UnshareContent) {
+              subBuilder.MergeFrom(UnshareContent);
+            }
+            input.ReadMessage(subBuilder);
+            UnshareContent = subBuilder;
+            break;
+          }
           case 82: {
             global::AbyssCLI.ABI.UIAction.Types.ConnectPeer subBuilder = new global::AbyssCLI.ABI.UIAction.Types.ConnectPeer();
             if (innerCase_ == InnerOneofCase.ConnectPeer) {
@@ -484,6 +531,15 @@ namespace AbyssCLI.ABI {
             }
             input.ReadMessage(subBuilder);
             ShareContent = subBuilder;
+            break;
+          }
+          case 42: {
+            global::AbyssCLI.ABI.UIAction.Types.UnshareContent subBuilder = new global::AbyssCLI.ABI.UIAction.Types.UnshareContent();
+            if (innerCase_ == InnerOneofCase.UnshareContent) {
+              subBuilder.MergeFrom(UnshareContent);
+            }
+            input.ReadMessage(subBuilder);
+            UnshareContent = subBuilder;
             break;
           }
           case 82: {
@@ -1467,6 +1523,204 @@ namespace AbyssCLI.ABI {
       }
 
       [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
+      public sealed partial class UnshareContent : pb::IMessage<UnshareContent>
+      #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+          , pb::IBufferMessage
+      #endif
+      {
+        private static readonly pb::MessageParser<UnshareContent> _parser = new pb::MessageParser<UnshareContent>(() => new UnshareContent());
+        private pb::UnknownFieldSet _unknownFields;
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+        public static pb::MessageParser<UnshareContent> Parser { get { return _parser; } }
+
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+        public static pbr::MessageDescriptor Descriptor {
+          get { return global::AbyssCLI.ABI.UIAction.Descriptor.NestedTypes[4]; }
+        }
+
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+        pbr::MessageDescriptor pb::IMessage.Descriptor {
+          get { return Descriptor; }
+        }
+
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+        public UnshareContent() {
+          OnConstruction();
+        }
+
+        partial void OnConstruction();
+
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+        public UnshareContent(UnshareContent other) : this() {
+          uuid_ = other.uuid_;
+          _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+        }
+
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+        public UnshareContent Clone() {
+          return new UnshareContent(this);
+        }
+
+        /// <summary>Field number for the "uuid" field.</summary>
+        public const int UuidFieldNumber = 1;
+        private pb::ByteString uuid_ = pb::ByteString.Empty;
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+        public pb::ByteString Uuid {
+          get { return uuid_; }
+          set {
+            uuid_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+          }
+        }
+
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+        public override bool Equals(object other) {
+          return Equals(other as UnshareContent);
+        }
+
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+        public bool Equals(UnshareContent other) {
+          if (ReferenceEquals(other, null)) {
+            return false;
+          }
+          if (ReferenceEquals(other, this)) {
+            return true;
+          }
+          if (Uuid != other.Uuid) return false;
+          return Equals(_unknownFields, other._unknownFields);
+        }
+
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+        public override int GetHashCode() {
+          int hash = 1;
+          if (Uuid.Length != 0) hash ^= Uuid.GetHashCode();
+          if (_unknownFields != null) {
+            hash ^= _unknownFields.GetHashCode();
+          }
+          return hash;
+        }
+
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+        public override string ToString() {
+          return pb::JsonFormatter.ToDiagnosticString(this);
+        }
+
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+        public void WriteTo(pb::CodedOutputStream output) {
+        #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+          output.WriteRawMessage(this);
+        #else
+          if (Uuid.Length != 0) {
+            output.WriteRawTag(10);
+            output.WriteBytes(Uuid);
+          }
+          if (_unknownFields != null) {
+            _unknownFields.WriteTo(output);
+          }
+        #endif
+        }
+
+        #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+        void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+          if (Uuid.Length != 0) {
+            output.WriteRawTag(10);
+            output.WriteBytes(Uuid);
+          }
+          if (_unknownFields != null) {
+            _unknownFields.WriteTo(ref output);
+          }
+        }
+        #endif
+
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+        public int CalculateSize() {
+          int size = 0;
+          if (Uuid.Length != 0) {
+            size += 1 + pb::CodedOutputStream.ComputeBytesSize(Uuid);
+          }
+          if (_unknownFields != null) {
+            size += _unknownFields.CalculateSize();
+          }
+          return size;
+        }
+
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+        public void MergeFrom(UnshareContent other) {
+          if (other == null) {
+            return;
+          }
+          if (other.Uuid.Length != 0) {
+            Uuid = other.Uuid;
+          }
+          _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+        }
+
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+        public void MergeFrom(pb::CodedInputStream input) {
+        #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+          input.ReadRawMessage(this);
+        #else
+          uint tag;
+          while ((tag = input.ReadTag()) != 0) {
+          if ((tag & 7) == 4) {
+            // Abort on any end group tag.
+            return;
+          }
+          switch(tag) {
+              default:
+                _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+                break;
+              case 10: {
+                Uuid = input.ReadBytes();
+                break;
+              }
+            }
+          }
+        #endif
+        }
+
+        #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+        void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
+          uint tag;
+          while ((tag = input.ReadTag()) != 0) {
+          if ((tag & 7) == 4) {
+            // Abort on any end group tag.
+            return;
+          }
+          switch(tag) {
+              default:
+                _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
+                break;
+              case 10: {
+                Uuid = input.ReadBytes();
+                break;
+              }
+            }
+          }
+        }
+        #endif
+
+      }
+
+      [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
       public sealed partial class ConnectPeer : pb::IMessage<ConnectPeer>
       #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
           , pb::IBufferMessage
@@ -1481,7 +1735,7 @@ namespace AbyssCLI.ABI {
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
         [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public static pbr::MessageDescriptor Descriptor {
-          get { return global::AbyssCLI.ABI.UIAction.Descriptor.NestedTypes[4]; }
+          get { return global::AbyssCLI.ABI.UIAction.Descriptor.NestedTypes[5]; }
         }
 
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]

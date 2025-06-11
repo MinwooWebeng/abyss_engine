@@ -24,6 +24,9 @@ message UIAction {
 		Vec3 pos = 3;
 		Vec4 rot = 4;
 	}
+	message UnshareContent {
+		bytes uuid = 1;
+	}
 
 	message ConnectPeer {
 		string aurl = 1;
@@ -34,6 +37,7 @@ message UIAction {
 		Kill kill = 2;
 		MoveWorld move_world = 3;
 		ShareContent share_content = 4;
+		UnshareContent unshare_content = 5;
 
 		ConnectPeer connect_peer = 10;
 	}

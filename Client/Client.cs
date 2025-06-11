@@ -78,6 +78,7 @@ namespace AbyssCLI.Client
             {
                 case UIAction.InnerOneofCase.MoveWorld: OnMoveWorld(message.MoveWorld); return true;
                 case UIAction.InnerOneofCase.ShareContent: OnShareContent(message.ShareContent); return true;
+                case UIAction.InnerOneofCase.UnshareContent: OnUnshareContent(message.UnshareContent); return true;
                 case UIAction.InnerOneofCase.ConnectPeer:
                     if (Host.OpenOutboundConnection(message.ConnectPeer.Aurl) != 0)
                     {
@@ -158,6 +159,10 @@ namespace AbyssCLI.Client
             }
 
             _current_world.TryShareObject(new Guid(args.Uuid.ToByteArray()), content_url, [args.Pos.X, args.Pos.Y, args.Pos.Z, args.Rot.W, args.Rot.X, args.Rot.Y, args.Rot.Z]);
+        }
+        private static void OnUnshareContent(UIAction.Types.UnshareContent args)
+        {
+            _current_world.TryUnshareObject(new Guid(args.Uuid.ToByteArray()));
         }
         private static UIAction ReadProtoMessage()
         {

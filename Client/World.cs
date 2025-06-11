@@ -74,7 +74,7 @@ namespace AbyssCLI.Client
             }
             return true;
         }
-        public void RemoveObject(Guid guid)
+        public void TryUnshareObject(Guid guid)
         {
             lock (_lock)
             {

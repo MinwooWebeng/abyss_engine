@@ -63,6 +63,17 @@ public void ShareContent
         Rot = rot
     }
 });
+public void UnshareContent
+(
+    ByteString uuid
+)
+=> Write(new UIAction()
+{
+    UnshareContent = new UnshareContent
+    {
+        Uuid = uuid
+    }
+});
 public void ConnectPeer
 (
     string aurl
