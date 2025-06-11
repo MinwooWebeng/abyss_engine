@@ -6,33 +6,30 @@ namespace AbyssCLI.Client
 {
     public static class Client
     {
+        public static AbyssLib.Host Host { get; private set; }
         public static readonly RenderActionWriter RenderWriter = new(Stream.Synchronized(Console.OpenStandardOutput()));
+
+        private static readonly BinaryReader _cin = new(Console.OpenStandardInput());
         private static readonly StreamWriter _cerr = new(Stream.Synchronized(Console.OpenStandardError()))
         {
             AutoFlush = true
         };
+        private static AbyssLib.SimplePathResolver _resolver;
+        private static World _current_world;
+        private static readonly object _world_move_lock = new();
         public static void CerrWriteLine(string message)
         {
-            lock(_cerr)
+            lock (_cerr)
             {
                 _cerr.WriteLine(message);
             }
         }
-        public static AbyssLib.Host Host { get; private set; }
-
-        private static readonly BinaryReader _cin = new(Console.OpenStandardInput());
-        private static AbyssLib.SimplePathResolver _resolver;
-        private static World _current_world;
-        private static readonly object _world_move_lock = new();
-        public static void Init()
+        public static void Run()
         {
             if (AbyssLib.Init() != 0)
             {
                 throw new Exception("failed to initialize abyssnet.dll");
             }
-        }
-        public static void Run()
-        {
             _resolver = AbyssLib.NewSimplePathResolver();
 
             //Host Initialization
@@ -41,7 +38,6 @@ namespace AbyssCLI.Client
             {
                 throw new Exception("host not initialized");
             }
-
             var abyst_server_path = Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "\\ABYST\\" + init_msg.Init.Name;
             if (!Directory.Exists(abyst_server_path))
             {
@@ -64,18 +60,16 @@ namespace AbyssCLI.Client
             var net_world = Host.OpenWorld(default_world_url_raw);
             _current_world = new World(Host, net_world, default_world_url);
             if (!_resolver.TrySetMapping("", net_world.world_id).Empty)
-            {
-                throw new Exception("faild to set path for initial world at default path");
-            }
-
+             
             while (UIActionHandle()) { }
         }
-        public static void MoveWorld(AbyssURL url) => MainWorldSwap(url);
         private static bool UIActionHandle()
         {
             var message = ReadProtoMessage();
             switch (message.InnerCase)
             {
+                case UIAction.InnerOneofCase.Kill:
+                    return false;
                 case UIAction.InnerOneofCase.MoveWorld: OnMoveWorld(message.MoveWorld); return true;
                 case UIAction.InnerOneofCase.ShareContent: OnShareContent(message.ShareContent); return true;
                 case UIAction.InnerOneofCase.UnshareContent: OnUnshareContent(message.UnshareContent); return true;
@@ -85,10 +79,6 @@ namespace AbyssCLI.Client
                         CerrWriteLine("failed to open outbound connection: " + message.ConnectPeer.Aurl);
                     }
                     return true;
-                case UIAction.InnerOneofCase.Kill:
-                    return false;
-                case UIAction.InnerOneofCase.None:
-                case UIAction.InnerOneofCase.Init:
                 default: throw new Exception("fatal: received invalid UI Action");
             }
         }
@@ -101,7 +91,7 @@ namespace AbyssCLI.Client
 
             MainWorldSwap(aurl);
         }
-        private static void MainWorldSwap(AbyssURL url)
+        public static void MainWorldSwap(AbyssURL url) //can also be called from javascript API.
         {
             lock (_world_move_lock)
             {

@@ -7,7 +7,6 @@ class Program
     {
         try
         {
-            Client.Init();
             Client.Run();
             Client.CerrWriteLine("AbyssCLI terminated peacefully");
         }

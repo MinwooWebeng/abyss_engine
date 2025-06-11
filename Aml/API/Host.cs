@@ -42,7 +42,7 @@ namespace AbyssCLI.Aml.API
                 Client.Client.CerrWriteLine("move_world: failed to parse url");
                 return;
             }
-            Client.Client.MoveWorld(url_parsed);
+            Client.Client.MainWorldSwap(url_parsed);
         }
 #pragma warning restore IDE1006
 

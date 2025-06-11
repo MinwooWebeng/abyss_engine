@@ -17,6 +17,8 @@ message File {
 //if action requires another component, ends with 'C'
 //if -C is possible, then must not have -F.
 //if no variation is possible, no suffix.
+//all hierarchical element has element_id, which is globally unique in an abyss browser.
+//they don't necessarily be an element on the rendering engine, depending on its implementation.
 message RenderAction {
 	message CreateElement {
 		int32 parent_id = 1;
@@ -35,8 +37,13 @@ message RenderAction {
 		Vec4 rot = 3;
 	}
 
+	//shared item container
+	message CreateItem {
+		int32 element_id = 1;
+		bytes uuid = 2;
+	}
+
 	//components
-	
 	message CreateImage {
 		int32 image_id = 1;
 		File file = 2;
