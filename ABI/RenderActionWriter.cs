@@ -63,6 +63,45 @@ public void ElemSetPos
         Rot = rot
     }
 });
+public void CreateItem
+(
+    int element_id,
+    string sharer_hash,
+    ByteString uuid
+)
+=> Write(new RenderAction()
+{
+    CreateItem = new CreateItem
+    {
+        ElementId = element_id,
+        SharerHash = sharer_hash,
+        Uuid = uuid
+    }
+});
+public void DeleteItem
+(
+    int element_id
+)
+=> Write(new RenderAction()
+{
+    DeleteItem = new DeleteItem
+    {
+        ElementId = element_id
+    }
+});
+public void ItemSetIcon
+(
+    int element_id,
+    int image_id
+)
+=> Write(new RenderAction()
+{
+    ItemSetIcon = new ItemSetIcon
+    {
+        ElementId = element_id,
+        ImageId = image_id
+    }
+});
 public void CreateImage
 (
     int image_id,
@@ -232,13 +271,15 @@ public void DeleteAnimation
 });
 public void LocalInfo
 (
-    string aurl
+    string aurl,
+    string local_hash
 )
 => Write(new RenderAction()
 {
     LocalInfo = new LocalInfo
     {
-        Aurl = aurl
+        Aurl = aurl,
+        LocalHash = local_hash
     }
 });
 public void InfoContentShared
@@ -271,6 +312,17 @@ public void InfoContentDeleted
         ContentUuid = content_uuid,
         SharerHash = sharer_hash,
         WorldUuid = world_uuid
+    }
+});
+public void ConsolePrint
+(
+    string text
+)
+=> Write(new RenderAction()
+{
+    ConsolePrint = new ConsolePrint
+    {
+        Text = text
     }
 });
 

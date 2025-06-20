@@ -4,10 +4,10 @@ namespace AbyssCLI.Aml
 {
     internal sealed class BodyImpl : AmlNode
     {
-        public BodyImpl(AmlNode context, XmlNode xml_node, float[] transform)
+        public BodyImpl(AmlNode context, XmlNode xml_node, float[] transform, int base_element)
             : base(context)
         {
-            _root_elem = RenderID.ElementId;
+            _root_elem = base_element;
             _transform = transform;
             foreach (XmlNode child in xml_node?.ChildNodes)
             {

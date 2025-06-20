@@ -17,4 +17,4 @@ Write-Output "Copying \Debug to \AbyssUIBuild\AbyssCLI"
 Copy-Item -Path .\bin\Debug\net8.0\* -Destination D:\unity\AbyssUIBuild\AbyssCLI -Recurse
 
 Write-Output "Copying \ABI to \AbyssUI\Assets\Host\ABI"
-Copy-Item -Path .\ABI\* -Destination D:\Unity\AbyssUI\Assets\Host\ABI -Recurse
+Copy-Item -Path .\ABI\* -Destination D:\unity\AbyssUI\Assets\Host\ABI -Recurse

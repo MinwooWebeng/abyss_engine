@@ -1,10 +1,9 @@
 ﻿using AbyssCLI.ABI;
 using AbyssCLI.Tool;
-using Google.Protobuf;
 
 namespace AbyssCLI.Client
 {
-    public static class Client
+    public static partial class Client
     {
         public static AbyssLib.Host Host { get; private set; }
         public static readonly RenderActionWriter RenderWriter = new(Stream.Synchronized(Console.OpenStandardOutput()));
@@ -45,11 +44,11 @@ namespace AbyssCLI.Client
             }
             Host = AbyssLib.OpenAbyssHost(init_msg.Init.RootKey.ToByteArray(), _resolver, AbyssLib.NewSimpleAbystServer(abyst_server_path));
             if (!Host.IsValid())
-            {
+            { 
                 CerrWriteLine("host creation failed: " + AbyssLib.GetError().ToString());
                 return;
             }
-            RenderWriter.LocalInfo(Host.local_aurl.Raw);
+            RenderWriter.LocalInfo(Host.local_aurl.Raw, Host.local_aurl.Id);
 
             var default_world_url_raw = "abyst:" + Host.local_aurl.Id;
             if (!AbyssURLParser.TryParse(default_world_url_raw, out AbyssURL default_world_url))
@@ -73,86 +72,9 @@ namespace AbyssCLI.Client
                 case UIAction.InnerOneofCase.MoveWorld: OnMoveWorld(message.MoveWorld); return true;
                 case UIAction.InnerOneofCase.ShareContent: OnShareContent(message.ShareContent); return true;
                 case UIAction.InnerOneofCase.UnshareContent: OnUnshareContent(message.UnshareContent); return true;
-                case UIAction.InnerOneofCase.ConnectPeer:
-                    if (Host.OpenOutboundConnection(message.ConnectPeer.Aurl) != 0)
-                    {
-                        CerrWriteLine("failed to open outbound connection: " + message.ConnectPeer.Aurl);
-                    }
-                    return true;
+                case UIAction.InnerOneofCase.ConnectPeer: OnConnectPeer(message.ConnectPeer); return true;
                 default: throw new Exception("fatal: received invalid UI Action");
             }
-        }
-        private static void OnMoveWorld(UIAction.Types.MoveWorld args)
-        {
-            if (!AbyssURLParser.TryParseFrom(args.WorldUrl, Host.local_aurl, out var aurl)) {
-                CerrWriteLine("MoveWorld: failed to parse world url");
-                return;
-            }
-
-            MainWorldSwap(aurl);
-        }
-        public static void MainWorldSwap(AbyssURL url) //can also be called from javascript API.
-        {
-            lock (_world_move_lock)
-            {
-                AbyssLib.World net_world;
-                AbyssURL world_url;
-                if (url.Scheme == "abyss")
-                {
-                    net_world = Host.JoinWorld(url.Raw);
-                    if (!net_world.IsValid())
-                    {
-                        CerrWriteLine("failed to join world: " + url.Raw);
-                        return;
-                    }
-                    if (!AbyssURLParser.TryParse(net_world.url, out world_url) || world_url.Scheme == "abyss")
-                    {
-                        CerrWriteLine("invalid world url: " + world_url.Raw);
-                        net_world.Leave();
-                        return;
-                    }
-                }
-                else
-                {
-                    net_world = Host.OpenWorld(url.Raw);
-                    world_url = url;
-                }
-                if (!net_world.IsValid())
-                {
-                    CerrWriteLine("MoveWorld: failed to open world");
-                    return;
-                }
-
-                _resolver.DeleteMapping("");
-                _current_world?.Leave();
-                try
-                {
-                    _current_world = new World(Host, net_world, world_url);
-                }
-                catch (Exception ex)
-                {
-                    CerrWriteLine("world creation failed: " + ex.Message);
-                    _current_world = null;
-                }
-                if(!_resolver.TrySetMapping("", net_world.world_id).Empty)
-                {
-                    throw new Exception("failed to set world path mapping");
-                }
-            }
-        }
-        private static void OnShareContent(UIAction.Types.ShareContent args)
-        {
-            if (!AbyssURLParser.TryParseFrom(args.Url, Host.local_aurl, out var content_url))
-            {
-                CerrWriteLine("OnShareContent: failed to parse address: " + args.Url);
-                return;
-            }
-
-            _current_world.TryShareObject(new Guid(args.Uuid.ToByteArray()), content_url, [args.Pos.X, args.Pos.Y, args.Pos.Z, args.Rot.W, args.Rot.X, args.Rot.Y, args.Rot.Z]);
-        }
-        private static void OnUnshareContent(UIAction.Types.UnshareContent args)
-        {
-            _current_world.TryUnshareObject(new Guid(args.Uuid.ToByteArray()));
         }
         private static UIAction ReadProtoMessage()
         {

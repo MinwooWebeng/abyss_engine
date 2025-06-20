@@ -6,7 +6,7 @@ namespace AbyssCLI.Aml
 {
     internal sealed class DocumentImpl(Contexted root,
         AbyssLib.Host host,
-        ResourceLoader resourceLoader, AbyssURL url, float[] transform)
+        ResourceLoader resourceLoader, AbyssURL url, float[] transform, int base_element)
         : AmlNode(root, resourceLoader)
     {
         public static readonly float[] _defaultTransform = [0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f];
@@ -50,15 +50,17 @@ namespace AbyssCLI.Aml
             var body_node = aml_node.SelectSingleNode("body");
             if (body_node == null)
             {
-                Children.Add(new BodyImpl(this, doc.CreateNode(XmlNodeType.Element, "body", null), _defaultTransform));
+                Children.Add(new BodyImpl(this, doc.CreateNode(XmlNodeType.Element, "body", null), _defaultTransform, base_element));
             }
             else
             {
-                Children.Add(new BodyImpl(this, body_node, transform));
+                Children.Add(new BodyImpl(this, body_node, transform, base_element));
             }
         }
         private readonly AbyssLib.Host host = host;
         private readonly AbyssURL url = url;
+
+        public readonly int base_element = base_element;
 
         //valid only after Activation
         public HeadImpl Head => Children[0] as HeadImpl;

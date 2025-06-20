@@ -40,7 +40,15 @@ message RenderAction {
 	//shared item container
 	message CreateItem {
 		int32 element_id = 1;
-		bytes uuid = 2;
+		string sharer_hash = 2;
+		bytes uuid = 3;
+	}
+	message DeleteItem {
+		int32 element_id = 1;
+	}
+	message ItemSetIcon {
+		int32 element_id = 1;
+		int32 image_id = 2;
 	}
 
 	//components
@@ -106,6 +114,7 @@ message RenderAction {
 
 	message LocalInfo {
 		string aurl = 1;
+		string local_hash = 2;
 	}
 	message InfoContentShared {
 		string content_uuid = 1;
@@ -119,11 +128,19 @@ message RenderAction {
 		string world_uuid = 4;
 	}
 
+	message ConsolePrint {
+		string text = 1;
+	}
+
 	oneof inner {
 		CreateElement create_element = 1;
 		MoveElement move_element = 2;
 		DeleteElement delete_element = 3;
 		ElemSetPos elem_set_pos = 4;
+
+		CreateItem create_item = 30;
+		DeleteItem delete_item = 31;
+		ItemSetIcon item_set_icon = 32;
 
 		CreateImage create_image = 100;
 		DeleteImage delete_image = 109;
@@ -145,5 +162,7 @@ message RenderAction {
 		LocalInfo local_info = 1000;
 		InfoContentShared info_content_shared = 1001;
 		InfoContentDeleted info_content_deleted = 1002;
+
+		ConsolePrint console_print = 9000; 
 	}
 }

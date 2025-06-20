@@ -1,6 +1,5 @@
-﻿using AbyssCLI.Aml;
-using AbyssCLI.Tool;
-using System.Text.RegularExpressions;
+﻿using AbyssCLI.Tool;
+using Microsoft.ClearScript;
 
 namespace AbyssCLI.Client
 {
@@ -8,9 +7,9 @@ namespace AbyssCLI.Client
     {
         private readonly AbyssLib.Host _host;
         private readonly AbyssLib.World _world;
-        private readonly Aml.Content _environment;
-        private readonly Dictionary<string, Tuple<AbyssLib.WorldMember, Dictionary<Guid, Aml.Content>>> _members = []; //peer hash - [uuid - content]
-        private readonly Dictionary<Guid, Aml.Content> _local_contents = []; //UUID - content
+        private readonly CAbstraction.Environment _environment;
+        private readonly Dictionary<string, CAbstraction.Member> _members = []; //peer hash - [uuid - item]
+        private readonly Dictionary<Guid, CAbstraction.Item> _local_items = []; //UUID - item
         private readonly object _lock = new();
         private readonly Thread _world_th;
 
@@ -18,7 +17,7 @@ namespace AbyssCLI.Client
         {
             _host = host;
             _world = world;
-            _environment = new(host, URL, Aml.DocumentImpl._defaultTransform);
+            _environment = new(host, URL);
             _environment.Activate();
 
             _world_th = new Thread(() =>
@@ -50,46 +49,36 @@ namespace AbyssCLI.Client
             });
             _world_th.Start();
         }
-        public bool TryShareObject(Guid uuid, AbyssURL url, float[] transform)
+        public void ShareItem(Guid uuid, AbyssURL url, float[] transform)
         {
-            Aml.Content content;
-            try
-            {
-                content = new Aml.Content(_host, url, transform);
-            }
-            catch (Exception ex)
-            {
-                Client.CerrWriteLine("shared object construction failed: " + ex.Message);
-                return false;
-            }
-            content.Activate();
+            var item = new CAbstraction.Item(_host, _host.local_aurl.Id, uuid, url, Aml.RenderID.ElementId, transform);
+            item.Activate();
 
             lock (_lock)
             {
-                _local_contents[uuid] = content;
+                _local_items[uuid] = item;
                 foreach (var entry in _members)
                 {
-                    entry.Value.Item1.AppendObjects([Tuple.Create(uuid, url.Raw, transform)]);
+                    entry.Value.network_handle.AppendObjects([Tuple.Create(uuid, url.Raw, transform)]);
                 }
             }
-            return true;
         }
-        public void TryUnshareObject(Guid guid)
+        public void UnshareItem(Guid guid)
         {
             lock (_lock)
             {
-                _local_contents[guid].Close();
-                _local_contents.Remove(guid);
-
+                var item = _local_items[guid];
+                item.CloseAsync();
+                _local_items.Remove(guid);
                 foreach (var member in _members)
                 {
-                    member.Value.Item1.DeleteObjects([guid]);
+                    member.Value.network_handle.DeleteObjects([guid]);
                 }
             }
         }
         public void Leave()
         {
-            _environment.Close();
+            _environment.CloseAsync();
             if (_world.Leave() != 0)
             {
                 Client.CerrWriteLine("failed to leave world");
@@ -98,17 +87,17 @@ namespace AbyssCLI.Client
 
             foreach (var member in _members)
             {
-                foreach (var content in member.Value.Item2.Values)
+                foreach (var item in member.Value.remote_items.Values)
                 {
-                    content.Close();
+                    item.CloseAsync();
                 }
             }
-            foreach (var content in _local_contents.Values)
+            foreach (var item in _local_items.Values)
             {
-                content.Close();
+                item.CloseAsync();
             }
             _members.Clear(); //do we need this?
-            _local_contents.Clear(); //do we need this?
+            _local_items.Clear(); //do we need this?
         }
 
         //internals
@@ -120,17 +109,17 @@ namespace AbyssCLI.Client
         {
             lock (_lock)
             {
-                if (!_members.TryAdd(member.hash, Tuple.Create(member, new Dictionary<Guid, Aml.Content>())))
+                if (!_members.TryAdd(member.hash, new(member)))
                 {
                     Client.CerrWriteLine("failed to append peer; old peer session pends");
                     return;
                 }
-                var list_of_local_contents = _local_contents
-                    .Select(kvp => Tuple.Create(kvp.Key, kvp.Value.URL.Raw, kvp.Value.Transform))
+                var list_of_local_items = _local_items
+                    .Select(kvp => Tuple.Create(kvp.Key, kvp.Value.URL.Raw, kvp.Value.spawn_transform))
                     .ToArray();
-                if (list_of_local_contents.Length != 0)
+                if (list_of_local_items.Length != 0)
                 {
-                    member.AppendObjects(list_of_local_contents);
+                    member.AppendObjects(list_of_local_items);
                 }
             }
         }
@@ -158,24 +147,14 @@ namespace AbyssCLI.Client
                 
                 foreach (var obj in parsed_objects)
                 {
-                    Aml.Content content;
-                    try
-                    {
-                        content = new Aml.Content(_host, obj.Item2, obj.Item3);
-                    }
-                    catch (Exception ex)
-                    {
-                        Client.CerrWriteLine("peer shared object construction failed: " + ex.Message);
-                        continue;
-                    }
-
-                    if (!member.Item2.TryAdd(obj.Item1, content))
+                    var item = new CAbstraction.Item(_host, evnt.peer_hash, obj.Item1, obj.Item2, Aml.RenderID.ElementId, obj.Item3);
+                    if (!member.remote_items.TryAdd(obj.Item1, item))
                     {
                         Client.CerrWriteLine("uid collision of objects appended from peer");
                         continue;
                     }
 
-                    content.Activate();
+                    item.Activate();
                 }
             }
         }
@@ -191,12 +170,12 @@ namespace AbyssCLI.Client
 
                 foreach (var id in evnt.object_ids)
                 {
-                    if (!member.Item2.Remove(id, out var content))
+                    if (!member.remote_items.Remove(id, out var item))
                     {
                         Client.CerrWriteLine("peer tried to delete unshared objects");
                         continue;
                     }
-                    content.Close();
+                    item.CloseAsync();
                 }
             }
         }
@@ -210,9 +189,9 @@ namespace AbyssCLI.Client
                     return;
                 }
 
-                foreach (var items in value.Item2)
+                foreach (var item in value.remote_items.Values)
                 {
-                    items.Value.Close();
+                    item.CloseAsync();
                 }
             }
         }
