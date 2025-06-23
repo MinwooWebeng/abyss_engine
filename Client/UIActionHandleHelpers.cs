@@ -35,6 +35,7 @@ namespace AbyssCLI.Client
                     net_world = Host.OpenWorld(url.Raw);
                     world_url = url;
                 }
+
                 if (!net_world.IsValid())
                 {
                     CerrWriteLine("MoveWorld: failed to open world");

@@ -102,6 +102,28 @@ public void ItemSetIcon
         ImageId = image_id
     }
 });
+public void MemberInfo
+(
+    string peer_hash
+)
+=> Write(new RenderAction()
+{
+    MemberInfo = new MemberInfo
+    {
+        PeerHash = peer_hash
+    }
+});
+public void MemberLeave
+(
+    string peer_hash
+)
+=> Write(new RenderAction()
+{
+    MemberLeave = new MemberLeave
+    {
+        PeerHash = peer_hash
+    }
+});
 public void CreateImage
 (
     int image_id,

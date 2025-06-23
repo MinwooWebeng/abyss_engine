@@ -21,7 +21,6 @@ namespace AbyssCLI.Aml
         }
         protected override Task ActivateSelfCallback(CancellationToken token)
         {
-            Client.Client.RenderWriter.CreateElement(0, _root_elem);
             Client.Client.RenderWriter.ElemSetPos(
                 _root_elem, 
                 new ABI.Vec3{
@@ -37,14 +36,6 @@ namespace AbyssCLI.Aml
                     Z = _transform[6],
                 });
             return Task.CompletedTask;
-        }
-        protected override void DeceaseSelfCallback()
-        {
-            Client.Client.RenderWriter.MoveElement(_root_elem, -1);
-        }
-        protected override void CleanupSelfCallback()
-        {
-            Client.Client.RenderWriter.DeleteElement(_root_elem);
         }
         public static string Tag => "body";
 

@@ -1,4 +1,5 @@
-﻿using AbyssCLI.Tool;
+﻿using AbyssCLI.CAbstraction;
+using AbyssCLI.Tool;
 using Microsoft.ClearScript;
 
 namespace AbyssCLI.Client
@@ -17,7 +18,7 @@ namespace AbyssCLI.Client
         {
             _host = host;
             _world = world;
-            _environment = new(host, URL);
+            _environment = new(host, URL, Aml.RenderID.ComponentId);
             _environment.Activate();
 
             _world_th = new Thread(() =>
@@ -114,6 +115,8 @@ namespace AbyssCLI.Client
                     Client.CerrWriteLine("failed to append peer; old peer session pends");
                     return;
                 }
+                Client.RenderWriter.MemberInfo(member.hash);
+
                 var list_of_local_items = _local_items
                     .Select(kvp => Tuple.Create(kvp.Key, kvp.Value.URL.Raw, kvp.Value.spawn_transform))
                     .ToArray();
@@ -188,6 +191,7 @@ namespace AbyssCLI.Client
                     Client.CerrWriteLine("non-existing peer leaved");
                     return;
                 }
+                Client.RenderWriter.MemberInfo(peer_hash);
 
                 foreach (var item in value.remote_items.Values)
                 {

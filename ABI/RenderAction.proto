@@ -51,6 +51,14 @@ message RenderAction {
 		int32 image_id = 2;
 	}
 
+	// member session join - leave
+	message MemberInfo {
+		string peer_hash = 1;
+	}
+	message MemberLeave {
+		string peer_hash = 1;
+	}
+
 	//components
 	message CreateImage {
 		int32 image_id = 1;
@@ -141,6 +149,9 @@ message RenderAction {
 		CreateItem create_item = 30;
 		DeleteItem delete_item = 31;
 		ItemSetIcon item_set_icon = 32;
+
+		MemberInfo member_info = 50;
+		MemberLeave member_leave = 51;
 
 		CreateImage create_image = 100;
 		DeleteImage delete_image = 109;

@@ -26,7 +26,7 @@ namespace AbyssCLI.ABI {
           string.Concat(
             "ChJSZW5kZXJBY3Rpb24ucHJvdG8aCm1pbWUucHJvdG8aEGNvbW1vbnR5cGUu",
             "cHJvdG8iSAoERmlsZRITCgRtaW1lGAEgASgOMgUuTUlNRRIRCgltbWFwX25h",
-            "bWUYAiABKAkSCwoDb2ZmGAMgASgNEgsKA2xlbhgEIAEoDSKLFgoMUmVuZGVy",
+            "bWUYAiABKAkSCwoDb2ZmGAMgASgNEgsKA2xlbhgEIAEoDSKyFwoMUmVuZGVy",
             "QWN0aW9uEjUKDmNyZWF0ZV9lbGVtZW50GAEgASgLMhsuUmVuZGVyQWN0aW9u",
             "LkNyZWF0ZUVsZW1lbnRIABIxCgxtb3ZlX2VsZW1lbnQYAiABKAsyGS5SZW5k",
             "ZXJBY3Rpb24uTW92ZUVsZW1lbnRIABI1Cg5kZWxldGVfZWxlbWVudBgDIAEo",
@@ -35,73 +35,78 @@ namespace AbyssCLI.ABI {
             "dGVfaXRlbRgeIAEoCzIYLlJlbmRlckFjdGlvbi5DcmVhdGVJdGVtSAASLwoL",
             "ZGVsZXRlX2l0ZW0YHyABKAsyGC5SZW5kZXJBY3Rpb24uRGVsZXRlSXRlbUgA",
             "EjIKDWl0ZW1fc2V0X2ljb24YICABKAsyGS5SZW5kZXJBY3Rpb24uSXRlbVNl",
-            "dEljb25IABIxCgxjcmVhdGVfaW1hZ2UYZCABKAsyGS5SZW5kZXJBY3Rpb24u",
-            "Q3JlYXRlSW1hZ2VIABIxCgxkZWxldGVfaW1hZ2UYbSABKAsyGS5SZW5kZXJB",
-            "Y3Rpb24uRGVsZXRlSW1hZ2VIABI6ChFjcmVhdGVfbWF0ZXJpYWxfdhhuIAEo",
-            "CzIdLlJlbmRlckFjdGlvbi5DcmVhdGVNYXRlcmlhbFZIABI6ChFjcmVhdGVf",
-            "bWF0ZXJpYWxfZhhvIAEoCzIdLlJlbmRlckFjdGlvbi5DcmVhdGVNYXRlcmlh",
-            "bEZIABI/ChRtYXRlcmlhbF9zZXRfcGFyYW1fdhhwIAEoCzIfLlJlbmRlckFj",
-            "dGlvbi5NYXRlcmlhbFNldFBhcmFtVkgAEj8KFG1hdGVyaWFsX3NldF9wYXJh",
-            "bV9jGHEgASgLMh8uUmVuZGVyQWN0aW9uLk1hdGVyaWFsU2V0UGFyYW1DSAAS",
-            "NwoPZGVsZXRlX21hdGVyaWFsGHcgASgLMhwuUmVuZGVyQWN0aW9uLkRlbGV0",
-            "ZU1hdGVyaWFsSAASPAoSY3JlYXRlX3N0YXRpY19tZXNoGHggASgLMh4uUmVu",
-            "ZGVyQWN0aW9uLkNyZWF0ZVN0YXRpY01lc2hIABJHChhzdGF0aWNfbWVzaF9z",
-            "ZXRfbWF0ZXJpYWwYeSABKAsyIy5SZW5kZXJBY3Rpb24uU3RhdGljTWVzaFNl",
-            "dE1hdGVyaWFsSAASRQoXZWxlbV9hdHRhY2hfc3RhdGljX21lc2gYeiABKAsy",
-            "Ii5SZW5kZXJBY3Rpb24uRWxlbUF0dGFjaFN0YXRpY01lc2hIABI9ChJkZWxl",
-            "dGVfc3RhdGljX21lc2gYgQEgASgLMh4uUmVuZGVyQWN0aW9uLkRlbGV0ZVN0",
-            "YXRpY01lc2hIABI6ChBjcmVhdGVfYW5pbWF0aW9uGMgBIAEoCzIdLlJlbmRl",
-            "ckFjdGlvbi5DcmVhdGVBbmltYXRpb25IABI6ChBkZWxldGVfYW5pbWF0aW9u",
-            "GNEBIAEoCzIdLlJlbmRlckFjdGlvbi5EZWxldGVBbmltYXRpb25IABIuCgps",
-            "b2NhbF9pbmZvGOgHIAEoCzIXLlJlbmRlckFjdGlvbi5Mb2NhbEluZm9IABI/",
-            "ChNpbmZvX2NvbnRlbnRfc2hhcmVkGOkHIAEoCzIfLlJlbmRlckFjdGlvbi5J",
-            "bmZvQ29udGVudFNoYXJlZEgAEkEKFGluZm9fY29udGVudF9kZWxldGVkGOoH",
-            "IAEoCzIgLlJlbmRlckFjdGlvbi5JbmZvQ29udGVudERlbGV0ZWRIABI0Cg1j",
-            "b25zb2xlX3ByaW50GKhGIAEoCzIaLlJlbmRlckFjdGlvbi5Db25zb2xlUHJp",
-            "bnRIABo2Cg1DcmVhdGVFbGVtZW50EhEKCXBhcmVudF9pZBgBIAEoBRISCgpl",
-            "bGVtZW50X2lkGAIgASgFGjgKC01vdmVFbGVtZW50EhIKCmVsZW1lbnRfaWQY",
-            "ASABKAUSFQoNbmV3X3BhcmVudF9pZBgCIAEoBRojCg1EZWxldGVFbGVtZW50",
-            "EhIKCmVsZW1lbnRfaWQYASABKAUaSAoKRWxlbVNldFBvcxISCgplbGVtZW50",
-            "X2lkGAEgASgFEhIKA3BvcxgCIAEoCzIFLlZlYzMSEgoDcm90GAMgASgLMgUu",
-            "VmVjNBpDCgpDcmVhdGVJdGVtEhIKCmVsZW1lbnRfaWQYASABKAUSEwoLc2hh",
-            "cmVyX2hhc2gYAiABKAkSDAoEdXVpZBgDIAEoDBogCgpEZWxldGVJdGVtEhIK",
-            "CmVsZW1lbnRfaWQYASABKAUaMwoLSXRlbVNldEljb24SEgoKZWxlbWVudF9p",
-            "ZBgBIAEoBRIQCghpbWFnZV9pZBgCIAEoBRo0CgtDcmVhdGVJbWFnZRIQCghp",
-            "bWFnZV9pZBgBIAEoBRITCgRmaWxlGAIgASgLMgUuRmlsZRofCgtEZWxldGVJ",
-            "bWFnZRIQCghpbWFnZV9pZBgBIAEoBRo7Cg9DcmVhdGVNYXRlcmlhbFYSEwoL",
-            "bWF0ZXJpYWxfaWQYASABKAUSEwoLc2hhZGVyX25hbWUYAiABKAkaOwoPQ3Jl",
-            "YXRlTWF0ZXJpYWxGEhMKC21hdGVyaWFsX2lkGAEgASgFEhMKBGZpbGUYAiAB",
-            "KAsyBS5GaWxlGlQKEU1hdGVyaWFsU2V0UGFyYW1WEhMKC21hdGVyaWFsX2lk",
-            "GAEgASgFEhIKCnBhcmFtX25hbWUYAiABKAkSFgoFcGFyYW0YAyABKAsyBy5B",
-            "bnlWYWwaUgoRTWF0ZXJpYWxTZXRQYXJhbUMSEwoLbWF0ZXJpYWxfaWQYASAB",
-            "KAUSEgoKcGFyYW1fbmFtZRgCIAEoCRIUCgxjb21wb25lbnRfaWQYAyABKAUa",
-            "JQoORGVsZXRlTWF0ZXJpYWwSEwoLbWF0ZXJpYWxfaWQYASABKAUaOAoQQ3Jl",
-            "YXRlU3RhdGljTWVzaBIPCgdtZXNoX2lkGAEgASgFEhMKBGZpbGUYAiABKAsy",
-            "BS5GaWxlGlQKFVN0YXRpY01lc2hTZXRNYXRlcmlhbBIPCgdtZXNoX2lkGAEg",
-            "ASgFEhUKDW1hdGVyaWFsX3Nsb3QYAiABKAUSEwoLbWF0ZXJpYWxfaWQYAyAB",
-            "KAUaOwoURWxlbUF0dGFjaFN0YXRpY01lc2gSEgoKZWxlbWVudF9pZBgBIAEo",
-            "BRIPCgdtZXNoX2lkGAIgASgFGiMKEERlbGV0ZVN0YXRpY01lc2gSDwoHbWVz",
-            "aF9pZBgBIAEoBRo8Cg9DcmVhdGVBbmltYXRpb24SFAoMYW5pbWF0aW9uX2lk",
-            "GAEgASgFEhMKBGZpbGUYAiABKAsyBS5GaWxlGicKD0RlbGV0ZUFuaW1hdGlv",
-            "bhIUCgxhbmltYXRpb25faWQYASABKAUaLQoJTG9jYWxJbmZvEgwKBGF1cmwY",
-            "ASABKAkSEgoKbG9jYWxfaGFzaBgCIAEoCRpnChFJbmZvQ29udGVudFNoYXJl",
-            "ZBIUCgxjb250ZW50X3V1aWQYASABKAkSEwoLY29udGVudF91cmwYAiABKAkS",
-            "EwoLc2hhcmVyX2hhc2gYAyABKAkSEgoKd29ybGRfdXVpZBgEIAEoCRpTChJJ",
-            "bmZvQ29udGVudERlbGV0ZWQSFAoMY29udGVudF91dWlkGAEgASgJEhMKC3No",
-            "YXJlcl9oYXNoGAMgASgJEhIKCndvcmxkX3V1aWQYBCABKAkaHAoMQ29uc29s",
-            "ZVByaW50EgwKBHRleHQYASABKAlCBwoFaW5uZXJCD6oCDEFieXNzQ0xJLkFC",
-            "SWIGcHJvdG8z"));
+            "dEljb25IABIvCgttZW1iZXJfaW5mbxgyIAEoCzIYLlJlbmRlckFjdGlvbi5N",
+            "ZW1iZXJJbmZvSAASMQoMbWVtYmVyX2xlYXZlGDMgASgLMhkuUmVuZGVyQWN0",
+            "aW9uLk1lbWJlckxlYXZlSAASMQoMY3JlYXRlX2ltYWdlGGQgASgLMhkuUmVu",
+            "ZGVyQWN0aW9uLkNyZWF0ZUltYWdlSAASMQoMZGVsZXRlX2ltYWdlGG0gASgL",
+            "MhkuUmVuZGVyQWN0aW9uLkRlbGV0ZUltYWdlSAASOgoRY3JlYXRlX21hdGVy",
+            "aWFsX3YYbiABKAsyHS5SZW5kZXJBY3Rpb24uQ3JlYXRlTWF0ZXJpYWxWSAAS",
+            "OgoRY3JlYXRlX21hdGVyaWFsX2YYbyABKAsyHS5SZW5kZXJBY3Rpb24uQ3Jl",
+            "YXRlTWF0ZXJpYWxGSAASPwoUbWF0ZXJpYWxfc2V0X3BhcmFtX3YYcCABKAsy",
+            "Hy5SZW5kZXJBY3Rpb24uTWF0ZXJpYWxTZXRQYXJhbVZIABI/ChRtYXRlcmlh",
+            "bF9zZXRfcGFyYW1fYxhxIAEoCzIfLlJlbmRlckFjdGlvbi5NYXRlcmlhbFNl",
+            "dFBhcmFtQ0gAEjcKD2RlbGV0ZV9tYXRlcmlhbBh3IAEoCzIcLlJlbmRlckFj",
+            "dGlvbi5EZWxldGVNYXRlcmlhbEgAEjwKEmNyZWF0ZV9zdGF0aWNfbWVzaBh4",
+            "IAEoCzIeLlJlbmRlckFjdGlvbi5DcmVhdGVTdGF0aWNNZXNoSAASRwoYc3Rh",
+            "dGljX21lc2hfc2V0X21hdGVyaWFsGHkgASgLMiMuUmVuZGVyQWN0aW9uLlN0",
+            "YXRpY01lc2hTZXRNYXRlcmlhbEgAEkUKF2VsZW1fYXR0YWNoX3N0YXRpY19t",
+            "ZXNoGHogASgLMiIuUmVuZGVyQWN0aW9uLkVsZW1BdHRhY2hTdGF0aWNNZXNo",
+            "SAASPQoSZGVsZXRlX3N0YXRpY19tZXNoGIEBIAEoCzIeLlJlbmRlckFjdGlv",
+            "bi5EZWxldGVTdGF0aWNNZXNoSAASOgoQY3JlYXRlX2FuaW1hdGlvbhjIASAB",
+            "KAsyHS5SZW5kZXJBY3Rpb24uQ3JlYXRlQW5pbWF0aW9uSAASOgoQZGVsZXRl",
+            "X2FuaW1hdGlvbhjRASABKAsyHS5SZW5kZXJBY3Rpb24uRGVsZXRlQW5pbWF0",
+            "aW9uSAASLgoKbG9jYWxfaW5mbxjoByABKAsyFy5SZW5kZXJBY3Rpb24uTG9j",
+            "YWxJbmZvSAASPwoTaW5mb19jb250ZW50X3NoYXJlZBjpByABKAsyHy5SZW5k",
+            "ZXJBY3Rpb24uSW5mb0NvbnRlbnRTaGFyZWRIABJBChRpbmZvX2NvbnRlbnRf",
+            "ZGVsZXRlZBjqByABKAsyIC5SZW5kZXJBY3Rpb24uSW5mb0NvbnRlbnREZWxl",
+            "dGVkSAASNAoNY29uc29sZV9wcmludBioRiABKAsyGi5SZW5kZXJBY3Rpb24u",
+            "Q29uc29sZVByaW50SAAaNgoNQ3JlYXRlRWxlbWVudBIRCglwYXJlbnRfaWQY",
+            "ASABKAUSEgoKZWxlbWVudF9pZBgCIAEoBRo4CgtNb3ZlRWxlbWVudBISCgpl",
+            "bGVtZW50X2lkGAEgASgFEhUKDW5ld19wYXJlbnRfaWQYAiABKAUaIwoNRGVs",
+            "ZXRlRWxlbWVudBISCgplbGVtZW50X2lkGAEgASgFGkgKCkVsZW1TZXRQb3MS",
+            "EgoKZWxlbWVudF9pZBgBIAEoBRISCgNwb3MYAiABKAsyBS5WZWMzEhIKA3Jv",
+            "dBgDIAEoCzIFLlZlYzQaQwoKQ3JlYXRlSXRlbRISCgplbGVtZW50X2lkGAEg",
+            "ASgFEhMKC3NoYXJlcl9oYXNoGAIgASgJEgwKBHV1aWQYAyABKAwaIAoKRGVs",
+            "ZXRlSXRlbRISCgplbGVtZW50X2lkGAEgASgFGjMKC0l0ZW1TZXRJY29uEhIK",
+            "CmVsZW1lbnRfaWQYASABKAUSEAoIaW1hZ2VfaWQYAiABKAUaHwoKTWVtYmVy",
+            "SW5mbxIRCglwZWVyX2hhc2gYASABKAkaIAoLTWVtYmVyTGVhdmUSEQoJcGVl",
+            "cl9oYXNoGAEgASgJGjQKC0NyZWF0ZUltYWdlEhAKCGltYWdlX2lkGAEgASgF",
+            "EhMKBGZpbGUYAiABKAsyBS5GaWxlGh8KC0RlbGV0ZUltYWdlEhAKCGltYWdl",
+            "X2lkGAEgASgFGjsKD0NyZWF0ZU1hdGVyaWFsVhITCgttYXRlcmlhbF9pZBgB",
+            "IAEoBRITCgtzaGFkZXJfbmFtZRgCIAEoCRo7Cg9DcmVhdGVNYXRlcmlhbEYS",
+            "EwoLbWF0ZXJpYWxfaWQYASABKAUSEwoEZmlsZRgCIAEoCzIFLkZpbGUaVAoR",
+            "TWF0ZXJpYWxTZXRQYXJhbVYSEwoLbWF0ZXJpYWxfaWQYASABKAUSEgoKcGFy",
+            "YW1fbmFtZRgCIAEoCRIWCgVwYXJhbRgDIAEoCzIHLkFueVZhbBpSChFNYXRl",
+            "cmlhbFNldFBhcmFtQxITCgttYXRlcmlhbF9pZBgBIAEoBRISCgpwYXJhbV9u",
+            "YW1lGAIgASgJEhQKDGNvbXBvbmVudF9pZBgDIAEoBRolCg5EZWxldGVNYXRl",
+            "cmlhbBITCgttYXRlcmlhbF9pZBgBIAEoBRo4ChBDcmVhdGVTdGF0aWNNZXNo",
+            "Eg8KB21lc2hfaWQYASABKAUSEwoEZmlsZRgCIAEoCzIFLkZpbGUaVAoVU3Rh",
+            "dGljTWVzaFNldE1hdGVyaWFsEg8KB21lc2hfaWQYASABKAUSFQoNbWF0ZXJp",
+            "YWxfc2xvdBgCIAEoBRITCgttYXRlcmlhbF9pZBgDIAEoBRo7ChRFbGVtQXR0",
+            "YWNoU3RhdGljTWVzaBISCgplbGVtZW50X2lkGAEgASgFEg8KB21lc2hfaWQY",
+            "AiABKAUaIwoQRGVsZXRlU3RhdGljTWVzaBIPCgdtZXNoX2lkGAEgASgFGjwK",
+            "D0NyZWF0ZUFuaW1hdGlvbhIUCgxhbmltYXRpb25faWQYASABKAUSEwoEZmls",
+            "ZRgCIAEoCzIFLkZpbGUaJwoPRGVsZXRlQW5pbWF0aW9uEhQKDGFuaW1hdGlv",
+            "bl9pZBgBIAEoBRotCglMb2NhbEluZm8SDAoEYXVybBgBIAEoCRISCgpsb2Nh",
+            "bF9oYXNoGAIgASgJGmcKEUluZm9Db250ZW50U2hhcmVkEhQKDGNvbnRlbnRf",
+            "dXVpZBgBIAEoCRITCgtjb250ZW50X3VybBgCIAEoCRITCgtzaGFyZXJfaGFz",
+            "aBgDIAEoCRISCgp3b3JsZF91dWlkGAQgASgJGlMKEkluZm9Db250ZW50RGVs",
+            "ZXRlZBIUCgxjb250ZW50X3V1aWQYASABKAkSEwoLc2hhcmVyX2hhc2gYAyAB",
+            "KAkSEgoKd29ybGRfdXVpZBgEIAEoCRocCgxDb25zb2xlUHJpbnQSDAoEdGV4",
+            "dBgBIAEoCUIHCgVpbm5lckIPqgIMQWJ5c3NDTEkuQUJJYgZwcm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::MimeReflection.Descriptor, global::AbyssCLI.ABI.CommontypeReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
             new pbr::GeneratedClrTypeInfo(typeof(global::AbyssCLI.ABI.File), global::AbyssCLI.ABI.File.Parser, new[]{ "Mime", "MmapName", "Off", "Len" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::AbyssCLI.ABI.RenderAction), global::AbyssCLI.ABI.RenderAction.Parser, new[]{ "CreateElement", "MoveElement", "DeleteElement", "ElemSetPos", "CreateItem", "DeleteItem", "ItemSetIcon", "CreateImage", "DeleteImage", "CreateMaterialV", "CreateMaterialF", "MaterialSetParamV", "MaterialSetParamC", "DeleteMaterial", "CreateStaticMesh", "StaticMeshSetMaterial", "ElemAttachStaticMesh", "DeleteStaticMesh", "CreateAnimation", "DeleteAnimation", "LocalInfo", "InfoContentShared", "InfoContentDeleted", "ConsolePrint" }, new[]{ "Inner" }, null, null, new pbr::GeneratedClrTypeInfo[] { new pbr::GeneratedClrTypeInfo(typeof(global::AbyssCLI.ABI.RenderAction.Types.CreateElement), global::AbyssCLI.ABI.RenderAction.Types.CreateElement.Parser, new[]{ "ParentId", "ElementId" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::AbyssCLI.ABI.RenderAction), global::AbyssCLI.ABI.RenderAction.Parser, new[]{ "CreateElement", "MoveElement", "DeleteElement", "ElemSetPos", "CreateItem", "DeleteItem", "ItemSetIcon", "MemberInfo", "MemberLeave", "CreateImage", "DeleteImage", "CreateMaterialV", "CreateMaterialF", "MaterialSetParamV", "MaterialSetParamC", "DeleteMaterial", "CreateStaticMesh", "StaticMeshSetMaterial", "ElemAttachStaticMesh", "DeleteStaticMesh", "CreateAnimation", "DeleteAnimation", "LocalInfo", "InfoContentShared", "InfoContentDeleted", "ConsolePrint" }, new[]{ "Inner" }, null, null, new pbr::GeneratedClrTypeInfo[] { new pbr::GeneratedClrTypeInfo(typeof(global::AbyssCLI.ABI.RenderAction.Types.CreateElement), global::AbyssCLI.ABI.RenderAction.Types.CreateElement.Parser, new[]{ "ParentId", "ElementId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::AbyssCLI.ABI.RenderAction.Types.MoveElement), global::AbyssCLI.ABI.RenderAction.Types.MoveElement.Parser, new[]{ "ElementId", "NewParentId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::AbyssCLI.ABI.RenderAction.Types.DeleteElement), global::AbyssCLI.ABI.RenderAction.Types.DeleteElement.Parser, new[]{ "ElementId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::AbyssCLI.ABI.RenderAction.Types.ElemSetPos), global::AbyssCLI.ABI.RenderAction.Types.ElemSetPos.Parser, new[]{ "ElementId", "Pos", "Rot" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::AbyssCLI.ABI.RenderAction.Types.CreateItem), global::AbyssCLI.ABI.RenderAction.Types.CreateItem.Parser, new[]{ "ElementId", "SharerHash", "Uuid" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::AbyssCLI.ABI.RenderAction.Types.DeleteItem), global::AbyssCLI.ABI.RenderAction.Types.DeleteItem.Parser, new[]{ "ElementId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::AbyssCLI.ABI.RenderAction.Types.ItemSetIcon), global::AbyssCLI.ABI.RenderAction.Types.ItemSetIcon.Parser, new[]{ "ElementId", "ImageId" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::AbyssCLI.ABI.RenderAction.Types.MemberInfo), global::AbyssCLI.ABI.RenderAction.Types.MemberInfo.Parser, new[]{ "PeerHash" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::AbyssCLI.ABI.RenderAction.Types.MemberLeave), global::AbyssCLI.ABI.RenderAction.Types.MemberLeave.Parser, new[]{ "PeerHash" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::AbyssCLI.ABI.RenderAction.Types.CreateImage), global::AbyssCLI.ABI.RenderAction.Types.CreateImage.Parser, new[]{ "ImageId", "File" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::AbyssCLI.ABI.RenderAction.Types.DeleteImage), global::AbyssCLI.ABI.RenderAction.Types.DeleteImage.Parser, new[]{ "ImageId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::AbyssCLI.ABI.RenderAction.Types.CreateMaterialV), global::AbyssCLI.ABI.RenderAction.Types.CreateMaterialV.Parser, new[]{ "MaterialId", "ShaderName" }, null, null, null, null),
@@ -500,6 +505,12 @@ namespace AbyssCLI.ABI {
         case InnerOneofCase.ItemSetIcon:
           ItemSetIcon = other.ItemSetIcon.Clone();
           break;
+        case InnerOneofCase.MemberInfo:
+          MemberInfo = other.MemberInfo.Clone();
+          break;
+        case InnerOneofCase.MemberLeave:
+          MemberLeave = other.MemberLeave.Clone();
+          break;
         case InnerOneofCase.CreateImage:
           CreateImage = other.CreateImage.Clone();
           break;
@@ -643,6 +654,30 @@ namespace AbyssCLI.ABI {
       set {
         inner_ = value;
         innerCase_ = value == null ? InnerOneofCase.None : InnerOneofCase.ItemSetIcon;
+      }
+    }
+
+    /// <summary>Field number for the "member_info" field.</summary>
+    public const int MemberInfoFieldNumber = 50;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public global::AbyssCLI.ABI.RenderAction.Types.MemberInfo MemberInfo {
+      get { return innerCase_ == InnerOneofCase.MemberInfo ? (global::AbyssCLI.ABI.RenderAction.Types.MemberInfo) inner_ : null; }
+      set {
+        inner_ = value;
+        innerCase_ = value == null ? InnerOneofCase.None : InnerOneofCase.MemberInfo;
+      }
+    }
+
+    /// <summary>Field number for the "member_leave" field.</summary>
+    public const int MemberLeaveFieldNumber = 51;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public global::AbyssCLI.ABI.RenderAction.Types.MemberLeave MemberLeave {
+      get { return innerCase_ == InnerOneofCase.MemberLeave ? (global::AbyssCLI.ABI.RenderAction.Types.MemberLeave) inner_ : null; }
+      set {
+        inner_ = value;
+        innerCase_ = value == null ? InnerOneofCase.None : InnerOneofCase.MemberLeave;
       }
     }
 
@@ -861,6 +896,8 @@ namespace AbyssCLI.ABI {
       CreateItem = 30,
       DeleteItem = 31,
       ItemSetIcon = 32,
+      MemberInfo = 50,
+      MemberLeave = 51,
       CreateImage = 100,
       DeleteImage = 109,
       CreateMaterialV = 110,
@@ -915,6 +952,8 @@ namespace AbyssCLI.ABI {
       if (!object.Equals(CreateItem, other.CreateItem)) return false;
       if (!object.Equals(DeleteItem, other.DeleteItem)) return false;
       if (!object.Equals(ItemSetIcon, other.ItemSetIcon)) return false;
+      if (!object.Equals(MemberInfo, other.MemberInfo)) return false;
+      if (!object.Equals(MemberLeave, other.MemberLeave)) return false;
       if (!object.Equals(CreateImage, other.CreateImage)) return false;
       if (!object.Equals(DeleteImage, other.DeleteImage)) return false;
       if (!object.Equals(CreateMaterialV, other.CreateMaterialV)) return false;
@@ -947,6 +986,8 @@ namespace AbyssCLI.ABI {
       if (innerCase_ == InnerOneofCase.CreateItem) hash ^= CreateItem.GetHashCode();
       if (innerCase_ == InnerOneofCase.DeleteItem) hash ^= DeleteItem.GetHashCode();
       if (innerCase_ == InnerOneofCase.ItemSetIcon) hash ^= ItemSetIcon.GetHashCode();
+      if (innerCase_ == InnerOneofCase.MemberInfo) hash ^= MemberInfo.GetHashCode();
+      if (innerCase_ == InnerOneofCase.MemberLeave) hash ^= MemberLeave.GetHashCode();
       if (innerCase_ == InnerOneofCase.CreateImage) hash ^= CreateImage.GetHashCode();
       if (innerCase_ == InnerOneofCase.DeleteImage) hash ^= DeleteImage.GetHashCode();
       if (innerCase_ == InnerOneofCase.CreateMaterialV) hash ^= CreateMaterialV.GetHashCode();
@@ -1010,6 +1051,14 @@ namespace AbyssCLI.ABI {
       if (innerCase_ == InnerOneofCase.ItemSetIcon) {
         output.WriteRawTag(130, 2);
         output.WriteMessage(ItemSetIcon);
+      }
+      if (innerCase_ == InnerOneofCase.MemberInfo) {
+        output.WriteRawTag(146, 3);
+        output.WriteMessage(MemberInfo);
+      }
+      if (innerCase_ == InnerOneofCase.MemberLeave) {
+        output.WriteRawTag(154, 3);
+        output.WriteMessage(MemberLeave);
       }
       if (innerCase_ == InnerOneofCase.CreateImage) {
         output.WriteRawTag(162, 6);
@@ -1117,6 +1166,14 @@ namespace AbyssCLI.ABI {
         output.WriteRawTag(130, 2);
         output.WriteMessage(ItemSetIcon);
       }
+      if (innerCase_ == InnerOneofCase.MemberInfo) {
+        output.WriteRawTag(146, 3);
+        output.WriteMessage(MemberInfo);
+      }
+      if (innerCase_ == InnerOneofCase.MemberLeave) {
+        output.WriteRawTag(154, 3);
+        output.WriteMessage(MemberLeave);
+      }
       if (innerCase_ == InnerOneofCase.CreateImage) {
         output.WriteRawTag(162, 6);
         output.WriteMessage(CreateImage);
@@ -1215,6 +1272,12 @@ namespace AbyssCLI.ABI {
       }
       if (innerCase_ == InnerOneofCase.ItemSetIcon) {
         size += 2 + pb::CodedOutputStream.ComputeMessageSize(ItemSetIcon);
+      }
+      if (innerCase_ == InnerOneofCase.MemberInfo) {
+        size += 2 + pb::CodedOutputStream.ComputeMessageSize(MemberInfo);
+      }
+      if (innerCase_ == InnerOneofCase.MemberLeave) {
+        size += 2 + pb::CodedOutputStream.ComputeMessageSize(MemberLeave);
       }
       if (innerCase_ == InnerOneofCase.CreateImage) {
         size += 2 + pb::CodedOutputStream.ComputeMessageSize(CreateImage);
@@ -1321,6 +1384,18 @@ namespace AbyssCLI.ABI {
             ItemSetIcon = new global::AbyssCLI.ABI.RenderAction.Types.ItemSetIcon();
           }
           ItemSetIcon.MergeFrom(other.ItemSetIcon);
+          break;
+        case InnerOneofCase.MemberInfo:
+          if (MemberInfo == null) {
+            MemberInfo = new global::AbyssCLI.ABI.RenderAction.Types.MemberInfo();
+          }
+          MemberInfo.MergeFrom(other.MemberInfo);
+          break;
+        case InnerOneofCase.MemberLeave:
+          if (MemberLeave == null) {
+            MemberLeave = new global::AbyssCLI.ABI.RenderAction.Types.MemberLeave();
+          }
+          MemberLeave.MergeFrom(other.MemberLeave);
           break;
         case InnerOneofCase.CreateImage:
           if (CreateImage == null) {
@@ -1506,6 +1581,24 @@ namespace AbyssCLI.ABI {
             }
             input.ReadMessage(subBuilder);
             ItemSetIcon = subBuilder;
+            break;
+          }
+          case 402: {
+            global::AbyssCLI.ABI.RenderAction.Types.MemberInfo subBuilder = new global::AbyssCLI.ABI.RenderAction.Types.MemberInfo();
+            if (innerCase_ == InnerOneofCase.MemberInfo) {
+              subBuilder.MergeFrom(MemberInfo);
+            }
+            input.ReadMessage(subBuilder);
+            MemberInfo = subBuilder;
+            break;
+          }
+          case 410: {
+            global::AbyssCLI.ABI.RenderAction.Types.MemberLeave subBuilder = new global::AbyssCLI.ABI.RenderAction.Types.MemberLeave();
+            if (innerCase_ == InnerOneofCase.MemberLeave) {
+              subBuilder.MergeFrom(MemberLeave);
+            }
+            input.ReadMessage(subBuilder);
+            MemberLeave = subBuilder;
             break;
           }
           case 802: {
@@ -1741,6 +1834,24 @@ namespace AbyssCLI.ABI {
             }
             input.ReadMessage(subBuilder);
             ItemSetIcon = subBuilder;
+            break;
+          }
+          case 402: {
+            global::AbyssCLI.ABI.RenderAction.Types.MemberInfo subBuilder = new global::AbyssCLI.ABI.RenderAction.Types.MemberInfo();
+            if (innerCase_ == InnerOneofCase.MemberInfo) {
+              subBuilder.MergeFrom(MemberInfo);
+            }
+            input.ReadMessage(subBuilder);
+            MemberInfo = subBuilder;
+            break;
+          }
+          case 410: {
+            global::AbyssCLI.ABI.RenderAction.Types.MemberLeave subBuilder = new global::AbyssCLI.ABI.RenderAction.Types.MemberLeave();
+            if (innerCase_ == InnerOneofCase.MemberLeave) {
+              subBuilder.MergeFrom(MemberLeave);
+            }
+            input.ReadMessage(subBuilder);
+            MemberLeave = subBuilder;
             break;
           }
           case 802: {
@@ -3573,6 +3684,405 @@ namespace AbyssCLI.ABI {
       }
 
       /// <summary>
+      /// member session join - leave
+      /// </summary>
+      [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
+      public sealed partial class MemberInfo : pb::IMessage<MemberInfo>
+      #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+          , pb::IBufferMessage
+      #endif
+      {
+        private static readonly pb::MessageParser<MemberInfo> _parser = new pb::MessageParser<MemberInfo>(() => new MemberInfo());
+        private pb::UnknownFieldSet _unknownFields;
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+        public static pb::MessageParser<MemberInfo> Parser { get { return _parser; } }
+
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+        public static pbr::MessageDescriptor Descriptor {
+          get { return global::AbyssCLI.ABI.RenderAction.Descriptor.NestedTypes[7]; }
+        }
+
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+        pbr::MessageDescriptor pb::IMessage.Descriptor {
+          get { return Descriptor; }
+        }
+
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+        public MemberInfo() {
+          OnConstruction();
+        }
+
+        partial void OnConstruction();
+
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+        public MemberInfo(MemberInfo other) : this() {
+          peerHash_ = other.peerHash_;
+          _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+        }
+
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+        public MemberInfo Clone() {
+          return new MemberInfo(this);
+        }
+
+        /// <summary>Field number for the "peer_hash" field.</summary>
+        public const int PeerHashFieldNumber = 1;
+        private string peerHash_ = "";
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+        public string PeerHash {
+          get { return peerHash_; }
+          set {
+            peerHash_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+          }
+        }
+
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+        public override bool Equals(object other) {
+          return Equals(other as MemberInfo);
+        }
+
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+        public bool Equals(MemberInfo other) {
+          if (ReferenceEquals(other, null)) {
+            return false;
+          }
+          if (ReferenceEquals(other, this)) {
+            return true;
+          }
+          if (PeerHash != other.PeerHash) return false;
+          return Equals(_unknownFields, other._unknownFields);
+        }
+
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+        public override int GetHashCode() {
+          int hash = 1;
+          if (PeerHash.Length != 0) hash ^= PeerHash.GetHashCode();
+          if (_unknownFields != null) {
+            hash ^= _unknownFields.GetHashCode();
+          }
+          return hash;
+        }
+
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+        public override string ToString() {
+          return pb::JsonFormatter.ToDiagnosticString(this);
+        }
+
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+        public void WriteTo(pb::CodedOutputStream output) {
+        #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+          output.WriteRawMessage(this);
+        #else
+          if (PeerHash.Length != 0) {
+            output.WriteRawTag(10);
+            output.WriteString(PeerHash);
+          }
+          if (_unknownFields != null) {
+            _unknownFields.WriteTo(output);
+          }
+        #endif
+        }
+
+        #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+        void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+          if (PeerHash.Length != 0) {
+            output.WriteRawTag(10);
+            output.WriteString(PeerHash);
+          }
+          if (_unknownFields != null) {
+            _unknownFields.WriteTo(ref output);
+          }
+        }
+        #endif
+
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+        public int CalculateSize() {
+          int size = 0;
+          if (PeerHash.Length != 0) {
+            size += 1 + pb::CodedOutputStream.ComputeStringSize(PeerHash);
+          }
+          if (_unknownFields != null) {
+            size += _unknownFields.CalculateSize();
+          }
+          return size;
+        }
+
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+        public void MergeFrom(MemberInfo other) {
+          if (other == null) {
+            return;
+          }
+          if (other.PeerHash.Length != 0) {
+            PeerHash = other.PeerHash;
+          }
+          _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+        }
+
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+        public void MergeFrom(pb::CodedInputStream input) {
+        #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+          input.ReadRawMessage(this);
+        #else
+          uint tag;
+          while ((tag = input.ReadTag()) != 0) {
+          if ((tag & 7) == 4) {
+            // Abort on any end group tag.
+            return;
+          }
+          switch(tag) {
+              default:
+                _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+                break;
+              case 10: {
+                PeerHash = input.ReadString();
+                break;
+              }
+            }
+          }
+        #endif
+        }
+
+        #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+        void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
+          uint tag;
+          while ((tag = input.ReadTag()) != 0) {
+          if ((tag & 7) == 4) {
+            // Abort on any end group tag.
+            return;
+          }
+          switch(tag) {
+              default:
+                _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
+                break;
+              case 10: {
+                PeerHash = input.ReadString();
+                break;
+              }
+            }
+          }
+        }
+        #endif
+
+      }
+
+      [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
+      public sealed partial class MemberLeave : pb::IMessage<MemberLeave>
+      #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+          , pb::IBufferMessage
+      #endif
+      {
+        private static readonly pb::MessageParser<MemberLeave> _parser = new pb::MessageParser<MemberLeave>(() => new MemberLeave());
+        private pb::UnknownFieldSet _unknownFields;
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+        public static pb::MessageParser<MemberLeave> Parser { get { return _parser; } }
+
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+        public static pbr::MessageDescriptor Descriptor {
+          get { return global::AbyssCLI.ABI.RenderAction.Descriptor.NestedTypes[8]; }
+        }
+
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+        pbr::MessageDescriptor pb::IMessage.Descriptor {
+          get { return Descriptor; }
+        }
+
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+        public MemberLeave() {
+          OnConstruction();
+        }
+
+        partial void OnConstruction();
+
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+        public MemberLeave(MemberLeave other) : this() {
+          peerHash_ = other.peerHash_;
+          _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+        }
+
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+        public MemberLeave Clone() {
+          return new MemberLeave(this);
+        }
+
+        /// <summary>Field number for the "peer_hash" field.</summary>
+        public const int PeerHashFieldNumber = 1;
+        private string peerHash_ = "";
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+        public string PeerHash {
+          get { return peerHash_; }
+          set {
+            peerHash_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+          }
+        }
+
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+        public override bool Equals(object other) {
+          return Equals(other as MemberLeave);
+        }
+
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+        public bool Equals(MemberLeave other) {
+          if (ReferenceEquals(other, null)) {
+            return false;
+          }
+          if (ReferenceEquals(other, this)) {
+            return true;
+          }
+          if (PeerHash != other.PeerHash) return false;
+          return Equals(_unknownFields, other._unknownFields);
+        }
+
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+        public override int GetHashCode() {
+          int hash = 1;
+          if (PeerHash.Length != 0) hash ^= PeerHash.GetHashCode();
+          if (_unknownFields != null) {
+            hash ^= _unknownFields.GetHashCode();
+          }
+          return hash;
+        }
+
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+        public override string ToString() {
+          return pb::JsonFormatter.ToDiagnosticString(this);
+        }
+
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+        public void WriteTo(pb::CodedOutputStream output) {
+        #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+          output.WriteRawMessage(this);
+        #else
+          if (PeerHash.Length != 0) {
+            output.WriteRawTag(10);
+            output.WriteString(PeerHash);
+          }
+          if (_unknownFields != null) {
+            _unknownFields.WriteTo(output);
+          }
+        #endif
+        }
+
+        #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+        void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+          if (PeerHash.Length != 0) {
+            output.WriteRawTag(10);
+            output.WriteString(PeerHash);
+          }
+          if (_unknownFields != null) {
+            _unknownFields.WriteTo(ref output);
+          }
+        }
+        #endif
+
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+        public int CalculateSize() {
+          int size = 0;
+          if (PeerHash.Length != 0) {
+            size += 1 + pb::CodedOutputStream.ComputeStringSize(PeerHash);
+          }
+          if (_unknownFields != null) {
+            size += _unknownFields.CalculateSize();
+          }
+          return size;
+        }
+
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+        public void MergeFrom(MemberLeave other) {
+          if (other == null) {
+            return;
+          }
+          if (other.PeerHash.Length != 0) {
+            PeerHash = other.PeerHash;
+          }
+          _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+        }
+
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+        public void MergeFrom(pb::CodedInputStream input) {
+        #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+          input.ReadRawMessage(this);
+        #else
+          uint tag;
+          while ((tag = input.ReadTag()) != 0) {
+          if ((tag & 7) == 4) {
+            // Abort on any end group tag.
+            return;
+          }
+          switch(tag) {
+              default:
+                _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+                break;
+              case 10: {
+                PeerHash = input.ReadString();
+                break;
+              }
+            }
+          }
+        #endif
+        }
+
+        #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+        void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
+          uint tag;
+          while ((tag = input.ReadTag()) != 0) {
+          if ((tag & 7) == 4) {
+            // Abort on any end group tag.
+            return;
+          }
+          switch(tag) {
+              default:
+                _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
+                break;
+              case 10: {
+                PeerHash = input.ReadString();
+                break;
+              }
+            }
+          }
+        }
+        #endif
+
+      }
+
+      /// <summary>
       ///components
       /// </summary>
       [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
@@ -3590,7 +4100,7 @@ namespace AbyssCLI.ABI {
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
         [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public static pbr::MessageDescriptor Descriptor {
-          get { return global::AbyssCLI.ABI.RenderAction.Descriptor.NestedTypes[7]; }
+          get { return global::AbyssCLI.ABI.RenderAction.Descriptor.NestedTypes[9]; }
         }
 
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -3834,7 +4344,7 @@ namespace AbyssCLI.ABI {
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
         [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public static pbr::MessageDescriptor Descriptor {
-          get { return global::AbyssCLI.ABI.RenderAction.Descriptor.NestedTypes[8]; }
+          get { return global::AbyssCLI.ABI.RenderAction.Descriptor.NestedTypes[10]; }
         }
 
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -4032,7 +4542,7 @@ namespace AbyssCLI.ABI {
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
         [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public static pbr::MessageDescriptor Descriptor {
-          get { return global::AbyssCLI.ABI.RenderAction.Descriptor.NestedTypes[9]; }
+          get { return global::AbyssCLI.ABI.RenderAction.Descriptor.NestedTypes[11]; }
         }
 
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -4267,7 +4777,7 @@ namespace AbyssCLI.ABI {
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
         [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public static pbr::MessageDescriptor Descriptor {
-          get { return global::AbyssCLI.ABI.RenderAction.Descriptor.NestedTypes[10]; }
+          get { return global::AbyssCLI.ABI.RenderAction.Descriptor.NestedTypes[12]; }
         }
 
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -4511,7 +5021,7 @@ namespace AbyssCLI.ABI {
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
         [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public static pbr::MessageDescriptor Descriptor {
-          get { return global::AbyssCLI.ABI.RenderAction.Descriptor.NestedTypes[11]; }
+          get { return global::AbyssCLI.ABI.RenderAction.Descriptor.NestedTypes[13]; }
         }
 
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -4792,7 +5302,7 @@ namespace AbyssCLI.ABI {
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
         [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public static pbr::MessageDescriptor Descriptor {
-          get { return global::AbyssCLI.ABI.RenderAction.Descriptor.NestedTypes[12]; }
+          get { return global::AbyssCLI.ABI.RenderAction.Descriptor.NestedTypes[14]; }
         }
 
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -5064,7 +5574,7 @@ namespace AbyssCLI.ABI {
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
         [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public static pbr::MessageDescriptor Descriptor {
-          get { return global::AbyssCLI.ABI.RenderAction.Descriptor.NestedTypes[13]; }
+          get { return global::AbyssCLI.ABI.RenderAction.Descriptor.NestedTypes[15]; }
         }
 
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -5262,7 +5772,7 @@ namespace AbyssCLI.ABI {
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
         [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public static pbr::MessageDescriptor Descriptor {
-          get { return global::AbyssCLI.ABI.RenderAction.Descriptor.NestedTypes[14]; }
+          get { return global::AbyssCLI.ABI.RenderAction.Descriptor.NestedTypes[16]; }
         }
 
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -5506,7 +6016,7 @@ namespace AbyssCLI.ABI {
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
         [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public static pbr::MessageDescriptor Descriptor {
-          get { return global::AbyssCLI.ABI.RenderAction.Descriptor.NestedTypes[15]; }
+          get { return global::AbyssCLI.ABI.RenderAction.Descriptor.NestedTypes[17]; }
         }
 
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -5778,7 +6288,7 @@ namespace AbyssCLI.ABI {
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
         [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public static pbr::MessageDescriptor Descriptor {
-          get { return global::AbyssCLI.ABI.RenderAction.Descriptor.NestedTypes[16]; }
+          get { return global::AbyssCLI.ABI.RenderAction.Descriptor.NestedTypes[18]; }
         }
 
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -6013,7 +6523,7 @@ namespace AbyssCLI.ABI {
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
         [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public static pbr::MessageDescriptor Descriptor {
-          get { return global::AbyssCLI.ABI.RenderAction.Descriptor.NestedTypes[17]; }
+          get { return global::AbyssCLI.ABI.RenderAction.Descriptor.NestedTypes[19]; }
         }
 
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -6211,7 +6721,7 @@ namespace AbyssCLI.ABI {
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
         [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public static pbr::MessageDescriptor Descriptor {
-          get { return global::AbyssCLI.ABI.RenderAction.Descriptor.NestedTypes[18]; }
+          get { return global::AbyssCLI.ABI.RenderAction.Descriptor.NestedTypes[20]; }
         }
 
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -6455,7 +6965,7 @@ namespace AbyssCLI.ABI {
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
         [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public static pbr::MessageDescriptor Descriptor {
-          get { return global::AbyssCLI.ABI.RenderAction.Descriptor.NestedTypes[19]; }
+          get { return global::AbyssCLI.ABI.RenderAction.Descriptor.NestedTypes[21]; }
         }
 
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -6653,7 +7163,7 @@ namespace AbyssCLI.ABI {
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
         [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public static pbr::MessageDescriptor Descriptor {
-          get { return global::AbyssCLI.ABI.RenderAction.Descriptor.NestedTypes[20]; }
+          get { return global::AbyssCLI.ABI.RenderAction.Descriptor.NestedTypes[22]; }
         }
 
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -6888,7 +7398,7 @@ namespace AbyssCLI.ABI {
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
         [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public static pbr::MessageDescriptor Descriptor {
-          get { return global::AbyssCLI.ABI.RenderAction.Descriptor.NestedTypes[21]; }
+          get { return global::AbyssCLI.ABI.RenderAction.Descriptor.NestedTypes[23]; }
         }
 
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -7197,7 +7707,7 @@ namespace AbyssCLI.ABI {
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
         [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public static pbr::MessageDescriptor Descriptor {
-          get { return global::AbyssCLI.ABI.RenderAction.Descriptor.NestedTypes[22]; }
+          get { return global::AbyssCLI.ABI.RenderAction.Descriptor.NestedTypes[24]; }
         }
 
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -7469,7 +7979,7 @@ namespace AbyssCLI.ABI {
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
         [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public static pbr::MessageDescriptor Descriptor {
-          get { return global::AbyssCLI.ABI.RenderAction.Descriptor.NestedTypes[23]; }
+          get { return global::AbyssCLI.ABI.RenderAction.Descriptor.NestedTypes[25]; }
         }
 
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
