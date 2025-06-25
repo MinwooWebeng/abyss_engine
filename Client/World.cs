@@ -79,6 +79,7 @@ namespace AbyssCLI.Client
         }
         public void Leave()
         {
+            Client.CerrWriteLine("leaving: " + _world.url);
             _environment.CloseAsync();
             if (_world.Leave() != 0)
             {
@@ -104,10 +105,12 @@ namespace AbyssCLI.Client
         //internals
         private static void OnMemberRequest(AbyssLib.WorldMemberRequest evnt)
         {
+            Client.CerrWriteLine("OnMemberRequest");
             evnt.Accept();
         }
         private void OnMemberReady(AbyssLib.WorldMember member)
         {
+            Client.CerrWriteLine("OnMemberReady");
             lock (_lock)
             {
                 if (!_members.TryAdd(member.hash, new(member)))
@@ -128,6 +131,7 @@ namespace AbyssCLI.Client
         }
         private void OnMemberObjectAppend(AbyssLib.MemberObjectAppend evnt)
         {
+            Client.CerrWriteLine("OnMemberObjectAppend");
             var parsed_objects = evnt.objects
                 .Select(gst =>
                 {
@@ -150,7 +154,7 @@ namespace AbyssCLI.Client
                 
                 foreach (var obj in parsed_objects)
                 {
-                    var item = new CAbstraction.Item(_host, evnt.peer_hash, obj.Item1, obj.Item2, Aml.RenderID.ElementId, obj.Item3);
+                    var item = new Item(_host, evnt.peer_hash, obj.Item1, obj.Item2, Aml.RenderID.ElementId, obj.Item3);
                     if (!member.remote_items.TryAdd(obj.Item1, item))
                     {
                         Client.CerrWriteLine("uid collision of objects appended from peer");
@@ -163,6 +167,7 @@ namespace AbyssCLI.Client
         }
         private void OnMemberObjectDelete(AbyssLib.MemberObjectDelete evnt)
         {
+            Client.CerrWriteLine("OnMemberObjectDelete");
             lock (_lock)
             {
                 if (!_members.TryGetValue(evnt.peer_hash, out var member))
@@ -184,14 +189,15 @@ namespace AbyssCLI.Client
         }
         private void OnMemberLeave(string peer_hash)
         {
-            lock(_lock)
+            Client.CerrWriteLine("OnMemberLeave");
+            lock (_lock)
             {
                 if (!_members.Remove(peer_hash, out var value))
                 {
                     Client.CerrWriteLine("non-existing peer leaved");
                     return;
                 }
-                Client.RenderWriter.MemberInfo(peer_hash);
+                Client.RenderWriter.MemberLeave(peer_hash);
 
                 foreach (var item in value.remote_items.Values)
                 {

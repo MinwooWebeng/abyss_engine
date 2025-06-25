@@ -53,6 +53,7 @@ namespace AbyssCLI.Client
                     CerrWriteLine("world creation failed: " + ex.Message);
                     _current_world = null;
                 }
+
                 if (!_resolver.TrySetMapping("", net_world.world_id).Empty)
                 {
                     throw new Exception("failed to set world path mapping");

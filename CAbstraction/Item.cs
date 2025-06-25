@@ -12,7 +12,7 @@ namespace AbyssCLI.CAbstraction
         public readonly float[] spawn_transform = spawn_transform;
         public void Activate()
         {
-            Client.Client.RenderWriter.CreateItem(base_element, host.local_aurl.Id, Google.Protobuf.ByteString.CopyFrom(uuid.ToByteArray()));
+            Client.Client.RenderWriter.CreateItem(base_element, sharer_hash, Google.Protobuf.ByteString.CopyFrom(uuid.ToByteArray()));
             _documentImpl.Activate();
         }
         public Task CloseAsync()

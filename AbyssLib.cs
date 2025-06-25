@@ -371,6 +371,16 @@ namespace AbyssCLI
                     }
                 }
             }
+            public void WriteAndStatisticsLogFile()
+            {
+                [DllImport("abyssnet.dll")]
+                static extern int Host_WriteANDStatisticsLogFile(IntPtr h);
+
+                if (Host_WriteANDStatisticsLogFile(handle) != 0)
+                {
+                    throw new Exception("Host_WriteANDStatisticsLogFile returned non-zero");
+                }
+            }
             ~Host() => CloseAbyssHandle(handle);
         }
         static public Host OpenAbyssHost(byte[] root_priv_key_pem, SimplePathResolver path_resolver, IntPtr abyst_server)
