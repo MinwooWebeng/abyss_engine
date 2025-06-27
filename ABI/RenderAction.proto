@@ -55,6 +55,9 @@ message RenderAction {
 	message MemberInfo {
 		string peer_hash = 1;
 	}
+	message MemberSetProfile {
+		int32 iamge_id = 1;
+	}
 	message MemberLeave {
 		string peer_hash = 1;
 	}
@@ -152,6 +155,7 @@ message RenderAction {
 
 		MemberInfo member_info = 50;
 		MemberLeave member_leave = 51;
+		MemberSetProfile member_set_profile = 52;
 
 		CreateImage create_image = 100;
 		DeleteImage delete_image = 109;

@@ -99,7 +99,6 @@
 
             //previously deceased, or cleanuped.
         }
-
         protected virtual Task ActivateCallback(CancellationToken token) { return Task.CompletedTask; }
         //ActivateCallback is guranteed to be called only once
         protected virtual void ErrorCallback(Exception e) { throw new NotImplementedException(); }

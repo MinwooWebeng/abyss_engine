@@ -113,6 +113,17 @@ public void MemberInfo
         PeerHash = peer_hash
     }
 });
+public void MemberSetProfile
+(
+    int iamge_id
+)
+=> Write(new RenderAction()
+{
+    MemberSetProfile = new MemberSetProfile
+    {
+        IamgeId = iamge_id
+    }
+});
 public void MemberLeave
 (
     string peer_hash
