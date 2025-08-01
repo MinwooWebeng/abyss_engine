@@ -105,6 +105,5 @@ public void ConnectPeer
 		}
 		public bool AutoFlush = false;
 		private readonly System.IO.Stream _out_stream;
-
 	}
 }

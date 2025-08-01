@@ -367,10 +367,13 @@ public void ConsolePrint
 		private void Write(RenderAction msg)
 		{
 			var msg_len = msg.CalculateSize();
-			_out_sema.WaitOne();
+
+			lock (_out_stream)
+			{
 			_out_stream.Write(BitConverter.GetBytes(msg_len));
 			msg.WriteTo(_out_stream);
-			_out_sema.Release();
+
+			}
             if(AutoFlush)
             {
                 _out_stream.Flush();
@@ -378,6 +381,5 @@ public void ConsolePrint
 		}
 		public bool AutoFlush = false;
 		private readonly System.IO.Stream _out_stream;
-		private readonly System.Threading.Semaphore _out_sema = new(1, 1);
 	}
 }

@@ -155,7 +155,9 @@ namespace AbyssCLI.ABI
 ` +
 		func() string {
 			if is_concurrent {
-				return "			_out_sema.WaitOne();"
+				return `
+			lock (_out_stream)
+			{`
 			}
 			return ""
 		}() + `
@@ -164,7 +166,8 @@ namespace AbyssCLI.ABI
 ` +
 		func() string {
 			if is_concurrent {
-				return "			_out_sema.Release();"
+				return `
+			}`
 			}
 			return ""
 		}() + `
@@ -175,13 +178,6 @@ namespace AbyssCLI.ABI
 		}
 		public bool AutoFlush = false;
 		private readonly System.IO.Stream _out_stream;
-` +
-		func() string {
-			if is_concurrent {
-				return "		private readonly System.Threading.Semaphore _out_sema = new(1, 1);"
-			}
-			return ""
-		}() + `
 	}
 }`
 

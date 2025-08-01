@@ -47,6 +47,7 @@ namespace AbyssCLI.Client
                 try
                 {
                     _current_world = new World(Host, net_world, world_url);
+                    _current_world.Start();
                 }
                 catch (Exception ex)
                 {

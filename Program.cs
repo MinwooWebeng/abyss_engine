@@ -1,13 +1,12 @@
-﻿using AbyssCLI;
-using AbyssCLI.Client;
-using System.Runtime.ConstrainedExecution;
+﻿using AbyssCLI.Client;
 class Program
 {
     public static void Main()
     {
         try
         {
-            Client.Run();
+            Client.Init();
+            Client.Main();
             Client.CerrWriteLine("AbyssCLI terminated peacefully");
         }
         catch (Exception ex)

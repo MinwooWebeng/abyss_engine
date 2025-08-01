@@ -1,6 +1,5 @@
 ﻿using AbyssCLI.CAbstraction;
 using AbyssCLI.Tool;
-using Microsoft.ClearScript;
 
 namespace AbyssCLI.Client
 {
@@ -19,8 +18,6 @@ namespace AbyssCLI.Client
             _host = host;
             _world = world;
             _environment = new(host, URL, Aml.RenderID.ComponentId);
-            _environment.Activate();
-
             _world_th = new Thread(() =>
             {
                 while (true)
@@ -48,6 +45,10 @@ namespace AbyssCLI.Client
                     }
                 }
             });
+        }
+        public void Start()
+        {
+            _environment.Activate();
             _world_th.Start();
         }
         public void ShareItem(Guid uuid, AbyssURL url, float[] transform)
