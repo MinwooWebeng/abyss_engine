@@ -1,6 +1,6 @@
 ﻿namespace AbyssCLI.Tool
 {
-    [Obsolete("bad")]
+    [Obsolete("Use TaskCompletionSource")]
     class WaiterGroup<T>
     {
         public bool TryFinalizeValue(T value)

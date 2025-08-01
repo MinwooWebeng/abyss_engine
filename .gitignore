@@ -13,4 +13,8 @@
 *.csproj.*
 *.AssemblyAttributes.cs
 *.AssemblyInfo.cs
+*.db
+*.db-shm
+*.db-wal
+
 testground/

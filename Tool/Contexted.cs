@@ -1,6 +1,6 @@
 ﻿namespace AbyssCLI.Tool
 {
-    [Obsolete("bad")]
+    [Obsolete("Use ContextedTask")]
     public class Contexted
     {
         public Contexted()
