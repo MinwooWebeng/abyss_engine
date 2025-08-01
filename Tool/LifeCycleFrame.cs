@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace AbyssCLI.Tool
 {
+    [Obsolete("bad")]
     internal abstract class LifeCycleFrame
     {
         protected abstract void OnNoExecution();

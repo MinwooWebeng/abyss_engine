@@ -1,5 +1,6 @@
 ﻿namespace AbyssCLI.Tool
 {
+    [Obsolete("bad")]
     public class Contexted
     {
         public Contexted()

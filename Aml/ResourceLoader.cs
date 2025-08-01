@@ -1,6 +1,4 @@
 ﻿using AbyssCLI.Tool;
-using Google.Protobuf.WellKnownTypes;
-using System.Data;
 using System.IO.MemoryMappedFiles;
 
 namespace AbyssCLI.Aml

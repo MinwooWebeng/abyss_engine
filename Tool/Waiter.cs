@@ -1,5 +1,6 @@
 ﻿namespace AbyssCLI.Tool
 {
+    [Obsolete("bad")]
     public class Waiter<T>
     {
         //every method is safe to call multiple times

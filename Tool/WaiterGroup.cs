@@ -1,5 +1,6 @@
 ﻿namespace AbyssCLI.Tool
 {
+    [Obsolete("bad")]
     class WaiterGroup<T>
     {
         public bool TryFinalizeValue(T value)
