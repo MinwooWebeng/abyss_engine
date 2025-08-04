@@ -1,4 +1,4 @@
-﻿namespace AbyssCLI.Aml.API
+﻿namespace AbyssCLI.AmlDepr.API
 {
     public class Console()
     {

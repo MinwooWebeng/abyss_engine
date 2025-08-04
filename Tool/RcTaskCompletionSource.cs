@@ -1,6 +1,6 @@
 ﻿namespace AbyssCLI.Tool
 {
-    internal class RcTaskCompletionSource<TResult>() : IDisposable where TResult : IDisposable
+    public class RcTaskCompletionSource<TResult>() : IDisposable where TResult : IDisposable
     {
         /// <summary>
         /// TryGetReference to get reference.
@@ -99,7 +99,7 @@
         }
     }
 
-    internal class TaskCompletionReference<TResult>(Task<TResult> inner, Action free) : IDisposable where TResult : IDisposable
+    public class TaskCompletionReference<TResult>(Task<TResult> inner, Action free) : IDisposable where TResult : IDisposable
     {
         public Task<TResult> Task { get; private set; } = inner;
         private readonly Action _free = free; // origin reference clearer.

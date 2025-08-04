@@ -1,10 +1,9 @@
-﻿using Google.Protobuf.WellKnownTypes;
-using Microsoft.ClearScript;
+﻿using Microsoft.ClearScript;
 using Microsoft.ClearScript.JavaScript;
 using Microsoft.ClearScript.V8;
 using System.Xml;
 
-namespace AbyssCLI.Aml
+namespace AbyssCLI.AmlDepr
 {
     internal sealed class ScriptImpl(AmlNode context, XmlNode xml_node, AbyssLib.Host host, DocumentImpl document) : AmlNode(context)
     {

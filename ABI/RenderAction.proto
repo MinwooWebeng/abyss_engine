@@ -20,6 +20,11 @@ message File {
 //all hierarchical element has element_id, which is globally unique in an abyss browser.
 //they don't necessarily be an element on the rendering engine, depending on its implementation.
 message RenderAction {
+	//debug
+	message ConsolePrint {
+		string text = 1;
+	}
+
 	message CreateElement {
 		int32 parent_id = 1;
 		int32 element_id = 2;
@@ -30,6 +35,10 @@ message RenderAction {
 	}
 	message DeleteElement {
 		int32 element_id = 1;
+	}
+	message ElemSetActive {
+		int32 element_id = 1;
+		bool active = 2;
 	}
 	message ElemSetPos {
 		int32 element_id = 1;
@@ -46,9 +55,17 @@ message RenderAction {
 	message DeleteItem {
 		int32 element_id = 1;
 	}
+	message ItemSetTitle {
+		int32 element_id = 1;
+		string title = 2;
+	}
 	message ItemSetIcon {
 		int32 element_id = 1;
 		int32 image_id = 2;
+	}
+	message ItemAlert {
+		int32 element_id = 1;
+		string alert_msg = 2;
 	}
 
 	// member session join - leave
@@ -139,45 +156,43 @@ message RenderAction {
 		string world_uuid = 4;
 	}
 
-	message ConsolePrint {
-		string text = 1;
-	}
-
 	oneof inner {
-		CreateElement create_element = 1;
-		MoveElement move_element = 2;
-		DeleteElement delete_element = 3;
-		ElemSetPos elem_set_pos = 4;
+		ConsolePrint console_print = 100;
 
-		CreateItem create_item = 30;
-		DeleteItem delete_item = 31;
-		ItemSetIcon item_set_icon = 32;
+		CreateElement create_element = 200;
+		MoveElement move_element = 201;
+		DeleteElement delete_element = 202;
+		ElemSetPos elem_set_pos = 203;
 
-		MemberInfo member_info = 50;
-		MemberLeave member_leave = 51;
-		MemberSetProfile member_set_profile = 52;
+		CreateItem create_item = 300;
+		DeleteItem delete_item = 301;
+		ItemSetTitle item_set_title = 302;
+		ItemSetIcon item_set_icon = 303;
+		ItemAlert item_alert = 304;
 
-		CreateImage create_image = 100;
-		DeleteImage delete_image = 109;
+		MemberInfo member_info = 400;
+		MemberLeave member_leave = 401;
+		MemberSetProfile member_set_profile = 402;
 
-		CreateMaterialV create_material_v = 110;
-		CreateMaterialF create_material_f = 111;
-		MaterialSetParamV material_set_param_v = 112;
-		MaterialSetParamC material_set_param_c = 113;
-		DeleteMaterial delete_material = 119;
+		CreateImage create_image = 500;
+		DeleteImage delete_image = 501;
 
-		CreateStaticMesh create_static_mesh = 120;
-		StaticMeshSetMaterial static_mesh_set_material = 121;
-		ElemAttachStaticMesh elem_attach_static_mesh = 122;
-		DeleteStaticMesh delete_static_mesh = 129;
+		CreateMaterialV create_material_v = 600;
+		CreateMaterialF create_material_f = 601;
+		MaterialSetParamV material_set_param_v = 602;
+		MaterialSetParamC material_set_param_c = 603;
+		DeleteMaterial delete_material = 604;
+
+		CreateStaticMesh create_static_mesh = 700;
+		StaticMeshSetMaterial static_mesh_set_material = 701;
+		ElemAttachStaticMesh elem_attach_static_mesh = 702;
+		DeleteStaticMesh delete_static_mesh = 703;
 		
-		CreateAnimation create_animation = 200;
-		DeleteAnimation delete_animation = 209;
+		CreateAnimation create_animation = 800;
+		DeleteAnimation delete_animation = 801;
 
-		LocalInfo local_info = 1000;
-		InfoContentShared info_content_shared = 1001;
-		InfoContentDeleted info_content_deleted = 1002;
-
-		ConsolePrint console_print = 9000; 
+		LocalInfo local_info = 900;
+		InfoContentShared info_content_shared = 901;
+		InfoContentDeleted info_content_deleted = 902;
 	}
 }

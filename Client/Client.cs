@@ -1,4 +1,5 @@
 ﻿using AbyssCLI.ABI;
+using AbyssCLI.Cache;
 using AbyssCLI.Tool;
 
 namespace AbyssCLI.Client
@@ -6,6 +7,7 @@ namespace AbyssCLI.Client
     public static partial class Client
     {
         public static AbyssLib.Host Host { get; private set; }
+        public static Cache.Cache Cache { get; private set; }
         public static readonly RenderActionWriter RenderWriter = new(Console.OpenStandardOutput())
         {
             AutoFlush = true
@@ -46,6 +48,21 @@ namespace AbyssCLI.Client
                 return;
             }
             RenderWriter.LocalInfo(Host.local_aurl.Raw, Host.local_aurl.Id);
+
+            var http_client = new HttpClient();
+            Cache = new(
+                http_request => Task.Run(async () =>
+                {
+                    var result = await http_client.SendAsync(http_request);
+                    var entry = Cache.Get(http_request.RequestUri.ToString());
+                    entry.TrySetResult(new(result));
+                }),
+                abyst_request => Task.Run(() =>
+                {
+                    //TODO
+                    //var result = await abyst_client.SendAsync(request);
+                })
+            ); //TODO:
 
             var default_world_url_raw = "abyst:" + Host.local_aurl.Id;
             if (!AbyssURLParser.TryParse(default_world_url_raw, out AbyssURL default_world_url))

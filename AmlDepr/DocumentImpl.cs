@@ -2,7 +2,7 @@
 using System.Text;
 using System.Xml;
 
-namespace AbyssCLI.Aml
+namespace AbyssCLI.AmlDepr
 {
     internal sealed class DocumentImpl(Contexted root,
         AbyssLib.Host host,
@@ -30,7 +30,7 @@ namespace AbyssCLI.Aml
             XmlDocument doc = new();
             doc.LoadXml(Encoding.UTF8.GetString(await response.Content.ReadAsByteArrayAsync(token)));
             // Check for the DOCTYPE
-            if (doc.DocumentType == null || (doc.DocumentType.Name != "AML" && doc.DocumentType.Name != "AML"))
+            if (doc.DocumentType == null || doc.DocumentType.Name != "AML")
                 throw new Exception("DOCTYPE mismatch");
 
             XmlNode aml_node = doc.SelectSingleNode("/aml");

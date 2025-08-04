@@ -28,7 +28,7 @@ namespace AbyssCLI.Client
                 default: throw new Exception("fatal: received invalid UI Action");
             }
         }
-        public static void Main()
+        public static void Start()
         {
             while (UIActionHandle()) { }
         }

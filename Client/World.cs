@@ -6,7 +6,7 @@ namespace AbyssCLI.Client
     {
         private readonly AbyssLib.Host _host;
         private readonly AbyssLib.World _world;
-        private readonly HL.Environment _environment;
+        private readonly HL.EnvironmentDepr _environment;
         private readonly Dictionary<string, HL.Member> _members = []; //peer hash - [uuid - item]
         private readonly Dictionary<Guid, HL.Item> _local_items = []; //UUID - item
         private readonly object _lock = new();
@@ -16,7 +16,7 @@ namespace AbyssCLI.Client
         {
             _host = host;
             _world = world;
-            _environment = new(host, URL, Aml.RenderID.ComponentId);
+            _environment = new(host, URL, AmlDepr.RenderID.ComponentId);
             _world_th = new Thread(() =>
             {
                 while (true)
@@ -52,7 +52,7 @@ namespace AbyssCLI.Client
         }
         public void ShareItem(Guid uuid, AbyssURL url, float[] transform)
         {
-            var item = new HL.Item(_host, _host.local_aurl.Id, uuid, url, Aml.RenderID.ElementId, transform);
+            var item = new HL.Item(_host, _host.local_aurl.Id, uuid, url, AmlDepr.RenderID.ElementId, transform);
             item.Activate();
 
             lock (_lock)
@@ -154,7 +154,7 @@ namespace AbyssCLI.Client
                 
                 foreach (var obj in parsed_objects)
                 {
-                    var item = new HL.Item(_host, evnt.peer_hash, obj.Item1, obj.Item2, Aml.RenderID.ElementId, obj.Item3);
+                    var item = new HL.Item(_host, evnt.peer_hash, obj.Item1, obj.Item2, AmlDepr.RenderID.ElementId, obj.Item3);
                     if (!member.remote_items.TryAdd(obj.Item1, item))
                     {
                         Client.CerrWriteLine("uid collision of objects appended from peer");

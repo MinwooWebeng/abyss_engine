@@ -1,7 +1,7 @@
 ﻿using AbyssCLI.Tool;
 using System.IO.MemoryMappedFiles;
 
-namespace AbyssCLI.Aml
+namespace AbyssCLI.AmlDepr
 {
     //each content must have one MediaLoader
     //TODO: add CORS protection before adding cookie.

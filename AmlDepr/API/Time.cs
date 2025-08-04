@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AbyssCLI.Aml.API
+namespace AbyssCLI.AmlDepr.API
 {
-    public static class Player
+    public class Time
     {
     }
 }

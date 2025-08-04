@@ -1,6 +1,6 @@
 ﻿using Microsoft.ClearScript.JavaScript;
 
-namespace AbyssCLI.Aml.API
+namespace AbyssCLI.AmlDepr.API
 {
     public class WebFetchApi(ResourceLoader resource_loader)
     {

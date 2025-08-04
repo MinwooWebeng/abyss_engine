@@ -1,7 +1,7 @@
 ﻿using AbyssCLI.Tool;
 using System.Xml;
 
-namespace AbyssCLI.Aml
+namespace AbyssCLI.AmlDepr
 {
     internal class MeshImpl : AmlNode
     {

@@ -1,6 +1,6 @@
 ﻿using System.Xml;
 
-namespace AbyssCLI.Aml
+namespace AbyssCLI.AmlDepr
 {
     internal sealed class BodyImpl : AmlNode
     {

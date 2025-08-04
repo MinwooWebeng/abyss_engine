@@ -8,7 +8,7 @@ namespace AbyssCLI.Cache
     /// We have monolithic cache, which entry contains 1) resource 2) origin 3) response headers. (and more)
     /// However, non-semantic response header fields are excluded.
     /// </summary>
-    internal class Cache(Action<HttpRequestMessage> http_requester, Action<AbystRequestMessage> abyst_requester)
+    public class Cache(Action<HttpRequestMessage> http_requester, Action<AbystRequestMessage> abyst_requester)
     {
         private readonly Action<HttpRequestMessage> _http_requester = http_requester;
         private readonly Action<AbystRequestMessage> _abyst_requester = abyst_requester;
@@ -24,6 +24,13 @@ namespace AbyssCLI.Cache
         }
         public RcTaskCompletionSource<CachedResource> Get(string key)
         {
+            object requestMessage = key switch
+            {
+                string s when s.StartsWith("http") => new HttpRequestMessage(HttpMethod.Get, key),
+                string s when s.StartsWith("abyst") => new AbystRequestMessage(HttpMethod.Get, key),
+                _ => throw new Exception("invalid address"),
+            };
+
             lock (_inner)
             {
                 if (_inner.TryGetValue(key, out var entry))
@@ -32,12 +39,15 @@ namespace AbyssCLI.Cache
                 }
                 RcTaskCompletionSource<CachedResource> new_entry = new();
                 _inner.Add(key, new_entry);
-                if (key.StartsWith("http"))
+
+                switch (requestMessage)
                 {
-                    _http_requester.Invoke(new(HttpMethod.Get, key));
-                } else if (key.StartsWith("abyst"))
-                {
-                    _abyst_requester.Invoke(new());
+                    case HttpRequestMessage hrm:
+                        _http_requester.Invoke(hrm);
+                        break;
+                    case AbystRequestMessage arm:
+                        _abyst_requester.Invoke(arm);
+                        break;
                 }
                 return new_entry;
             }

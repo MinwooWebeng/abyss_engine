@@ -1,6 +1,6 @@
 ﻿using System.Xml;
 
-namespace AbyssCLI.Aml
+namespace AbyssCLI.AmlDepr
 {
     internal class GroupImpl : AmlNode
     {
@@ -12,8 +12,8 @@ namespace AbyssCLI.Aml
             {
                 ElementDictionary[Id] = this;
             }
-            Pos = Aml.AmlValueParser.ParseVec3(xml_this_node.Attributes["pos"]?.Value);
-            Rot = Aml.AmlValueParser.ParseVec4(xml_this_node.Attributes["rot"]?.Value);
+            Pos = AmlDepr.AmlValueParser.ParseVec3(xml_this_node.Attributes["pos"]?.Value);
+            Rot = AmlDepr.AmlValueParser.ParseVec4(xml_this_node.Attributes["rot"]?.Value);
             _render_parent = render_parent;
             _render_elem = RenderID.ElementId;
             foreach (XmlNode child in xml_this_node.ChildNodes)

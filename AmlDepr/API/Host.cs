@@ -1,6 +1,6 @@
 ﻿using AbyssCLI.Tool;
 
-namespace AbyssCLI.Aml.API
+namespace AbyssCLI.AmlDepr.API
 {
     public class Host(AbyssURL path)
     {

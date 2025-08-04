@@ -1,5 +1,5 @@
 ﻿#pragma warning disable IDE1006 //naming convention
-namespace AbyssCLI.Aml
+namespace AbyssCLI.AmlDepr
 {
     public struct vec3
     {

@@ -6,7 +6,7 @@ class Program
         try
         {
             Client.Init();
-            Client.Main();
+            Client.Start();
             Client.CerrWriteLine("AbyssCLI terminated peacefully");
         }
         catch (Exception ex)

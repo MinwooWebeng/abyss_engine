@@ -1,4 +1,4 @@
-﻿namespace AbyssCLI.Aml.API
+﻿namespace AbyssCLI.AmlDepr.API
 {
 #pragma warning disable IDE1006 //naming convension
     public class Document

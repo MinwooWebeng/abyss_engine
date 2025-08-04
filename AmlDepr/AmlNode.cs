@@ -1,7 +1,7 @@
 ﻿using AbyssCLI.Tool;
 using System.Collections.Concurrent;
 
-namespace AbyssCLI.Aml
+namespace AbyssCLI.AmlDepr
 {
     internal class AmlNode : Contexted
     {

@@ -11,6 +11,17 @@ namespace AbyssCLI.ABI
 			_out_stream = stream;
 		}
 		
+public void ConsolePrint
+(
+    string text
+)
+=> Write(new RenderAction()
+{
+    ConsolePrint = new ConsolePrint
+    {
+        Text = text
+    }
+});
 public void CreateElement
 (
     int parent_id,
@@ -46,6 +57,19 @@ public void DeleteElement
     DeleteElement = new DeleteElement
     {
         ElementId = element_id
+    }
+});
+public void ElemSetActive
+(
+    int element_id,
+    bool active
+)
+=> Write(new RenderAction()
+{
+    ElemSetActive = new ElemSetActive
+    {
+        ElementId = element_id,
+        Active = active
     }
 });
 public void ElemSetPos
@@ -89,6 +113,19 @@ public void DeleteItem
         ElementId = element_id
     }
 });
+public void ItemSetTitle
+(
+    int element_id,
+    string title
+)
+=> Write(new RenderAction()
+{
+    ItemSetTitle = new ItemSetTitle
+    {
+        ElementId = element_id,
+        Title = title
+    }
+});
 public void ItemSetIcon
 (
     int element_id,
@@ -100,6 +137,19 @@ public void ItemSetIcon
     {
         ElementId = element_id,
         ImageId = image_id
+    }
+});
+public void ItemAlert
+(
+    int element_id,
+    string alert_msg
+)
+=> Write(new RenderAction()
+{
+    ItemAlert = new ItemAlert
+    {
+        ElementId = element_id,
+        AlertMsg = alert_msg
     }
 });
 public void MemberInfo
@@ -345,17 +395,6 @@ public void InfoContentDeleted
         ContentUuid = content_uuid,
         SharerHash = sharer_hash,
         WorldUuid = world_uuid
-    }
-});
-public void ConsolePrint
-(
-    string text
-)
-=> Write(new RenderAction()
-{
-    ConsolePrint = new ConsolePrint
-    {
-        Text = text
     }
 });
 

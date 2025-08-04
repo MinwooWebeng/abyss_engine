@@ -1,4 +1,4 @@
-﻿namespace AbyssCLI.AML
+﻿namespace AbyssCLI.AmlDepr
 {
     internal static class RenderID
     {

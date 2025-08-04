@@ -1,14 +1,10 @@
 ﻿namespace AbyssCLI.Cache
 {
-    internal class CachedResource : IDisposable
+    public class CachedResource(HttpResponseMessage http_response) : IDisposable
     {
-        static public CachedResource DefaultFailedResource
-        {
-            get
-            {
-                return default;
-            }
-        }
+        protected HttpResponseMessage _http_response = http_response;
+        public string MIMEType => _http_response.Content.Headers.ContentType?.MediaType ?? "";
+        
         private bool _disposed = false;
         public void Dispose()
         {
@@ -19,8 +15,10 @@
         {
             if (!_disposed)
             {
-                //TODO
-
+                if (disposing)
+                {
+                    _http_response.Dispose();
+                }
                 _disposed = true;
             }
         }
@@ -28,5 +26,6 @@
         {
             Dispose(disposing: false);
         }
+        static public CachedResource DefaultFailedResource => default;
     }
 }
