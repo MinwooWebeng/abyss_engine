@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AbyssCLI.CAbstraction
+namespace AbyssCLI.HL
 {
     internal sealed class Profile : Contexted
     {

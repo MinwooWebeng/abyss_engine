@@ -1,7 +1,7 @@
 ﻿using AbyssCLI.Aml;
 using AbyssCLI.Tool;
 
-namespace AbyssCLI.CAbstraction
+namespace AbyssCLI.HL
 {
     internal class Item(AbyssLib.Host host, string sharer_hash, Guid uuid, AbyssURL URL, int base_element, float[] spawn_transform)
     {

@@ -1,7 +1,7 @@
 ﻿using AbyssCLI.Aml;
 using AbyssCLI.Tool;
 
-namespace AbyssCLI.CAbstraction
+namespace AbyssCLI.HL
 {
     internal class Environment(AbyssLib.Host host, AbyssURL URL, int base_element)
     {
