@@ -1,9 +1,8 @@
-﻿namespace AbyssCLI.AML
+﻿namespace AbyssCLI.AML;
+
+public class Body : Element
 {
-    public class Body : Element
+    internal Body() : base("body", null)
     {
-        internal Body(object options) : base("body", options)
-        {
-        }
     }
 }

@@ -1,51 +1,35 @@
 ﻿using AbyssCLI.Tool;
 
-namespace AbyssCLI.AmlDepr.API
+namespace AbyssCLI.AmlDepr.API;
+
+public class Host(AbyssURL path)
 {
-    public class Host(AbyssURL path)
-    {
 #pragma warning disable IDE1006 //naming convention
-        public string hash()
+    public string hash() => Client.Client.Host.local_aurl.Id;
+    public string abyss_url() => Client.Client.Host.local_aurl.Raw;
+    public string root_certificate() => System.Text.Encoding.ASCII.GetString(Client.Client.Host.root_certificate);
+    public string handshake_key_certificate() => System.Text.Encoding.ASCII.GetString(Client.Client.Host.handshake_key_certificate);
+    public void register_peer(string root_cert, string handshake_key_cert)
+    {
+        byte[] root_cert_bytes = System.Text.Encoding.ASCII.GetBytes(root_cert);
+        byte[] handshake_key_cert_bytes = System.Text.Encoding.ASCII.GetBytes(handshake_key_cert);
+        AbyssLib.DLLError err = Client.Client.Host.AppendKnownPeer(root_cert_bytes, handshake_key_cert_bytes);
+        if (!err.Empty)
         {
-            return Client.Client.Host.local_aurl.Id;
+            throw new Exception(err.Message); //this should never happen.
         }
-        public string abyss_url()
+    }
+    public void connect(string abyss_url) => Client.Client.Host.OpenOutboundConnection(abyss_url);
+    public void move_world(string url)
+    {
+        if (!AbyssURLParser.TryParseFrom(url, _path, out AbyssURL url_parsed))
         {
-            return Client.Client.Host.local_aurl.Raw;
+            Client.Client.CerrWriteLine("move_world: failed to parse url");
+            return;
         }
-        public string root_certificate()
-        {
-            return System.Text.Encoding.ASCII.GetString(Client.Client.Host.root_certificate);
-        }
-        public string handshake_key_certificate()
-        {
-            return System.Text.Encoding.ASCII.GetString(Client.Client.Host.handshake_key_certificate);
-        }
-        public void register_peer(string root_cert, string handshake_key_cert)
-        {
-            var root_cert_bytes = System.Text.Encoding.ASCII.GetBytes(root_cert);
-            var handshake_key_cert_bytes = System.Text.Encoding.ASCII.GetBytes(handshake_key_cert);
-            var err = Client.Client.Host.AppendKnownPeer(root_cert_bytes, handshake_key_cert_bytes);
-            if (!err.Empty)
-            {
-                throw new Exception(err.Message); //this should never happen.
-            }
-        }
-        public void connect(string abyss_url)
-        {
-            Client.Client.Host.OpenOutboundConnection(abyss_url);
-        }
-        public void move_world(string url)
-        {
-            if (!AbyssURLParser.TryParseFrom(url, _path, out var url_parsed))
-            {
-                Client.Client.CerrWriteLine("move_world: failed to parse url");
-                return;
-            }
-            Client.Client.MainWorldSwap(url_parsed);
-        }
+        Client.Client.MainWorldSwap(url_parsed);
+    }
 #pragma warning restore IDE1006
 
-        private readonly AbyssURL _path = path;
-    }
+    private readonly AbyssURL _path = path;
 }

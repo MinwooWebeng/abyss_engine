@@ -1,64 +1,59 @@
 ﻿using AbyssCLI.Tool;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace AbyssCLI.Client
+namespace AbyssCLI.Client;
+
+public static partial class Client
 {
-    public static partial class Client
+    [Obsolete]
+    public static void MainWorldSwap(AbyssURL url) //can also be called from javascript API.
     {
-        public static void MainWorldSwap(AbyssURL url) //can also be called from javascript API.
+        lock (_world_move_lock)
         {
-            lock (_world_move_lock)
+            AbyssLib.World net_world;
+            AbyssURL world_url;
+            if (url.Scheme == "abyss")
             {
-                AbyssLib.World net_world;
-                AbyssURL world_url;
-                if (url.Scheme == "abyss")
-                {
-                    net_world = Host.JoinWorld(url.Raw);
-                    if (!net_world.IsValid())
-                    {
-                        CerrWriteLine("failed to join world: " + url.Raw);
-                        return;
-                    }
-                    if (!AbyssURLParser.TryParse(net_world.url, out world_url) || world_url.Scheme == "abyss")
-                    {
-                        CerrWriteLine("invalid world url: " + world_url.Raw);
-                        net_world.Leave();
-                        return;
-                    }
-                }
-                else
-                {
-                    net_world = Host.OpenWorld(url.Raw);
-                    world_url = url;
-                }
-
+                net_world = Host.JoinWorld(url.Raw);
                 if (!net_world.IsValid())
                 {
-                    CerrWriteLine("MoveWorld: failed to open world");
+                    CerrWriteLine("failed to join world: " + url.Raw);
                     return;
                 }
+                if (!AbyssURLParser.TryParse(net_world.url, out world_url) || world_url.Scheme == "abyss")
+                {
+                    CerrWriteLine("invalid world url: " + world_url.Raw);
+                    _ = net_world.Leave();
+                    return;
+                }
+            }
+            else
+            {
+                net_world = Host.OpenWorld(url.Raw);
+                world_url = url;
+            }
 
-                _resolver.DeleteMapping("");
-                _current_world?.Leave();
-                try
-                {
-                    _current_world = new World(Host, net_world, world_url);
-                    _current_world.Start();
-                }
-                catch (Exception ex)
-                {
-                    CerrWriteLine("world creation failed: " + ex.Message);
-                    _current_world = null;
-                }
+            if (!net_world.IsValid())
+            {
+                CerrWriteLine("MoveWorld: failed to open world");
+                return;
+            }
 
-                if (!_resolver.TrySetMapping("", net_world.world_id).Empty)
-                {
-                    throw new Exception("failed to set world path mapping");
-                }
+            _ = _resolver.DeleteMapping("");
+            _current_world?.Leave();
+            try
+            {
+                _current_world = new World(Host, net_world, world_url);
+                _current_world.Start();
+            }
+            catch (Exception ex)
+            {
+                CerrWriteLine("world creation failed: " + ex.Message);
+                _current_world = null;
+            }
+
+            if (!_resolver.TrySetMapping("", net_world.world_id).Empty)
+            {
+                throw new Exception("failed to set world path mapping");
             }
         }
     }

@@ -1,5 +1,5 @@
 ﻿using AbyssCLI.Client;
-class Program
+internal class Program
 {
     public static void Main()
     {

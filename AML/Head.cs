@@ -1,9 +1,8 @@
-﻿namespace AbyssCLI.AML
+﻿namespace AbyssCLI.AML;
+
+public class Head : Element
 {
-    public class Head : Element
+    internal Head() : base("head", null)
     {
-        internal Head(object options) : base("head", options)
-        {
-        }
     }
 }

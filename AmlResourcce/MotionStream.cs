@@ -1,6 +1,5 @@
-﻿namespace AbyssCLI.AmlResourcce
+﻿namespace AbyssCLI.AmlResourcce;
+
+internal class MotionStream
 {
-    internal class MotionStream
-    {
-    }
 }

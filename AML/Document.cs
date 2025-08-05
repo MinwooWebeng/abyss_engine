@@ -1,53 +1,45 @@
-﻿using AbyssCLI.ABI;
+﻿namespace AbyssCLI.AML;
 
-namespace AbyssCLI.AML
-{
 #pragma warning disable IDE1006 //naming convension
-    public class Document
+public class Document
+{
+    internal readonly int _root_element_id;
+    internal Document()
     {
-        private readonly int _element_id;
-        private readonly RenderActionWriter _renderer;
-        internal Document(RenderActionWriter renderer, string documentURI)
-        {
-            _element_id = RenderID.ElementId;
-            _renderer = renderer;
-            this.documentURI = documentURI;
+        _root_element_id = RenderID.ElementId;
 
-            //construction
-            _renderer.CreateElement(0, _element_id);
-        }
-        public readonly Body body;
-        public readonly string doctype = "AML";
-        public readonly string documentURI;
-        public readonly Head head;
-        private string _title;
-        public string title
+        //construction
+        _renderer.CreateElement(0, _root_element_id);
+    }
+    public readonly Body body = new();
+    public readonly string doctype = "AML";
+    public readonly Head head = new();
+    private string _title;
+    public string title
+    {
+        get => _title;
+        set
         {
-            get => _title;
-            set
-            {
-                _title = value;
-                _renderer.ItemSetTitle(_element_id, title);
-            }
-        }
-
-        public static Element createElement(string tag, dynamic options) => tag switch
-        {
-            "head" => new Head(options),
-            "body" => new Body(options),
-            _ => new Element(tag, options)
-        };
-        public Element getElementById(string id)
-        {
-            if (id == null) return null;
-            if (id.Length == 0) return null;
-
-            var res = head.getElementByIdHelper(id);
-            if (res != null) return res;
-
-            res = body.getElementByIdHelper(id);
-            return res;
+            _title = value;
+            _renderer.ItemSetTitle(_root_element_id, title);
         }
     }
-#pragma warning restore IDE1006 //naming convension
+
+    public static Element createElement(string tag, dynamic options) => tag switch
+    {
+        _ => new Element(tag, options)
+    };
+    public Element getElementById(string id)
+    {
+        if (id == null) return null;
+        if (id.Length == 0) return null;
+
+        Element res = head.getElementByIdHelper(id);
+        if (res != null) return res;
+
+        res = body.getElementByIdHelper(id);
+        return res;
+    }
 }
+#pragma warning restore IDE1006 //naming convension
+

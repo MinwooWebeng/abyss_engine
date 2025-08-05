@@ -1,6 +1,5 @@
-﻿namespace AbyssCLI.Cache
+﻿namespace AbyssCLI.Cache;
+
+internal class RTMotion
 {
-    internal class RTMotion
-    {
-    }
 }

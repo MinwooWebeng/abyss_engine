@@ -1,7 +1,6 @@
-﻿namespace AbyssCLI.Abyst
+﻿namespace AbyssCLI.Abyst;
+
+public class AbystRequestMessage
 {
-    public class AbystRequestMessage
-    {
-        public AbystRequestMessage(HttpMethod method, string path) { }
-    }
+    public AbystRequestMessage(HttpMethod method, string path) { }
 }

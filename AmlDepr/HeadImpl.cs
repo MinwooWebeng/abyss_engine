@@ -1,26 +1,27 @@
 ﻿using System.Xml;
 
-namespace AbyssCLI.AmlDepr
+namespace AbyssCLI.AmlDepr;
+
+[Obsolete]
+internal sealed class HeadImpl : AmlNode
 {
-    internal sealed class HeadImpl : AmlNode
+    [Obsolete]
+    public HeadImpl(AmlNode context, XmlNode head_node, AbyssLib.Host host, DocumentImpl document)
+        : base(context)
     {
-        public HeadImpl(AmlNode context, XmlNode head_node, AbyssLib.Host host, DocumentImpl document)
-            : base(context)
+        Id = head_node.Attributes["id"]?.Value;
+
+        foreach (XmlNode child in head_node?.ChildNodes)
         {
-            Id = head_node.Attributes["id"]?.Value;
-
-            foreach (XmlNode child in head_node?.ChildNodes)
+            Children.Add(child.Name switch
             {
-                Children.Add(child.Name switch
-                {
-                    "script" => new ScriptImpl(this, child, host, document),
-                    _ => throw new Exception("Invalid tag in <head>"),
-                });
-            }
+                "script" => new ScriptImpl(this, child, host, document),
+                _ => throw new Exception("Invalid tag in <head>"),
+            });
         }
-        public static string Tag => "head";
-        public string Id { get; }
-
-        //private readonly DocumentImpl _document; //use when dynamically loading scripts.
     }
+    public static string Tag => "head";
+    public string Id { get; }
+
+    //private readonly DocumentImpl _document; //use when dynamically loading scripts.
 }

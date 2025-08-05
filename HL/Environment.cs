@@ -1,81 +1,67 @@
 ﻿using AbyssCLI.AML;
 using AbyssCLI.Tool;
-using System.Xml;
+using System.Collections.Generic;
 
-namespace AbyssCLI.HL
+namespace AbyssCLI.HL;
+
+internal class Environment(AbyssLib.Host host, AbyssURL url) : ContextedTask
 {
-    internal class Environment : ContextedTask
+    private readonly AbyssLib.Host _host = host;
+    private readonly AbyssURL _url = url;
+    private TaskCompletionReference<Cache.CachedResource> __document_cache_ref; //only to keep cache live.
+    private readonly Document _document = new();
+    private readonly DeallocStack _dealloc_stack = new();
+
+    protected override void OnNoExecution() { }
+    protected override void SynchronousInit() =>
+        Client.Client.RenderWriter.ConsolePrint("||>opening environment(" + _url.ToString() + ")<||"); //debug
+    protected override async Task AsyncTask(CancellationToken token)
     {
-        private readonly AbyssLib.Host _host;
-        private readonly AbyssURL _url;
-        private readonly int element_id = RenderID.ElementId;
-        private TaskCompletionReference<Cache.CachedResource> __document_cache_ref; //only to keep cache live.
-        public Environment(AbyssLib.Host host, AbyssURL url)
+        RcTaskCompletionSource<Cache.CachedResource> document_cache_entry = Client.Client.Cache.Get(_url.ToString());
+        if (!document_cache_entry.TryGetReference(out __document_cache_ref))
         {
-            _host = host;
-            _url = url;
+            throw new Exception("fatal:::failed to get document resource reference");
         }
-        protected override void OnNoExecution() { }
-        protected override void SynchronousInit()
+        Cache.CachedResource doc_resource = await __document_cache_ref.Task.WaitAsync(token);
+        if (doc_resource is not Cache.Text || doc_resource.MIMEType != "text/aml")
         {
-            //debug
-            Client.Client.RenderWriter.ConsolePrint("||>opening environment(" + element_id.ToString() + ")<||");
-            Client.Client.RenderWriter.CreateElement(0, element_id);
+            throw new Exception("fatal:::MIME mismatch");
         }
-        protected override async Task AsyncTask(CancellationToken token)
-        {
-            var document_cache_entry = Client.Client.Cache.Get(_url.ToString());
-            if (!document_cache_entry.TryGetReference(out __document_cache_ref))
-            {
-                throw new Exception("fatal:::failed to get document resource reference");
-            }
-            var doc_resource = await __document_cache_ref.Task.WaitAsync(token);
-            if (doc_resource is not Cache.Text || doc_resource.MIMEType != "text/aml")
-            {
-                throw new Exception("fatal:::MIME mismatch");
-            }
-            var raw_document = await (doc_resource as Cache.Text).ReadAsync(token);
+        string raw_document = await (doc_resource as Cache.Text).ReadAsync(token);
 
-            XmlDocument xml_document = new();
-            xml_document.LoadXml(raw_document);
-            var doctype = xml_document.DocumentType?.Name ?? string.Empty;
-            if (doctype != "aml" && doctype != "AML")
-                throw new Exception("doctype mismatch: " + doctype);
-
-            XmlElement aml = null;
-            foreach (XmlNode node in xml_document.DocumentElement.ChildNodes)
-            {
-                if (node.NodeType == XmlNodeType.Element)
-                {
-                    aml = node as XmlElement;
-                    break; // Found the first element, exit the loop
-                }
-            }
-            if (aml == null)
-                throw new Exception("<aml> tag not found");
-        }
-        protected override void OnSuccess()
-        {
-            //debug
-            Client.Client.RenderWriter.ConsolePrint("||>loaded environment(" + element_id.ToString() + ")<||");
-        }
-        protected override void OnStop()
-        {
-            //debug
-            Client.Client.RenderWriter.ConsolePrint("||>stopped loading environment(" + element_id.ToString() + ")<||");
-        }
-        protected override void OnFail(Exception e)
-        {
-            Client.Client.CerrWriteLine(e.ToString());
-        }
-        protected override void SynchronousExit()
-        {
-            //debug
-            Client.Client.RenderWriter.DeleteElement(element_id);
-            Client.Client.RenderWriter.ConsolePrint("||>closed environment(" + element_id.ToString() + ")<||");
-        }
-
-        //thread-safe kills - TODO
-        //public void Close()
+        await ParseUtil.ParseAMLDocumentAsync(token, _document, raw_document);
     }
+    protected override void OnSuccess() =>
+        Client.Client.RenderWriter.ConsolePrint("||>loaded environment(" + _url.ToString() + ")<||"); //debug
+    protected override void OnStop() =>
+        Client.Client.RenderWriter.ConsolePrint("||>stopped loading environment(" + _url.ToString() + ")<||"); //debug
+    protected override void OnFail(Exception e) => Client.Client.CerrWriteLine(e.ToString());
+    protected override void SynchronousExit()
+    {
+        _dealloc_stack.FreeAll();
+        Client.Client.RenderWriter.ConsolePrint("||>closed environment(" + _url.ToString() + ")<||"); //debug
+    }
+
+    public override void Stop()
+    {
+        Client.Client.RenderWriter.MoveElement(_document._root_element_id, -1);
+        base.Stop();
+    }
+    //public static new void Stop() => throw new InvalidOperationException("environment cannot be stopped directly, use Close() instead.");
+    //public void Close()
+    //{
+    //    var kill_task = new EnvironmentShutdownTask(); //this only hides the root element
+    //    Attach(kill_task);
+    //    base.Stop(); // signal token cancellation
+    //}
+    //private class EnvironmentShutdownTask(int root_element_id) : ContextedTask
+    //{
+    //    protected override void OnNoExecution() => throw new InvalidOperationException("environment killing task must be executed");
+    //    protected override void SynchronousInit() => Client.Client.RenderWriter.MoveElement(root_element_id, -1);
+    //    protected override async Task AsyncTask(CancellationToken token) => await Task.CompletedTask;
+    //    protected override void OnSuccess() { }
+    //    protected override void OnStop() => throw new InvalidOperationException("environment killing task cannot be stopped");
+    //    protected override void OnFail(Exception e) => throw new InvalidOperationException("environment killing task cannot fail");
+    //    protected override void SynchronousExit() { }
+    //}
 }

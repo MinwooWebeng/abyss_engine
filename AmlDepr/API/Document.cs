@@ -1,57 +1,97 @@
-﻿namespace AbyssCLI.AmlDepr.API
-{
+﻿namespace AbyssCLI.AmlDepr.API;
+
 #pragma warning disable IDE1006 //naming convension
-    public class Document
+public class Document
+{
+    [Obsolete]
+    internal Document(DocumentImpl impl) { _impl = impl; }
+
+    [Obsolete]
+    private readonly DocumentImpl _impl;
+
+    [Obsolete]
+    public Head head => new(_impl.Head);
+
+    [Obsolete]
+    public Body body => new(_impl.Body);
+
+    [Obsolete]
+    public object getElementById(string id)
     {
-        internal Document(DocumentImpl impl) { _impl = impl; }
-        private readonly DocumentImpl _impl;
-
-        public Head head => new(_impl.Head);
-        public Body body => new(_impl.Body);
-
-        public object getElementById(string id)
+        _ = _impl.ElementDictionary.TryGetValue(id, out AmlNode element);
+        return element switch
         {
-            _impl.ElementDictionary.TryGetValue(id, out var element);
-            return element switch
-            {
-                GroupImpl => new Group(element as GroupImpl),
-                _ => null
-            };
-        }
+            GroupImpl => new Group(element as GroupImpl),
+            _ => null
+        };
     }
-    public class Head
-    {
-        internal Head(HeadImpl impl) { _impl = impl; }
-        private readonly HeadImpl _impl;
-        public string tag => HeadImpl.Tag;
-    }
-    public class Script
-    {
-        internal Script(ScriptImpl impl) { _impl = impl; }
-        private readonly ScriptImpl _impl;
-        public string tag => ScriptImpl.Tag;
-    }
-    public class Body
-    {
-        internal Body(BodyImpl impl) { _impl = impl; }
-        private readonly BodyImpl _impl;
-        public string tag => BodyImpl.Tag;
-    }
-    public class Group
-    {
-        internal Group(GroupImpl impl) { _impl = impl; }
-        private readonly GroupImpl _impl;
-        public string id => _impl.Id;
-        public string tag => GroupImpl.Tag;
-    }
-    public class Mesh
-    {
-        internal Mesh(MeshImpl impl) { _impl = impl; }
-        private readonly MeshImpl _impl;
-        public string id => _impl.Id;
-        public string tag => MeshImpl.Tag;
-        public string src => _impl.Source;
-        public string type => _impl.MimeType;
-    }
-#pragma warning restore IDE1006 //naming convension
 }
+public class Head
+{
+    [Obsolete]
+    internal Head(HeadImpl impl) { _impl = impl; }
+
+    [Obsolete]
+    private readonly HeadImpl _impl;
+
+    [Obsolete]
+    public string tag => HeadImpl.Tag;
+}
+public class Script
+{
+    [Obsolete]
+    internal Script(ScriptImpl impl) { _impl = impl; }
+
+    [Obsolete]
+    private readonly ScriptImpl _impl;
+
+    [Obsolete]
+    public string tag => ScriptImpl.Tag;
+}
+public class Body
+{
+    [Obsolete]
+    internal Body(BodyImpl impl) { _impl = impl; }
+
+    [Obsolete]
+    private readonly BodyImpl _impl;
+
+    [Obsolete]
+    public string tag => BodyImpl.Tag;
+}
+public class Group
+{
+    [Obsolete]
+    internal Group(GroupImpl impl) { _impl = impl; }
+
+    [Obsolete]
+    private readonly GroupImpl _impl;
+
+    [Obsolete]
+    public string id => _impl.Id;
+
+    [Obsolete]
+    public string tag => GroupImpl.Tag;
+}
+public class Mesh
+{
+    [Obsolete]
+    internal Mesh(MeshImpl impl) { _impl = impl; }
+
+    [Obsolete]
+    private readonly MeshImpl _impl;
+
+    [Obsolete]
+    public string id => _impl.Id;
+
+    [Obsolete]
+    public string tag => MeshImpl.Tag;
+
+    [Obsolete]
+    public string src => _impl.Source;
+
+    [Obsolete]
+    public string type => _impl.MimeType;
+}
+#pragma warning restore IDE1006 //naming convension
+

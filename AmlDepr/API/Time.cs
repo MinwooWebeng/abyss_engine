@@ -1,12 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace AbyssCLI.AmlDepr.API;
 
-namespace AbyssCLI.AmlDepr.API
+public class Time
 {
-    public class Time
-    {
-    }
 }

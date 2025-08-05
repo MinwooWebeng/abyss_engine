@@ -1,36 +1,35 @@
 ﻿using AbyssCLI.ABI;
 
-namespace AbyssCLI.Client
+namespace AbyssCLI.Client;
+
+public partial class Client
 {
-    partial class Client
+    private static UIAction ReadProtoMessage()
     {
-        private static UIAction ReadProtoMessage()
+        int length = _cin.ReadInt32();
+        byte[] data = _cin.ReadBytes(length);
+        if (data.Length != length)
         {
-            int length = _cin.ReadInt32();
-            byte[] data = _cin.ReadBytes(length);
-            if (data.Length != length)
-            {
-                throw new Exception("stream closed");
-            }
-            return UIAction.Parser.ParseFrom(data);
+            throw new Exception("stream closed");
         }
-        private static bool UIActionHandle()
+        return UIAction.Parser.ParseFrom(data);
+    }
+    private static bool UIActionHandle()
+    {
+        UIAction message = ReadProtoMessage();
+        switch (message.InnerCase)
         {
-            var message = ReadProtoMessage();
-            switch (message.InnerCase)
-            {
-                case UIAction.InnerOneofCase.Kill:
-                    return false;
-                case UIAction.InnerOneofCase.MoveWorld: OnMoveWorld(message.MoveWorld); return true;
-                case UIAction.InnerOneofCase.ShareContent: OnShareContent(message.ShareContent); return true;
-                case UIAction.InnerOneofCase.UnshareContent: OnUnshareContent(message.UnshareContent); return true;
-                case UIAction.InnerOneofCase.ConnectPeer: OnConnectPeer(message.ConnectPeer); return true;
-                default: throw new Exception("fatal: received invalid UI Action");
-            }
+            case UIAction.InnerOneofCase.Kill:
+                return false;
+            case UIAction.InnerOneofCase.MoveWorld: OnMoveWorld(message.MoveWorld); return true;
+            case UIAction.InnerOneofCase.ShareContent: OnShareContent(message.ShareContent); return true;
+            case UIAction.InnerOneofCase.UnshareContent: OnUnshareContent(message.UnshareContent); return true;
+            case UIAction.InnerOneofCase.ConnectPeer: OnConnectPeer(message.ConnectPeer); return true;
+            default: throw new Exception("fatal: received invalid UI Action");
         }
-        public static void Start()
-        {
-            while (UIActionHandle()) { }
-        }
+    }
+    public static void Start()
+    {
+        while (UIActionHandle()) { }
     }
 }
