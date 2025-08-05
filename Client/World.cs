@@ -26,23 +26,23 @@ public class World
                 dynamic evnt_raw = world.WaitForEvent();
                 switch (evnt_raw)
                 {
-                    case AbyssLib.WorldMemberRequest evnt:
-                        OnMemberRequest(evnt);
-                        break;
-                    case AbyssLib.WorldMember evnt:
-                        OnMemberReady(evnt);
-                        break;
-                    case AbyssLib.MemberObjectAppend evnt:
-                        OnMemberObjectAppend(evnt);
-                        break;
-                    case AbyssLib.MemberObjectDelete evnt:
-                        OnMemberObjectDelete(evnt);
-                        break;
-                    case AbyssLib.WorldMemberLeave evnt:
-                        OnMemberLeave(evnt.peer_hash);
-                        break;
-                    case int: //world termination
-                        return;
+                case AbyssLib.WorldMemberRequest evnt:
+                    OnMemberRequest(evnt);
+                    break;
+                case AbyssLib.WorldMember evnt:
+                    OnMemberReady(evnt);
+                    break;
+                case AbyssLib.MemberObjectAppend evnt:
+                    OnMemberObjectAppend(evnt);
+                    break;
+                case AbyssLib.MemberObjectDelete evnt:
+                    OnMemberObjectDelete(evnt);
+                    break;
+                case AbyssLib.WorldMemberLeave evnt:
+                    OnMemberLeave(evnt.peer_hash);
+                    break;
+                case int: //world termination
+                    return;
                 }
             }
         });

@@ -1,16 +1,22 @@
 ﻿using AbyssCLI.AML;
 using AbyssCLI.Tool;
-using System.Collections.Generic;
 
 namespace AbyssCLI.HL;
 
-internal class Environment(AbyssLib.Host host, AbyssURL url) : ContextedTask
+internal class Environment : ContextedTask
 {
-    private readonly AbyssLib.Host _host = host;
-    private readonly AbyssURL _url = url;
+    private readonly AbyssLib.Host _host;
+    private readonly AbyssURL _url;
     private TaskCompletionReference<Cache.CachedResource> __document_cache_ref; //only to keep cache live.
-    private readonly Document _document = new();
-    private readonly DeallocStack _dealloc_stack = new();
+    private readonly DeallocStack _dealloc_stack;
+    private readonly Document _document;
+    public Environment(AbyssLib.Host host, AbyssURL url)
+    {
+        _host = host;
+        _url = url;
+        _dealloc_stack = new();
+        _document = new(_dealloc_stack);
+    }
 
     protected override void OnNoExecution() { }
     protected override void SynchronousInit() =>
@@ -29,7 +35,7 @@ internal class Environment(AbyssLib.Host host, AbyssURL url) : ContextedTask
         }
         string raw_document = await (doc_resource as Cache.Text).ReadAsync(token);
 
-        await ParseUtil.ParseAMLDocumentAsync(token, _document, raw_document);
+        await ParseUtil.ParseAMLDocumentAsync(_document, raw_document, token);
     }
     protected override void OnSuccess() =>
         Client.Client.RenderWriter.ConsolePrint("||>loaded environment(" + _url.ToString() + ")<||"); //debug

@@ -42,12 +42,12 @@ public class Cache(Action<HttpRequestMessage> http_requester, Action<AbystReques
 
             switch (requestMessage)
             {
-                case HttpRequestMessage hrm:
-                    _http_requester.Invoke(hrm);
-                    break;
-                case AbystRequestMessage arm:
-                    _abyst_requester.Invoke(arm);
-                    break;
+            case HttpRequestMessage hrm:
+                _http_requester.Invoke(hrm);
+                break;
+            case AbystRequestMessage arm:
+                _abyst_requester.Invoke(arm);
+                break;
             }
             return new_entry;
         }

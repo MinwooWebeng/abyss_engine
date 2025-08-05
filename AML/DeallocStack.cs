@@ -12,10 +12,10 @@ internal class DeallocStack
     }
     internal void FreeAll()
     {
-        var entry = stack.First;
+        LinkedListNode<DeallocEntry> entry = stack.First;
         while (entry != null)
         {
-            var next = entry.Next; // Store the next node BEFORE potential removal
+            LinkedListNode<DeallocEntry> next = entry.Next; // Store the next node BEFORE potential removal
             entry.Value.Free();
             entry = next; // Move to the next node
         }
@@ -48,12 +48,12 @@ internal class DeallocEntry
     {
         switch (type)
         {
-            case EDeallocType.IDisposable:
-                (element as IDisposable).Dispose();
-                break;
-            case EDeallocType.RendererElement:
-                Client.Client.RenderWriter.DeleteElement((int)element);
-                break;
+        case EDeallocType.IDisposable:
+            (element as IDisposable).Dispose();
+            break;
+        case EDeallocType.RendererElement:
+            Client.Client.RenderWriter.DeleteElement((int)element);
+            break;
         }
         stack?.Remove(stack_node);
     }

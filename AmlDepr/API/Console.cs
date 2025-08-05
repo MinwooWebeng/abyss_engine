@@ -7,12 +7,12 @@ public class Console()
     {
         switch (subject)
         {
-            case string text:
-                Client.Client.CerrWriteLine(text);
-                break;
-            default:
-                Client.Client.CerrWriteLine(subject.ToString());
-                break;
+        case string text:
+            Client.Client.CerrWriteLine(text);
+            break;
+        default:
+            Client.Client.CerrWriteLine(subject.ToString());
+            break;
         }
     }
 #pragma warning restore IDE1006

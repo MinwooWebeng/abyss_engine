@@ -2,7 +2,5 @@
 
 public class Body : Element
 {
-    internal Body() : base("body", null)
-    {
-    }
+    internal Body() : base("body", null) { }
 }

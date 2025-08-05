@@ -45,27 +45,27 @@ internal class MeshImpl : AmlNode
     {
         switch (MimeType)
         {
-            case "model/obj":
-                if (!ResourceLoader.TryGetFileOrWaiter(Source, MIME.ModelObj, out ResourceLoader.FileResource resource, out _resource_waiter))
-                {
-                    //resource not ready - wait for value;
-                    resource = _resource_waiter.GetValue();
-                }
-                token.ThrowIfCancellationRequested();
-                if (!resource.IsValid)
-                    throw new Exception("failed to load " + Source + " in <mesh" + (Id == null ? "" : (":" + Id)) + ">");
+        case "model/obj":
+            if (!ResourceLoader.TryGetFileOrWaiter(Source, MIME.ModelObj, out ResourceLoader.FileResource resource, out _resource_waiter))
+            {
+                //resource not ready - wait for value;
+                resource = _resource_waiter.GetValue();
+            }
+            token.ThrowIfCancellationRequested();
+            if (!resource.IsValid)
+                throw new Exception("failed to load " + Source + " in <mesh" + (Id == null ? "" : (":" + Id)) + ">");
 
-                int component_id = RenderID.ComponentId;
-                Client.Client.RenderWriter.CreateStaticMesh(component_id, resource.ABIFileInfo);
-                if (!MeshWaiterGroup.TryFinalizeValue(component_id))
-                { //decease called
-                    Client.Client.RenderWriter.DeleteStaticMesh(component_id);
-                    return Task.CompletedTask;
-                }
-                Client.Client.RenderWriter.ElemAttachStaticMesh(_render_parent, component_id);
+            int component_id = RenderID.ComponentId;
+            Client.Client.RenderWriter.CreateStaticMesh(component_id, resource.ABIFileInfo);
+            if (!MeshWaiterGroup.TryFinalizeValue(component_id))
+            { //decease called
+                Client.Client.RenderWriter.DeleteStaticMesh(component_id);
                 return Task.CompletedTask;
-            default:
-                throw new Exception("unsupported type in <mesh" + (Id == null ? "" : (":" + Id)) + ">");
+            }
+            Client.Client.RenderWriter.ElemAttachStaticMesh(_render_parent, component_id);
+            return Task.CompletedTask;
+        default:
+            throw new Exception("unsupported type in <mesh" + (Id == null ? "" : (":" + Id)) + ">");
         }
     }
 

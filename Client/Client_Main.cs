@@ -14,20 +14,24 @@ public partial class Client
         }
         return UIAction.Parser.ParseFrom(data);
     }
+
+    [Obsolete]
     private static bool UIActionHandle()
     {
         UIAction message = ReadProtoMessage();
         switch (message.InnerCase)
         {
-            case UIAction.InnerOneofCase.Kill:
-                return false;
-            case UIAction.InnerOneofCase.MoveWorld: OnMoveWorld(message.MoveWorld); return true;
-            case UIAction.InnerOneofCase.ShareContent: OnShareContent(message.ShareContent); return true;
-            case UIAction.InnerOneofCase.UnshareContent: OnUnshareContent(message.UnshareContent); return true;
-            case UIAction.InnerOneofCase.ConnectPeer: OnConnectPeer(message.ConnectPeer); return true;
-            default: throw new Exception("fatal: received invalid UI Action");
+        case UIAction.InnerOneofCase.Kill:
+            return false;
+        case UIAction.InnerOneofCase.MoveWorld: OnMoveWorld(message.MoveWorld); return true;
+        case UIAction.InnerOneofCase.ShareContent: OnShareContent(message.ShareContent); return true;
+        case UIAction.InnerOneofCase.UnshareContent: OnUnshareContent(message.UnshareContent); return true;
+        case UIAction.InnerOneofCase.ConnectPeer: OnConnectPeer(message.ConnectPeer); return true;
+        default: throw new Exception("fatal: received invalid UI Action");
         }
     }
+
+    [Obsolete]
     public static void Start()
     {
         while (UIActionHandle()) { }

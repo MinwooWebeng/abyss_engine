@@ -4,7 +4,7 @@ namespace AbyssCLI.AML;
 
 internal static class ParseUtil
 {
-    internal static async Task ParseAMLDocumentAsync(CancellationToken token, Document target, string document)
+    internal static async Task ParseAMLDocumentAsync(Document target, string document, CancellationToken token)
     {
         XmlDocument xml_document = new();
         xml_document.LoadXml(document);
@@ -24,25 +24,76 @@ internal static class ParseUtil
         if (aml_elem == null)
             throw new Exception("<aml> tag not found");
 
+        bool is_head_parsed = false;
+        bool is_body_parsed = false;
+        bool is_warned = false;
         foreach (XmlNode node in aml_elem)
         {
             if (node.NodeType != XmlNodeType.Element)
                 continue;
             switch (node.Name)
             {
-                case "head":
-                    await ParseHead(token, target, node as XmlElement);
-                    break;
-                case "body":
-                    await ParseBody(token, target, node as XmlElement);
-                    break;
+            case "head" when !is_head_parsed && !is_body_parsed: // head must be parsed before body
+                ParseHead(target, node as XmlElement, token);
+                is_head_parsed = true;
+                break;
+            case "body" when !is_body_parsed:
+                ParseBody(target.body, node as XmlElement, token);
+                is_body_parsed = true;
+                break;
+            default:
+                if (!is_warned)
+                {
+                    Client.Client.CerrWriteLine("Warning: <aml> may only have a <head> and a <body>, where <head> must come before <body>");
+                    is_warned = true;
+                }
+                break;
             }
         }
     }
-    private static async Task ParseHead(CancellationToken token, Document target, XmlElement aml_elem)
+    private static void ParseHead(Document document, XmlElement head_elem, CancellationToken token)
     {
+        Head target = document.head;
+        foreach (XmlNode child in head_elem.ChildNodes)
+        {
+            if (child.NodeType != XmlNodeType.Element)
+                continue;
+            switch (child.Name)
+            {
+            case "script":
+            {
+                XmlNode text_node = child.FirstChild;
+                if (text_node == null)
+                {
+                    Client.Client.CerrWriteLine("Warning: empty <script>");
+                }
+                if (text_node.NodeType != XmlNodeType.Text)
+                {
+                    Client.Client.CerrWriteLine("Warning: <script> tag must only have text content");
+                    continue;
+                }
+                target._scripts.Add(text_node.Value);
+            }
+            break;
+            case "title":
+            {
+                XmlNode text_node = child.FirstChild;
+                if (text_node == null)
+                {
+                    Client.Client.CerrWriteLine("Warning: empty <script>");
+                }
+                if (text_node.NodeType != XmlNodeType.Text)
+                {
+                    Client.Client.CerrWriteLine("Warning: <script> tag must only have text content");
+                    continue;
+                }
+
+            }
+            break;
+            }
+        }
     }
-    private static async Task ParseBody(CancellationToken token, Document target, XmlElement aml_elem)
+    private static void ParseBody(Body target, XmlElement body_elem, CancellationToken token)
     {
     }
 }

@@ -2,7 +2,6 @@
 
 public class Head : Element
 {
-    internal Head() : base("head", null)
-    {
-    }
+    internal List<string> _scripts = [];
+    internal Head() : base("head", null) { }
 }

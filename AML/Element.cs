@@ -18,15 +18,15 @@ public class Element
                 object value = optionsObj.GetProperty(property);
                 switch (property)
                 {
-                    case "id":
-                        if (value is string)
-                        {
-                            js_properties[property] = value;
-                        }
-                        break;
-                    default:
+                case "id":
+                    if (value is string)
+                    {
                         js_properties[property] = value;
-                        break;
+                    }
+                    break;
+                default:
+                    js_properties[property] = value;
+                    break;
                 }
             }
         }

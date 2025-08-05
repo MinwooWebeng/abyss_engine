@@ -20,6 +20,8 @@ public class Host(AbyssURL path)
         }
     }
     public void connect(string abyss_url) => Client.Client.Host.OpenOutboundConnection(abyss_url);
+
+    [Obsolete]
     public void move_world(string url)
     {
         if (!AbyssURLParser.TryParseFrom(url, _path, out AbyssURL url_parsed))

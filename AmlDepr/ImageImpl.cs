@@ -41,22 +41,22 @@ internal class ImageImpl : AmlNode
     {
         switch (MimeType)
         {
-            case "image/png":
-                if (!ResourceLoader.TryGetFileOrWaiter(Source, MIME.ImagePng, out _resource, out _resource_waiter))
-                {
-                    //resource not ready - wait for value;
-                    _resource = _resource_waiter.GetValue();
-                }
-                break;
-            case "image/jpg" or "image/jpeg":
-                if (!ResourceLoader.TryGetFileOrWaiter(Source, MIME.ImageJpeg, out _resource, out _resource_waiter))
-                {
-                    //resource not ready - wait for value;
-                    _resource = _resource_waiter.GetValue();
-                }
-                break;
-            default:
-                return Task.CompletedTask;
+        case "image/png":
+            if (!ResourceLoader.TryGetFileOrWaiter(Source, MIME.ImagePng, out _resource, out _resource_waiter))
+            {
+                //resource not ready - wait for value;
+                _resource = _resource_waiter.GetValue();
+            }
+            break;
+        case "image/jpg" or "image/jpeg":
+            if (!ResourceLoader.TryGetFileOrWaiter(Source, MIME.ImageJpeg, out _resource, out _resource_waiter))
+            {
+                //resource not ready - wait for value;
+                _resource = _resource_waiter.GetValue();
+            }
+            break;
+        default:
+            return Task.CompletedTask;
         }
         token.ThrowIfCancellationRequested();
         if (!_resource.IsValid)
