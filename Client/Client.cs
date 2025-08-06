@@ -1,5 +1,4 @@
 ﻿using AbyssCLI.ABI;
-using AbyssCLI.Cache;
 using AbyssCLI.Tool;
 
 namespace AbyssCLI.Client;
@@ -23,7 +22,6 @@ public static partial class Client
     private static readonly object _world_move_lock = new();
     public static void CerrWriteLine(string message) => _cerr.WriteLine(message);
 
-    [Obsolete]
     public static void Init()
     {
         if (AbyssLib.Init() != 0)
@@ -56,8 +54,7 @@ public static partial class Client
             http_request => Task.Run(async () =>
             {
                 HttpResponseMessage result = await http_client.SendAsync(http_request);
-                RcTaskCompletionSource<CachedResource> entry = Cache.Get(http_request.RequestUri.ToString());
-                _ = entry.TrySetResult(new(result));
+                Cache.Patch(http_request.RequestUri.ToString(), new(result));
             }),
             abyst_request => Task.Run(() =>
             {

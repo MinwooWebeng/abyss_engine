@@ -4,8 +4,5 @@ public class AbystRequestMessage
 {
     public AbystRequestMessage(HttpMethod method, string path) { }
 
-    public string ToString()
-    {
-        return "abyst:local";
-    }
+    public override string ToString() => "abyst:local";
 }

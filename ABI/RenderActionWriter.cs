@@ -71,7 +71,7 @@ public class RenderActionWriter
             Active = active
         }
     });
-    public void ElemSetPos
+    public void ElemSetTransform
     (
     int element_id,
     Vec3 pos,
@@ -79,7 +79,7 @@ public class RenderActionWriter
     )
     => Write(new RenderAction()
     {
-        ElemSetPos = new ElemSetPos
+        ElemSetTransform = new ElemSetTransform
         {
             ElementId = element_id,
             Pos = pos,

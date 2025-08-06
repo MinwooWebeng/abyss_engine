@@ -1,36 +1,32 @@
-﻿using AbyssCLI.AmlDepr;
-using AbyssCLI.Tool;
+﻿using AbyssCLI.Tool;
+using System.Numerics;
 
 namespace AbyssCLI.HL;
 
-internal class Item(AbyssLib.Host host, string sharer_hash, Guid uuid, AbyssURL URL, int base_element, float[] spawn_transform)
+internal class Item
 {
-    public readonly string sharer_hash = sharer_hash;
-    public readonly Guid uuid = uuid;
-    public readonly AbyssURL URL = URL;
-    public readonly int base_element = base_element;
-    public readonly float[] spawn_transform = spawn_transform;
+    public readonly string _sharer_hash;
+    public readonly Guid _uuid;
+    public readonly AbyssURL _url;
+    private readonly ContextedTask.ContextedTaskRoot _ct_root = new();
+    public readonly HL.Content _content;
 
-    [Obsolete]
-    public void Activate()
+    public Item(string sharer_hash, Guid uuid, AbyssURL URL, Vector3 spawn_pos, Quaternion spawn_rot)
     {
-        Client.Client.RenderWriter.CreateItem(base_element, sharer_hash, Google.Protobuf.ByteString.CopyFrom(uuid.ToByteArray()));
-        _ = _documentImpl.Activate();
+        _sharer_hash = sharer_hash;
+        _uuid = uuid;
+        _url = URL;
+        _content = new(URL, new()
+        {
+            title = sharer_hash + ":" + uuid.ToString(),
+            pos = spawn_pos,
+            rot = spawn_rot,
+            is_item = true,
+            sharer_hash = sharer_hash,
+            uuid = uuid
+        });
     }
+    public void Start() => _ct_root.Attach(_content);
 
-    [Obsolete]
-    public Task CloseAsync()
-    {
-        Client.Client.RenderWriter.DeleteItem(base_element);
-        return _documentImpl.CloseAsync();
-    }
-
-    [Obsolete]
-    private readonly DocumentImpl _documentImpl = new(
-        new Tool.Contexted(),
-        host,
-        new ResourceLoader(host, URL),
-        URL,
-        spawn_transform,
-        base_element);
+    public void Stop() => _content.Stop();
 }

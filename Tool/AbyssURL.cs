@@ -1,5 +1,4 @@
 ﻿namespace AbyssCLI.Tool;
-
 public class AbyssURL
 {
     public string Raw { get; set; }

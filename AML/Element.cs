@@ -5,7 +5,7 @@ namespace AbyssCLI.AML;
 #pragma warning disable IDE1006 //naming convension
 public class Element
 {
-    internal readonly Dictionary<string, object> js_properties = [];
+    internal readonly Dictionary<string, object> attributes = [];
     internal Element parent;
     internal readonly List<Element> _children;
     internal Element(string tag, object options)
@@ -21,11 +21,11 @@ public class Element
                 case "id":
                     if (value is string)
                     {
-                        js_properties[property] = value;
+                        attributes[property] = value;
                     }
                     break;
                 default:
-                    js_properties[property] = value;
+                    attributes[property] = value;
                     break;
                 }
             }
@@ -33,7 +33,7 @@ public class Element
     }
     internal Element getElementByIdHelper(string _id)
     {
-        if (js_properties.TryGetValue("id", out object id) && (string)id == _id)
+        if (attributes.TryGetValue("id", out object id) && (string)id == _id)
         {
             return this;
         }

@@ -15,7 +15,6 @@ public partial class Client
         return UIAction.Parser.ParseFrom(data);
     }
 
-    [Obsolete]
     private static bool UIActionHandle()
     {
         UIAction message = ReadProtoMessage();
@@ -31,7 +30,6 @@ public partial class Client
         }
     }
 
-    [Obsolete]
     public static void Start()
     {
         while (UIActionHandle()) { }

@@ -86,7 +86,7 @@ internal static class ParseUtil
         string src = script_elem.GetAttribute("src");
         if (src != null && src.Length > 0)
         {
-            var script_src = Client.Client.Cache.GetReference(src);
+            Tool.TaskCompletionReference<Cache.CachedResource> script_src = Client.Client.Cache.GetReference(src);
             head._scripts.Add((src, script_src));
             return;
         }
@@ -102,7 +102,7 @@ internal static class ParseUtil
             Client.Client.CerrWriteLine("Warning: text <script> should only have text");
             return;
         }
-        head._scripts.Add((String.Empty, text_node.Value));
+        head._scripts.Add((string.Empty, text_node.Value));
     }
     private static void ParseBody(Body target, XmlElement body_elem, CancellationToken token)
     {

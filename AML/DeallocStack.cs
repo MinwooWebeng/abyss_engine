@@ -20,13 +20,21 @@ internal class DeallocStack
             entry = next; // Move to the next node
         }
     }
+    ~DeallocStack()
+    {
+        if (stack.Count != 0)
+        {
+            Client.Client.CerrWriteLine("DeallocStack was not empty on finalization. This is a bug");
+        }
+    }
 }
 internal class DeallocEntry
 {
-    private enum EDeallocType
+    internal enum EDeallocType
     {
         IDisposable,
         RendererElement,
+        RendererUiItem,
     }
     private readonly EDeallocType type;
     private readonly object element;
@@ -35,9 +43,9 @@ internal class DeallocEntry
         type = EDeallocType.IDisposable;
         element = disposable;
     }
-    public DeallocEntry(int element_id)
+    public DeallocEntry(int element_id, EDeallocType type)
     {
-        type = EDeallocType.RendererElement;
+        this.type = type;
         element = element_id;
     }
     //** this is set by DeallocStack.Add() **
@@ -53,6 +61,9 @@ internal class DeallocEntry
             break;
         case EDeallocType.RendererElement:
             Client.Client.RenderWriter.DeleteElement((int)element);
+            break;
+        case EDeallocType.RendererUiItem:
+            Client.Client.RenderWriter.DeleteItem((int)element);
             break;
         }
         stack?.Remove(stack_node);

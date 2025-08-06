@@ -26,93 +26,93 @@ namespace AbyssCLI.ABI {
           string.Concat(
             "ChJSZW5kZXJBY3Rpb24ucHJvdG8aCm1pbWUucHJvdG8aEGNvbW1vbnR5cGUu",
             "cHJvdG8iSAoERmlsZRITCgRtaW1lGAEgASgOMgUuTUlNRRIRCgltbWFwX25h",
-            "bWUYAiABKAkSCwoDb2ZmGAMgASgNEgsKA2xlbhgEIAEoDSKsGgoMUmVuZGVy",
+            "bWUYAiABKAkSCwoDb2ZmGAMgASgNEgsKA2xlbhgEIAEoDSK+GgoMUmVuZGVy",
             "QWN0aW9uEjMKDWNvbnNvbGVfcHJpbnQYZCABKAsyGi5SZW5kZXJBY3Rpb24u",
             "Q29uc29sZVByaW50SAASNgoOY3JlYXRlX2VsZW1lbnQYyAEgASgLMhsuUmVu",
             "ZGVyQWN0aW9uLkNyZWF0ZUVsZW1lbnRIABIyCgxtb3ZlX2VsZW1lbnQYyQEg",
             "ASgLMhkuUmVuZGVyQWN0aW9uLk1vdmVFbGVtZW50SAASNgoOZGVsZXRlX2Vs",
-            "ZW1lbnQYygEgASgLMhsuUmVuZGVyQWN0aW9uLkRlbGV0ZUVsZW1lbnRIABIx",
-            "CgxlbGVtX3NldF9wb3MYywEgASgLMhguUmVuZGVyQWN0aW9uLkVsZW1TZXRQ",
-            "b3NIABIwCgtjcmVhdGVfaXRlbRisAiABKAsyGC5SZW5kZXJBY3Rpb24uQ3Jl",
-            "YXRlSXRlbUgAEjAKC2RlbGV0ZV9pdGVtGK0CIAEoCzIYLlJlbmRlckFjdGlv",
-            "bi5EZWxldGVJdGVtSAASNQoOaXRlbV9zZXRfdGl0bGUYrgIgASgLMhouUmVu",
-            "ZGVyQWN0aW9uLkl0ZW1TZXRUaXRsZUgAEjMKDWl0ZW1fc2V0X2ljb24YrwIg",
-            "ASgLMhkuUmVuZGVyQWN0aW9uLkl0ZW1TZXRJY29uSAASLgoKaXRlbV9hbGVy",
-            "dBiwAiABKAsyFy5SZW5kZXJBY3Rpb24uSXRlbUFsZXJ0SAASMAoLbWVtYmVy",
-            "X2luZm8YkAMgASgLMhguUmVuZGVyQWN0aW9uLk1lbWJlckluZm9IABIyCgxt",
-            "ZW1iZXJfbGVhdmUYkQMgASgLMhkuUmVuZGVyQWN0aW9uLk1lbWJlckxlYXZl",
-            "SAASPQoSbWVtYmVyX3NldF9wcm9maWxlGJIDIAEoCzIeLlJlbmRlckFjdGlv",
-            "bi5NZW1iZXJTZXRQcm9maWxlSAASMgoMY3JlYXRlX2ltYWdlGPQDIAEoCzIZ",
-            "LlJlbmRlckFjdGlvbi5DcmVhdGVJbWFnZUgAEjIKDGRlbGV0ZV9pbWFnZRj1",
-            "AyABKAsyGS5SZW5kZXJBY3Rpb24uRGVsZXRlSW1hZ2VIABI7ChFjcmVhdGVf",
-            "bWF0ZXJpYWxfdhjYBCABKAsyHS5SZW5kZXJBY3Rpb24uQ3JlYXRlTWF0ZXJp",
-            "YWxWSAASOwoRY3JlYXRlX21hdGVyaWFsX2YY2QQgASgLMh0uUmVuZGVyQWN0",
-            "aW9uLkNyZWF0ZU1hdGVyaWFsRkgAEkAKFG1hdGVyaWFsX3NldF9wYXJhbV92",
-            "GNoEIAEoCzIfLlJlbmRlckFjdGlvbi5NYXRlcmlhbFNldFBhcmFtVkgAEkAK",
-            "FG1hdGVyaWFsX3NldF9wYXJhbV9jGNsEIAEoCzIfLlJlbmRlckFjdGlvbi5N",
-            "YXRlcmlhbFNldFBhcmFtQ0gAEjgKD2RlbGV0ZV9tYXRlcmlhbBjcBCABKAsy",
-            "HC5SZW5kZXJBY3Rpb24uRGVsZXRlTWF0ZXJpYWxIABI9ChJjcmVhdGVfc3Rh",
-            "dGljX21lc2gYvAUgASgLMh4uUmVuZGVyQWN0aW9uLkNyZWF0ZVN0YXRpY01l",
-            "c2hIABJIChhzdGF0aWNfbWVzaF9zZXRfbWF0ZXJpYWwYvQUgASgLMiMuUmVu",
-            "ZGVyQWN0aW9uLlN0YXRpY01lc2hTZXRNYXRlcmlhbEgAEkYKF2VsZW1fYXR0",
-            "YWNoX3N0YXRpY19tZXNoGL4FIAEoCzIiLlJlbmRlckFjdGlvbi5FbGVtQXR0",
-            "YWNoU3RhdGljTWVzaEgAEj0KEmRlbGV0ZV9zdGF0aWNfbWVzaBi/BSABKAsy",
-            "Hi5SZW5kZXJBY3Rpb24uRGVsZXRlU3RhdGljTWVzaEgAEjoKEGNyZWF0ZV9h",
-            "bmltYXRpb24YoAYgASgLMh0uUmVuZGVyQWN0aW9uLkNyZWF0ZUFuaW1hdGlv",
-            "bkgAEjoKEGRlbGV0ZV9hbmltYXRpb24YoQYgASgLMh0uUmVuZGVyQWN0aW9u",
-            "LkRlbGV0ZUFuaW1hdGlvbkgAEi4KCmxvY2FsX2luZm8YhAcgASgLMhcuUmVu",
-            "ZGVyQWN0aW9uLkxvY2FsSW5mb0gAEj8KE2luZm9fY29udGVudF9zaGFyZWQY",
-            "hQcgASgLMh8uUmVuZGVyQWN0aW9uLkluZm9Db250ZW50U2hhcmVkSAASQQoU",
-            "aW5mb19jb250ZW50X2RlbGV0ZWQYhgcgASgLMiAuUmVuZGVyQWN0aW9uLklu",
-            "Zm9Db250ZW50RGVsZXRlZEgAGhwKDENvbnNvbGVQcmludBIMCgR0ZXh0GAEg",
-            "ASgJGjYKDUNyZWF0ZUVsZW1lbnQSEQoJcGFyZW50X2lkGAEgASgFEhIKCmVs",
-            "ZW1lbnRfaWQYAiABKAUaOAoLTW92ZUVsZW1lbnQSEgoKZWxlbWVudF9pZBgB",
-            "IAEoBRIVCg1uZXdfcGFyZW50X2lkGAIgASgFGiMKDURlbGV0ZUVsZW1lbnQS",
-            "EgoKZWxlbWVudF9pZBgBIAEoBRozCg1FbGVtU2V0QWN0aXZlEhIKCmVsZW1l",
-            "bnRfaWQYASABKAUSDgoGYWN0aXZlGAIgASgIGkgKCkVsZW1TZXRQb3MSEgoK",
-            "ZWxlbWVudF9pZBgBIAEoBRISCgNwb3MYAiABKAsyBS5WZWMzEhIKA3JvdBgD",
-            "IAEoCzIFLlZlYzQaQwoKQ3JlYXRlSXRlbRISCgplbGVtZW50X2lkGAEgASgF",
-            "EhMKC3NoYXJlcl9oYXNoGAIgASgJEgwKBHV1aWQYAyABKAwaIAoKRGVsZXRl",
-            "SXRlbRISCgplbGVtZW50X2lkGAEgASgFGjEKDEl0ZW1TZXRUaXRsZRISCgpl",
-            "bGVtZW50X2lkGAEgASgFEg0KBXRpdGxlGAIgASgJGjMKC0l0ZW1TZXRJY29u",
-            "EhIKCmVsZW1lbnRfaWQYASABKAUSEAoIaW1hZ2VfaWQYAiABKAUaMgoJSXRl",
-            "bUFsZXJ0EhIKCmVsZW1lbnRfaWQYASABKAUSEQoJYWxlcnRfbXNnGAIgASgJ",
-            "Gh8KCk1lbWJlckluZm8SEQoJcGVlcl9oYXNoGAEgASgJGiQKEE1lbWJlclNl",
-            "dFByb2ZpbGUSEAoIaWFtZ2VfaWQYASABKAUaIAoLTWVtYmVyTGVhdmUSEQoJ",
-            "cGVlcl9oYXNoGAEgASgJGjQKC0NyZWF0ZUltYWdlEhAKCGltYWdlX2lkGAEg",
-            "ASgFEhMKBGZpbGUYAiABKAsyBS5GaWxlGh8KC0RlbGV0ZUltYWdlEhAKCGlt",
-            "YWdlX2lkGAEgASgFGjsKD0NyZWF0ZU1hdGVyaWFsVhITCgttYXRlcmlhbF9p",
-            "ZBgBIAEoBRITCgtzaGFkZXJfbmFtZRgCIAEoCRo7Cg9DcmVhdGVNYXRlcmlh",
-            "bEYSEwoLbWF0ZXJpYWxfaWQYASABKAUSEwoEZmlsZRgCIAEoCzIFLkZpbGUa",
-            "VAoRTWF0ZXJpYWxTZXRQYXJhbVYSEwoLbWF0ZXJpYWxfaWQYASABKAUSEgoK",
-            "cGFyYW1fbmFtZRgCIAEoCRIWCgVwYXJhbRgDIAEoCzIHLkFueVZhbBpSChFN",
-            "YXRlcmlhbFNldFBhcmFtQxITCgttYXRlcmlhbF9pZBgBIAEoBRISCgpwYXJh",
-            "bV9uYW1lGAIgASgJEhQKDGNvbXBvbmVudF9pZBgDIAEoBRolCg5EZWxldGVN",
-            "YXRlcmlhbBITCgttYXRlcmlhbF9pZBgBIAEoBRo4ChBDcmVhdGVTdGF0aWNN",
-            "ZXNoEg8KB21lc2hfaWQYASABKAUSEwoEZmlsZRgCIAEoCzIFLkZpbGUaVAoV",
-            "U3RhdGljTWVzaFNldE1hdGVyaWFsEg8KB21lc2hfaWQYASABKAUSFQoNbWF0",
-            "ZXJpYWxfc2xvdBgCIAEoBRITCgttYXRlcmlhbF9pZBgDIAEoBRo7ChRFbGVt",
-            "QXR0YWNoU3RhdGljTWVzaBISCgplbGVtZW50X2lkGAEgASgFEg8KB21lc2hf",
-            "aWQYAiABKAUaIwoQRGVsZXRlU3RhdGljTWVzaBIPCgdtZXNoX2lkGAEgASgF",
-            "GjwKD0NyZWF0ZUFuaW1hdGlvbhIUCgxhbmltYXRpb25faWQYASABKAUSEwoE",
-            "ZmlsZRgCIAEoCzIFLkZpbGUaJwoPRGVsZXRlQW5pbWF0aW9uEhQKDGFuaW1h",
-            "dGlvbl9pZBgBIAEoBRotCglMb2NhbEluZm8SDAoEYXVybBgBIAEoCRISCgps",
-            "b2NhbF9oYXNoGAIgASgJGmcKEUluZm9Db250ZW50U2hhcmVkEhQKDGNvbnRl",
-            "bnRfdXVpZBgBIAEoCRITCgtjb250ZW50X3VybBgCIAEoCRITCgtzaGFyZXJf",
-            "aGFzaBgDIAEoCRISCgp3b3JsZF91dWlkGAQgASgJGlMKEkluZm9Db250ZW50",
-            "RGVsZXRlZBIUCgxjb250ZW50X3V1aWQYASABKAkSEwoLc2hhcmVyX2hhc2gY",
-            "AyABKAkSEgoKd29ybGRfdXVpZBgEIAEoCUIHCgVpbm5lckIPqgIMQWJ5c3ND",
-            "TEkuQUJJYgZwcm90bzM="));
+            "ZW1lbnQYygEgASgLMhsuUmVuZGVyQWN0aW9uLkRlbGV0ZUVsZW1lbnRIABI9",
+            "ChJlbGVtX3NldF90cmFuc2Zvcm0YywEgASgLMh4uUmVuZGVyQWN0aW9uLkVs",
+            "ZW1TZXRUcmFuc2Zvcm1IABIwCgtjcmVhdGVfaXRlbRisAiABKAsyGC5SZW5k",
+            "ZXJBY3Rpb24uQ3JlYXRlSXRlbUgAEjAKC2RlbGV0ZV9pdGVtGK0CIAEoCzIY",
+            "LlJlbmRlckFjdGlvbi5EZWxldGVJdGVtSAASNQoOaXRlbV9zZXRfdGl0bGUY",
+            "rgIgASgLMhouUmVuZGVyQWN0aW9uLkl0ZW1TZXRUaXRsZUgAEjMKDWl0ZW1f",
+            "c2V0X2ljb24YrwIgASgLMhkuUmVuZGVyQWN0aW9uLkl0ZW1TZXRJY29uSAAS",
+            "LgoKaXRlbV9hbGVydBiwAiABKAsyFy5SZW5kZXJBY3Rpb24uSXRlbUFsZXJ0",
+            "SAASMAoLbWVtYmVyX2luZm8YkAMgASgLMhguUmVuZGVyQWN0aW9uLk1lbWJl",
+            "ckluZm9IABIyCgxtZW1iZXJfbGVhdmUYkQMgASgLMhkuUmVuZGVyQWN0aW9u",
+            "Lk1lbWJlckxlYXZlSAASPQoSbWVtYmVyX3NldF9wcm9maWxlGJIDIAEoCzIe",
+            "LlJlbmRlckFjdGlvbi5NZW1iZXJTZXRQcm9maWxlSAASMgoMY3JlYXRlX2lt",
+            "YWdlGPQDIAEoCzIZLlJlbmRlckFjdGlvbi5DcmVhdGVJbWFnZUgAEjIKDGRl",
+            "bGV0ZV9pbWFnZRj1AyABKAsyGS5SZW5kZXJBY3Rpb24uRGVsZXRlSW1hZ2VI",
+            "ABI7ChFjcmVhdGVfbWF0ZXJpYWxfdhjYBCABKAsyHS5SZW5kZXJBY3Rpb24u",
+            "Q3JlYXRlTWF0ZXJpYWxWSAASOwoRY3JlYXRlX21hdGVyaWFsX2YY2QQgASgL",
+            "Mh0uUmVuZGVyQWN0aW9uLkNyZWF0ZU1hdGVyaWFsRkgAEkAKFG1hdGVyaWFs",
+            "X3NldF9wYXJhbV92GNoEIAEoCzIfLlJlbmRlckFjdGlvbi5NYXRlcmlhbFNl",
+            "dFBhcmFtVkgAEkAKFG1hdGVyaWFsX3NldF9wYXJhbV9jGNsEIAEoCzIfLlJl",
+            "bmRlckFjdGlvbi5NYXRlcmlhbFNldFBhcmFtQ0gAEjgKD2RlbGV0ZV9tYXRl",
+            "cmlhbBjcBCABKAsyHC5SZW5kZXJBY3Rpb24uRGVsZXRlTWF0ZXJpYWxIABI9",
+            "ChJjcmVhdGVfc3RhdGljX21lc2gYvAUgASgLMh4uUmVuZGVyQWN0aW9uLkNy",
+            "ZWF0ZVN0YXRpY01lc2hIABJIChhzdGF0aWNfbWVzaF9zZXRfbWF0ZXJpYWwY",
+            "vQUgASgLMiMuUmVuZGVyQWN0aW9uLlN0YXRpY01lc2hTZXRNYXRlcmlhbEgA",
+            "EkYKF2VsZW1fYXR0YWNoX3N0YXRpY19tZXNoGL4FIAEoCzIiLlJlbmRlckFj",
+            "dGlvbi5FbGVtQXR0YWNoU3RhdGljTWVzaEgAEj0KEmRlbGV0ZV9zdGF0aWNf",
+            "bWVzaBi/BSABKAsyHi5SZW5kZXJBY3Rpb24uRGVsZXRlU3RhdGljTWVzaEgA",
+            "EjoKEGNyZWF0ZV9hbmltYXRpb24YoAYgASgLMh0uUmVuZGVyQWN0aW9uLkNy",
+            "ZWF0ZUFuaW1hdGlvbkgAEjoKEGRlbGV0ZV9hbmltYXRpb24YoQYgASgLMh0u",
+            "UmVuZGVyQWN0aW9uLkRlbGV0ZUFuaW1hdGlvbkgAEi4KCmxvY2FsX2luZm8Y",
+            "hAcgASgLMhcuUmVuZGVyQWN0aW9uLkxvY2FsSW5mb0gAEj8KE2luZm9fY29u",
+            "dGVudF9zaGFyZWQYhQcgASgLMh8uUmVuZGVyQWN0aW9uLkluZm9Db250ZW50",
+            "U2hhcmVkSAASQQoUaW5mb19jb250ZW50X2RlbGV0ZWQYhgcgASgLMiAuUmVu",
+            "ZGVyQWN0aW9uLkluZm9Db250ZW50RGVsZXRlZEgAGhwKDENvbnNvbGVQcmlu",
+            "dBIMCgR0ZXh0GAEgASgJGjYKDUNyZWF0ZUVsZW1lbnQSEQoJcGFyZW50X2lk",
+            "GAEgASgFEhIKCmVsZW1lbnRfaWQYAiABKAUaOAoLTW92ZUVsZW1lbnQSEgoK",
+            "ZWxlbWVudF9pZBgBIAEoBRIVCg1uZXdfcGFyZW50X2lkGAIgASgFGiMKDURl",
+            "bGV0ZUVsZW1lbnQSEgoKZWxlbWVudF9pZBgBIAEoBRozCg1FbGVtU2V0QWN0",
+            "aXZlEhIKCmVsZW1lbnRfaWQYASABKAUSDgoGYWN0aXZlGAIgASgIGk4KEEVs",
+            "ZW1TZXRUcmFuc2Zvcm0SEgoKZWxlbWVudF9pZBgBIAEoBRISCgNwb3MYAiAB",
+            "KAsyBS5WZWMzEhIKA3JvdBgDIAEoCzIFLlZlYzQaQwoKQ3JlYXRlSXRlbRIS",
+            "CgplbGVtZW50X2lkGAEgASgFEhMKC3NoYXJlcl9oYXNoGAIgASgJEgwKBHV1",
+            "aWQYAyABKAwaIAoKRGVsZXRlSXRlbRISCgplbGVtZW50X2lkGAEgASgFGjEK",
+            "DEl0ZW1TZXRUaXRsZRISCgplbGVtZW50X2lkGAEgASgFEg0KBXRpdGxlGAIg",
+            "ASgJGjMKC0l0ZW1TZXRJY29uEhIKCmVsZW1lbnRfaWQYASABKAUSEAoIaW1h",
+            "Z2VfaWQYAiABKAUaMgoJSXRlbUFsZXJ0EhIKCmVsZW1lbnRfaWQYASABKAUS",
+            "EQoJYWxlcnRfbXNnGAIgASgJGh8KCk1lbWJlckluZm8SEQoJcGVlcl9oYXNo",
+            "GAEgASgJGiQKEE1lbWJlclNldFByb2ZpbGUSEAoIaWFtZ2VfaWQYASABKAUa",
+            "IAoLTWVtYmVyTGVhdmUSEQoJcGVlcl9oYXNoGAEgASgJGjQKC0NyZWF0ZUlt",
+            "YWdlEhAKCGltYWdlX2lkGAEgASgFEhMKBGZpbGUYAiABKAsyBS5GaWxlGh8K",
+            "C0RlbGV0ZUltYWdlEhAKCGltYWdlX2lkGAEgASgFGjsKD0NyZWF0ZU1hdGVy",
+            "aWFsVhITCgttYXRlcmlhbF9pZBgBIAEoBRITCgtzaGFkZXJfbmFtZRgCIAEo",
+            "CRo7Cg9DcmVhdGVNYXRlcmlhbEYSEwoLbWF0ZXJpYWxfaWQYASABKAUSEwoE",
+            "ZmlsZRgCIAEoCzIFLkZpbGUaVAoRTWF0ZXJpYWxTZXRQYXJhbVYSEwoLbWF0",
+            "ZXJpYWxfaWQYASABKAUSEgoKcGFyYW1fbmFtZRgCIAEoCRIWCgVwYXJhbRgD",
+            "IAEoCzIHLkFueVZhbBpSChFNYXRlcmlhbFNldFBhcmFtQxITCgttYXRlcmlh",
+            "bF9pZBgBIAEoBRISCgpwYXJhbV9uYW1lGAIgASgJEhQKDGNvbXBvbmVudF9p",
+            "ZBgDIAEoBRolCg5EZWxldGVNYXRlcmlhbBITCgttYXRlcmlhbF9pZBgBIAEo",
+            "BRo4ChBDcmVhdGVTdGF0aWNNZXNoEg8KB21lc2hfaWQYASABKAUSEwoEZmls",
+            "ZRgCIAEoCzIFLkZpbGUaVAoVU3RhdGljTWVzaFNldE1hdGVyaWFsEg8KB21l",
+            "c2hfaWQYASABKAUSFQoNbWF0ZXJpYWxfc2xvdBgCIAEoBRITCgttYXRlcmlh",
+            "bF9pZBgDIAEoBRo7ChRFbGVtQXR0YWNoU3RhdGljTWVzaBISCgplbGVtZW50",
+            "X2lkGAEgASgFEg8KB21lc2hfaWQYAiABKAUaIwoQRGVsZXRlU3RhdGljTWVz",
+            "aBIPCgdtZXNoX2lkGAEgASgFGjwKD0NyZWF0ZUFuaW1hdGlvbhIUCgxhbmlt",
+            "YXRpb25faWQYASABKAUSEwoEZmlsZRgCIAEoCzIFLkZpbGUaJwoPRGVsZXRl",
+            "QW5pbWF0aW9uEhQKDGFuaW1hdGlvbl9pZBgBIAEoBRotCglMb2NhbEluZm8S",
+            "DAoEYXVybBgBIAEoCRISCgpsb2NhbF9oYXNoGAIgASgJGmcKEUluZm9Db250",
+            "ZW50U2hhcmVkEhQKDGNvbnRlbnRfdXVpZBgBIAEoCRITCgtjb250ZW50X3Vy",
+            "bBgCIAEoCRITCgtzaGFyZXJfaGFzaBgDIAEoCRISCgp3b3JsZF91dWlkGAQg",
+            "ASgJGlMKEkluZm9Db250ZW50RGVsZXRlZBIUCgxjb250ZW50X3V1aWQYASAB",
+            "KAkSEwoLc2hhcmVyX2hhc2gYAyABKAkSEgoKd29ybGRfdXVpZBgEIAEoCUIH",
+            "CgVpbm5lckIPqgIMQWJ5c3NDTEkuQUJJYgZwcm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::MimeReflection.Descriptor, global::AbyssCLI.ABI.CommontypeReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
             new pbr::GeneratedClrTypeInfo(typeof(global::AbyssCLI.ABI.File), global::AbyssCLI.ABI.File.Parser, new[]{ "Mime", "MmapName", "Off", "Len" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::AbyssCLI.ABI.RenderAction), global::AbyssCLI.ABI.RenderAction.Parser, new[]{ "ConsolePrint", "CreateElement", "MoveElement", "DeleteElement", "ElemSetPos", "CreateItem", "DeleteItem", "ItemSetTitle", "ItemSetIcon", "ItemAlert", "MemberInfo", "MemberLeave", "MemberSetProfile", "CreateImage", "DeleteImage", "CreateMaterialV", "CreateMaterialF", "MaterialSetParamV", "MaterialSetParamC", "DeleteMaterial", "CreateStaticMesh", "StaticMeshSetMaterial", "ElemAttachStaticMesh", "DeleteStaticMesh", "CreateAnimation", "DeleteAnimation", "LocalInfo", "InfoContentShared", "InfoContentDeleted" }, new[]{ "Inner" }, null, null, new pbr::GeneratedClrTypeInfo[] { new pbr::GeneratedClrTypeInfo(typeof(global::AbyssCLI.ABI.RenderAction.Types.ConsolePrint), global::AbyssCLI.ABI.RenderAction.Types.ConsolePrint.Parser, new[]{ "Text" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::AbyssCLI.ABI.RenderAction), global::AbyssCLI.ABI.RenderAction.Parser, new[]{ "ConsolePrint", "CreateElement", "MoveElement", "DeleteElement", "ElemSetTransform", "CreateItem", "DeleteItem", "ItemSetTitle", "ItemSetIcon", "ItemAlert", "MemberInfo", "MemberLeave", "MemberSetProfile", "CreateImage", "DeleteImage", "CreateMaterialV", "CreateMaterialF", "MaterialSetParamV", "MaterialSetParamC", "DeleteMaterial", "CreateStaticMesh", "StaticMeshSetMaterial", "ElemAttachStaticMesh", "DeleteStaticMesh", "CreateAnimation", "DeleteAnimation", "LocalInfo", "InfoContentShared", "InfoContentDeleted" }, new[]{ "Inner" }, null, null, new pbr::GeneratedClrTypeInfo[] { new pbr::GeneratedClrTypeInfo(typeof(global::AbyssCLI.ABI.RenderAction.Types.ConsolePrint), global::AbyssCLI.ABI.RenderAction.Types.ConsolePrint.Parser, new[]{ "Text" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::AbyssCLI.ABI.RenderAction.Types.CreateElement), global::AbyssCLI.ABI.RenderAction.Types.CreateElement.Parser, new[]{ "ParentId", "ElementId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::AbyssCLI.ABI.RenderAction.Types.MoveElement), global::AbyssCLI.ABI.RenderAction.Types.MoveElement.Parser, new[]{ "ElementId", "NewParentId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::AbyssCLI.ABI.RenderAction.Types.DeleteElement), global::AbyssCLI.ABI.RenderAction.Types.DeleteElement.Parser, new[]{ "ElementId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::AbyssCLI.ABI.RenderAction.Types.ElemSetActive), global::AbyssCLI.ABI.RenderAction.Types.ElemSetActive.Parser, new[]{ "ElementId", "Active" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::AbyssCLI.ABI.RenderAction.Types.ElemSetPos), global::AbyssCLI.ABI.RenderAction.Types.ElemSetPos.Parser, new[]{ "ElementId", "Pos", "Rot" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::AbyssCLI.ABI.RenderAction.Types.ElemSetTransform), global::AbyssCLI.ABI.RenderAction.Types.ElemSetTransform.Parser, new[]{ "ElementId", "Pos", "Rot" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::AbyssCLI.ABI.RenderAction.Types.CreateItem), global::AbyssCLI.ABI.RenderAction.Types.CreateItem.Parser, new[]{ "ElementId", "SharerHash", "Uuid" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::AbyssCLI.ABI.RenderAction.Types.DeleteItem), global::AbyssCLI.ABI.RenderAction.Types.DeleteItem.Parser, new[]{ "ElementId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::AbyssCLI.ABI.RenderAction.Types.ItemSetTitle), global::AbyssCLI.ABI.RenderAction.Types.ItemSetTitle.Parser, new[]{ "ElementId", "Title" }, null, null, null, null),
@@ -453,13 +453,7 @@ namespace AbyssCLI.ABI {
   }
 
   /// <summary>
-  ///if action is adding new file, ends with 'F'
-  ///if action is value-only, ends with 'V'
-  ///if action requires another component, ends with 'C'
-  ///if -C is possible, then must not have -F.
-  ///if no variation is possible, no suffix.
-  ///all hierarchical element has element_id, which is globally unique in an abyss browser.
-  ///they don't necessarily be an element on the rendering engine, depending on its implementation.
+  /// render element and ui element works independently.
   /// </summary>
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class RenderAction : pb::IMessage<RenderAction>
@@ -509,8 +503,8 @@ namespace AbyssCLI.ABI {
         case InnerOneofCase.DeleteElement:
           DeleteElement = other.DeleteElement.Clone();
           break;
-        case InnerOneofCase.ElemSetPos:
-          ElemSetPos = other.ElemSetPos.Clone();
+        case InnerOneofCase.ElemSetTransform:
+          ElemSetTransform = other.ElemSetTransform.Clone();
           break;
         case InnerOneofCase.CreateItem:
           CreateItem = other.CreateItem.Clone();
@@ -643,15 +637,15 @@ namespace AbyssCLI.ABI {
       }
     }
 
-    /// <summary>Field number for the "elem_set_pos" field.</summary>
-    public const int ElemSetPosFieldNumber = 203;
+    /// <summary>Field number for the "elem_set_transform" field.</summary>
+    public const int ElemSetTransformFieldNumber = 203;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public global::AbyssCLI.ABI.RenderAction.Types.ElemSetPos ElemSetPos {
-      get { return innerCase_ == InnerOneofCase.ElemSetPos ? (global::AbyssCLI.ABI.RenderAction.Types.ElemSetPos) inner_ : null; }
+    public global::AbyssCLI.ABI.RenderAction.Types.ElemSetTransform ElemSetTransform {
+      get { return innerCase_ == InnerOneofCase.ElemSetTransform ? (global::AbyssCLI.ABI.RenderAction.Types.ElemSetTransform) inner_ : null; }
       set {
         inner_ = value;
-        innerCase_ = value == null ? InnerOneofCase.None : InnerOneofCase.ElemSetPos;
+        innerCase_ = value == null ? InnerOneofCase.None : InnerOneofCase.ElemSetTransform;
       }
     }
 
@@ -951,7 +945,7 @@ namespace AbyssCLI.ABI {
       CreateElement = 200,
       MoveElement = 201,
       DeleteElement = 202,
-      ElemSetPos = 203,
+      ElemSetTransform = 203,
       CreateItem = 300,
       DeleteItem = 301,
       ItemSetTitle = 302,
@@ -1010,7 +1004,7 @@ namespace AbyssCLI.ABI {
       if (!object.Equals(CreateElement, other.CreateElement)) return false;
       if (!object.Equals(MoveElement, other.MoveElement)) return false;
       if (!object.Equals(DeleteElement, other.DeleteElement)) return false;
-      if (!object.Equals(ElemSetPos, other.ElemSetPos)) return false;
+      if (!object.Equals(ElemSetTransform, other.ElemSetTransform)) return false;
       if (!object.Equals(CreateItem, other.CreateItem)) return false;
       if (!object.Equals(DeleteItem, other.DeleteItem)) return false;
       if (!object.Equals(ItemSetTitle, other.ItemSetTitle)) return false;
@@ -1047,7 +1041,7 @@ namespace AbyssCLI.ABI {
       if (innerCase_ == InnerOneofCase.CreateElement) hash ^= CreateElement.GetHashCode();
       if (innerCase_ == InnerOneofCase.MoveElement) hash ^= MoveElement.GetHashCode();
       if (innerCase_ == InnerOneofCase.DeleteElement) hash ^= DeleteElement.GetHashCode();
-      if (innerCase_ == InnerOneofCase.ElemSetPos) hash ^= ElemSetPos.GetHashCode();
+      if (innerCase_ == InnerOneofCase.ElemSetTransform) hash ^= ElemSetTransform.GetHashCode();
       if (innerCase_ == InnerOneofCase.CreateItem) hash ^= CreateItem.GetHashCode();
       if (innerCase_ == InnerOneofCase.DeleteItem) hash ^= DeleteItem.GetHashCode();
       if (innerCase_ == InnerOneofCase.ItemSetTitle) hash ^= ItemSetTitle.GetHashCode();
@@ -1107,9 +1101,9 @@ namespace AbyssCLI.ABI {
         output.WriteRawTag(210, 12);
         output.WriteMessage(DeleteElement);
       }
-      if (innerCase_ == InnerOneofCase.ElemSetPos) {
+      if (innerCase_ == InnerOneofCase.ElemSetTransform) {
         output.WriteRawTag(218, 12);
-        output.WriteMessage(ElemSetPos);
+        output.WriteMessage(ElemSetTransform);
       }
       if (innerCase_ == InnerOneofCase.CreateItem) {
         output.WriteRawTag(226, 18);
@@ -1233,9 +1227,9 @@ namespace AbyssCLI.ABI {
         output.WriteRawTag(210, 12);
         output.WriteMessage(DeleteElement);
       }
-      if (innerCase_ == InnerOneofCase.ElemSetPos) {
+      if (innerCase_ == InnerOneofCase.ElemSetTransform) {
         output.WriteRawTag(218, 12);
-        output.WriteMessage(ElemSetPos);
+        output.WriteMessage(ElemSetTransform);
       }
       if (innerCase_ == InnerOneofCase.CreateItem) {
         output.WriteRawTag(226, 18);
@@ -1355,8 +1349,8 @@ namespace AbyssCLI.ABI {
       if (innerCase_ == InnerOneofCase.DeleteElement) {
         size += 2 + pb::CodedOutputStream.ComputeMessageSize(DeleteElement);
       }
-      if (innerCase_ == InnerOneofCase.ElemSetPos) {
-        size += 2 + pb::CodedOutputStream.ComputeMessageSize(ElemSetPos);
+      if (innerCase_ == InnerOneofCase.ElemSetTransform) {
+        size += 2 + pb::CodedOutputStream.ComputeMessageSize(ElemSetTransform);
       }
       if (innerCase_ == InnerOneofCase.CreateItem) {
         size += 2 + pb::CodedOutputStream.ComputeMessageSize(CreateItem);
@@ -1467,11 +1461,11 @@ namespace AbyssCLI.ABI {
           }
           DeleteElement.MergeFrom(other.DeleteElement);
           break;
-        case InnerOneofCase.ElemSetPos:
-          if (ElemSetPos == null) {
-            ElemSetPos = new global::AbyssCLI.ABI.RenderAction.Types.ElemSetPos();
+        case InnerOneofCase.ElemSetTransform:
+          if (ElemSetTransform == null) {
+            ElemSetTransform = new global::AbyssCLI.ABI.RenderAction.Types.ElemSetTransform();
           }
-          ElemSetPos.MergeFrom(other.ElemSetPos);
+          ElemSetTransform.MergeFrom(other.ElemSetTransform);
           break;
         case InnerOneofCase.CreateItem:
           if (CreateItem == null) {
@@ -1675,12 +1669,12 @@ namespace AbyssCLI.ABI {
             break;
           }
           case 1626: {
-            global::AbyssCLI.ABI.RenderAction.Types.ElemSetPos subBuilder = new global::AbyssCLI.ABI.RenderAction.Types.ElemSetPos();
-            if (innerCase_ == InnerOneofCase.ElemSetPos) {
-              subBuilder.MergeFrom(ElemSetPos);
+            global::AbyssCLI.ABI.RenderAction.Types.ElemSetTransform subBuilder = new global::AbyssCLI.ABI.RenderAction.Types.ElemSetTransform();
+            if (innerCase_ == InnerOneofCase.ElemSetTransform) {
+              subBuilder.MergeFrom(ElemSetTransform);
             }
             input.ReadMessage(subBuilder);
-            ElemSetPos = subBuilder;
+            ElemSetTransform = subBuilder;
             break;
           }
           case 2402: {
@@ -1955,12 +1949,12 @@ namespace AbyssCLI.ABI {
             break;
           }
           case 1626: {
-            global::AbyssCLI.ABI.RenderAction.Types.ElemSetPos subBuilder = new global::AbyssCLI.ABI.RenderAction.Types.ElemSetPos();
-            if (innerCase_ == InnerOneofCase.ElemSetPos) {
-              subBuilder.MergeFrom(ElemSetPos);
+            global::AbyssCLI.ABI.RenderAction.Types.ElemSetTransform subBuilder = new global::AbyssCLI.ABI.RenderAction.Types.ElemSetTransform();
+            if (innerCase_ == InnerOneofCase.ElemSetTransform) {
+              subBuilder.MergeFrom(ElemSetTransform);
             }
             input.ReadMessage(subBuilder);
-            ElemSetPos = subBuilder;
+            ElemSetTransform = subBuilder;
             break;
           }
           case 2402: {
@@ -3294,16 +3288,16 @@ namespace AbyssCLI.ABI {
       }
 
       [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
-      public sealed partial class ElemSetPos : pb::IMessage<ElemSetPos>
+      public sealed partial class ElemSetTransform : pb::IMessage<ElemSetTransform>
       #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
           , pb::IBufferMessage
       #endif
       {
-        private static readonly pb::MessageParser<ElemSetPos> _parser = new pb::MessageParser<ElemSetPos>(() => new ElemSetPos());
+        private static readonly pb::MessageParser<ElemSetTransform> _parser = new pb::MessageParser<ElemSetTransform>(() => new ElemSetTransform());
         private pb::UnknownFieldSet _unknownFields;
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
         [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-        public static pb::MessageParser<ElemSetPos> Parser { get { return _parser; } }
+        public static pb::MessageParser<ElemSetTransform> Parser { get { return _parser; } }
 
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
         [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -3319,7 +3313,7 @@ namespace AbyssCLI.ABI {
 
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
         [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-        public ElemSetPos() {
+        public ElemSetTransform() {
           OnConstruction();
         }
 
@@ -3327,7 +3321,7 @@ namespace AbyssCLI.ABI {
 
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
         [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-        public ElemSetPos(ElemSetPos other) : this() {
+        public ElemSetTransform(ElemSetTransform other) : this() {
           elementId_ = other.elementId_;
           pos_ = other.pos_ != null ? other.pos_.Clone() : null;
           rot_ = other.rot_ != null ? other.rot_.Clone() : null;
@@ -3336,8 +3330,8 @@ namespace AbyssCLI.ABI {
 
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
         [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-        public ElemSetPos Clone() {
-          return new ElemSetPos(this);
+        public ElemSetTransform Clone() {
+          return new ElemSetTransform(this);
         }
 
         /// <summary>Field number for the "element_id" field.</summary>
@@ -3379,12 +3373,12 @@ namespace AbyssCLI.ABI {
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
         [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public override bool Equals(object other) {
-          return Equals(other as ElemSetPos);
+          return Equals(other as ElemSetTransform);
         }
 
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
         [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-        public bool Equals(ElemSetPos other) {
+        public bool Equals(ElemSetTransform other) {
           if (ReferenceEquals(other, null)) {
             return false;
           }
@@ -3483,7 +3477,7 @@ namespace AbyssCLI.ABI {
 
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
         [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-        public void MergeFrom(ElemSetPos other) {
+        public void MergeFrom(ElemSetTransform other) {
           if (other == null) {
             return;
           }
@@ -3584,7 +3578,7 @@ namespace AbyssCLI.ABI {
       }
 
       /// <summary>
-      ///shared item container
+      ///ui element
       /// </summary>
       [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
       public sealed partial class CreateItem : pb::IMessage<CreateItem>

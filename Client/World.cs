@@ -1,4 +1,5 @@
 ﻿using AbyssCLI.Tool;
+using System.Numerics;
 
 namespace AbyssCLI.Client;
 
@@ -6,19 +7,21 @@ public class World
 {
     private readonly AbyssLib.Host _host;
     private readonly AbyssLib.World _world;
-    [Obsolete]
-    private readonly HL.EnvironmentDepr _environment;
+    private readonly ContextedTask.ContextedTaskRoot _ct_root = new();
+    private readonly HL.Content _environment;
     private readonly Dictionary<string, HL.Member> _members = []; //peer hash - [uuid - item]
     private readonly Dictionary<Guid, HL.Item> _local_items = []; //UUID - item
     private readonly object _lock = new();
     private readonly Thread _world_th;
 
-    [Obsolete]
     public World(AbyssLib.Host host, AbyssLib.World world, AbyssURL URL)
     {
         _host = host;
         _world = world;
-        _environment = new(host, URL, AmlDepr.RenderID.ComponentId);
+        _environment = new(URL, new()
+        {
+            title = URL.ToString()
+        });
         _world_th = new Thread(() =>
         {
             while (true)
@@ -48,18 +51,18 @@ public class World
         });
     }
 
-    [Obsolete]
     public void Start()
     {
-        _environment.Activate();
+        _ct_root.Attach(_environment);
         _world_th.Start();
     }
 
-    [Obsolete]
     public void ShareItem(Guid uuid, AbyssURL url, float[] transform)
     {
-        var item = new HL.Item(_host, _host.local_aurl.Id, uuid, url, AmlDepr.RenderID.ElementId, transform);
-        item.Activate();
+        var item = new HL.Item(_host.local_aurl.Id, uuid, url,
+            new(transform[0], transform[1], transform[2]),
+            new(transform[3], transform[4], transform[5], transform[6]));
+        item.Start();
 
         lock (_lock)
         {
@@ -71,13 +74,12 @@ public class World
         }
     }
 
-    [Obsolete]
     public void UnshareItem(Guid guid)
     {
         lock (_lock)
         {
             HL.Item item = _local_items[guid];
-            _ = item.CloseAsync();
+            item.Stop();
             _ = _local_items.Remove(guid);
             foreach (KeyValuePair<string, HL.Member> member in _members)
             {
@@ -86,11 +88,10 @@ public class World
         }
     }
 
-    [Obsolete]
     public void Leave()
     {
         Client.CerrWriteLine("leaving: " + _world.url);
-        _ = _environment.CloseAsync();
+        _environment.Stop();
         if (_world.Leave() != 0)
         {
             Client.CerrWriteLine("failed to leave world");
@@ -101,12 +102,12 @@ public class World
         {
             foreach (HL.Item item in member.Value.remote_items.Values)
             {
-                _ = item.CloseAsync();
+                item.Stop();
             }
         }
         foreach (HL.Item item in _local_items.Values)
         {
-            _ = item.CloseAsync();
+            item.Stop();
         }
         _members.Clear(); //do we need this?
         _local_items.Clear(); //do we need this?
@@ -130,9 +131,12 @@ public class World
             }
             Client.RenderWriter.MemberInfo(member.hash);
 
-            Tuple<Guid, string, float[]>[] list_of_local_items = _local_items
-                .Select(kvp => Tuple.Create(kvp.Key, kvp.Value.URL.Raw, kvp.Value.spawn_transform))
-                .ToArray();
+            static float[] PosRotSerialize(Vector3 pos, Quaternion rot) =>
+                [pos.X, pos.Y, pos.Z, rot.W, rot.X, rot.Y, rot.Z];
+
+            Tuple<Guid, string, float[]>[] list_of_local_items = [.. _local_items
+                .Select(kvp => Tuple.Create(kvp.Key, kvp.Value._url.ToString(),
+                PosRotSerialize(kvp.Value._content._document._metadata.pos, kvp.Value._content._document._metadata.rot)))];
             if (list_of_local_items.Length != 0)
             {
                 _ = member.AppendObjects(list_of_local_items);
@@ -140,7 +144,6 @@ public class World
         }
     }
 
-    [Obsolete]
     private void OnMemberObjectAppend(AbyssLib.MemberObjectAppend evnt)
     {
         Client.CerrWriteLine("OnMemberObjectAppend");
@@ -166,19 +169,19 @@ public class World
 
             foreach (Tuple<Guid, AbyssURL, float[]> obj in parsed_objects)
             {
-                var item = new HL.Item(_host, evnt.peer_hash, obj.Item1, obj.Item2, AmlDepr.RenderID.ElementId, obj.Item3);
+                var item = new HL.Item(_host.local_aurl.Id, obj.Item1, obj.Item2,
+                    new(obj.Item3[0], obj.Item3[1], obj.Item3[2]),
+                    new(obj.Item3[3], obj.Item3[4], obj.Item3[5], obj.Item3[6]));
                 if (!member.remote_items.TryAdd(obj.Item1, item))
                 {
                     Client.CerrWriteLine("uid collision of objects appended from peer");
                     continue;
                 }
 
-                item.Activate();
+                item.Stop();
             }
         }
     }
-
-    [Obsolete]
     private void OnMemberObjectDelete(AbyssLib.MemberObjectDelete evnt)
     {
         Client.CerrWriteLine("OnMemberObjectDelete");
@@ -197,12 +200,10 @@ public class World
                     Client.CerrWriteLine("peer tried to delete unshared objects");
                     continue;
                 }
-                _ = item.CloseAsync();
+                item.Stop();
             }
         }
     }
-
-    [Obsolete]
     private void OnMemberLeave(string peer_hash)
     {
         Client.CerrWriteLine("OnMemberLeave");
@@ -217,7 +218,7 @@ public class World
 
             foreach (HL.Item item in value.remote_items.Values)
             {
-                _ = item.CloseAsync();
+                item.Stop();
             }
         }
     }

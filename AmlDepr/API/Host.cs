@@ -29,7 +29,7 @@ public class Host(AbyssURL path)
             Client.Client.CerrWriteLine("move_world: failed to parse url");
             return;
         }
-        Client.Client.MainWorldSwap(url_parsed);
+        Client.Client.SwapMainWorld(url_parsed);
     }
 #pragma warning restore IDE1006
 

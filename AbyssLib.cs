@@ -578,7 +578,7 @@ public static class AbyssLib
         }
         public ErrorCode AppendObjects(Tuple<Guid, string, float[]>[] objects_info)
         {
-            ObjectInfoFormat[] objinfo_marshalled = objects_info.Select(x => new ObjectInfoFormat { ID = BytesToHex(x.Item1.ToByteArray()), Addr = x.Item2, Transform = x.Item3 }).ToArray();
+            ObjectInfoFormat[] objinfo_marshalled = [.. objects_info.Select(x => new ObjectInfoFormat { ID = BytesToHex(x.Item1.ToByteArray()), Addr = x.Item2, Transform = x.Item3 })];
             string data = System.Text.Json.JsonSerializer.Serialize(objinfo_marshalled);
             byte[] data_bytes;
             try
@@ -666,7 +666,7 @@ public static class AbyssLib
                     infos = System.Text.Json.JsonSerializer.Deserialize<ObjectInfoFormat[]>(System.Text.Encoding.ASCII.GetString(buf, res_len));
                 }
 
-                objects = infos == null ? [] : infos.Select(x => Tuple.Create(new Guid(HexToBytes(x.ID)), x.Addr, x.Transform)).ToArray();
+                objects = infos == null ? [] : [.. infos.Select(x => Tuple.Create(new Guid(HexToBytes(x.ID)), x.Addr, x.Transform))];
             }
         }
         private readonly IntPtr handle;
@@ -712,7 +712,7 @@ public static class AbyssLib
                     infos = System.Text.Json.JsonSerializer.Deserialize<string[]>(System.Text.Encoding.ASCII.GetString(buf, res_len));
                 }
 
-                object_ids = infos == null ? [] : infos.Select(x => new Guid(HexToBytes(x))).ToArray();
+                object_ids = infos == null ? [] : [.. infos.Select(x => new Guid(HexToBytes(x)))];
             }
         }
         private readonly IntPtr handle;

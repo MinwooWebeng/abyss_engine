@@ -4,8 +4,7 @@ namespace AbyssCLI.Client;
 
 public static partial class Client
 {
-    [Obsolete]
-    public static void MainWorldSwap(AbyssURL url) //can also be called from javascript API.
+    public static void SwapMainWorld(AbyssURL url) //can also be called from javascript API.
     {
         lock (_world_move_lock)
         {

@@ -19,6 +19,8 @@ message File {
 //if no variation is possible, no suffix.
 //all hierarchical element has element_id, which is globally unique in an abyss browser.
 //they don't necessarily be an element on the rendering engine, depending on its implementation.
+
+// render element and ui element works independently.
 message RenderAction {
 	//debug
 	message ConsolePrint {
@@ -40,13 +42,13 @@ message RenderAction {
 		int32 element_id = 1;
 		bool active = 2;
 	}
-	message ElemSetPos {
+	message ElemSetTransform {
 		int32 element_id = 1;
 		Vec3 pos = 2;
 		Vec4 rot = 3;
 	}
 
-	//shared item container
+	//ui element
 	message CreateItem {
 		int32 element_id = 1;
 		string sharer_hash = 2;
@@ -162,7 +164,7 @@ message RenderAction {
 		CreateElement create_element = 200;
 		MoveElement move_element = 201;
 		DeleteElement delete_element = 202;
-		ElemSetPos elem_set_pos = 203;
+		ElemSetTransform elem_set_transform = 203;
 
 		CreateItem create_item = 300;
 		DeleteItem delete_item = 301;
