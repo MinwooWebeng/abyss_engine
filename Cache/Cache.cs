@@ -22,34 +22,70 @@ public class Cache(Action<HttpRequestMessage> http_requester, Action<AbystReques
             _inner.Add(key, value);
         }
     }
-    public RcTaskCompletionSource<CachedResource> Get(string key)
+    public static (object, string) InterpreURIText(string uri)
     {
-        object requestMessage = key switch
+        object requestMessage = uri switch
         {
-            string s when s.StartsWith("http") => new HttpRequestMessage(HttpMethod.Get, key),
-            string s when s.StartsWith("abyst") => new AbystRequestMessage(HttpMethod.Get, key),
+            string s when s.StartsWith("http") => new HttpRequestMessage(HttpMethod.Get, uri),
+            string s when s.StartsWith("abyst") => new AbystRequestMessage(HttpMethod.Get, uri),
             _ => throw new Exception("invalid address"),
         };
+        string normalized_key = requestMessage switch
+        {
+            HttpRequestMessage hrm => hrm.RequestUri.ToString(),
+            AbystRequestMessage arm => arm.ToString(),
+            _ => throw new Exception("invalid address"),
+        };
+        return (requestMessage, normalized_key);
+    }
+    [Obsolete("Use GetReference instead")]
+    public RcTaskCompletionSource<CachedResource> Get(string uri)
+    {
+        (object requestMessage, string normalized_key) = InterpreURIText(uri);
 
         lock (_inner)
         {
-            if (_inner.TryGetValue(key, out RcTaskCompletionSource<CachedResource> entry))
+            if (_inner.TryGetValue(normalized_key, out RcTaskCompletionSource<CachedResource> entry))
             {
                 return entry;
             }
             RcTaskCompletionSource<CachedResource> new_entry = new();
-            _inner.Add(key, new_entry);
+            _inner.Add(normalized_key, new_entry);
 
-            switch (requestMessage)
-            {
-            case HttpRequestMessage hrm:
-                _http_requester.Invoke(hrm);
-                break;
-            case AbystRequestMessage arm:
-                _abyst_requester.Invoke(arm);
-                break;
-            }
+            ThreadUnsafeRequestAny(requestMessage);
             return new_entry;
+        }
+    }
+    public TaskCompletionReference<CachedResource> GetReference(string uri)
+    {
+        (object requestMessage, string normalized_key) = InterpreURIText(uri);
+
+        lock (_inner)
+        {
+            if (_inner.TryGetValue(normalized_key, out RcTaskCompletionSource<CachedResource> entry))
+            {
+                _ = entry.TryGetReference(out TaskCompletionReference<CachedResource> reference);
+                return reference;
+            }
+            RcTaskCompletionSource<CachedResource> new_entry = new();
+            _ = new_entry.TryGetReference(out TaskCompletionReference<CachedResource> new_reference);
+            _inner.Add(normalized_key, new_entry);
+            ThreadUnsafeRequestAny(requestMessage);
+            return new_reference;
+        }
+    }
+    private void ThreadUnsafeRequestAny(object requestMessage)
+    {
+        switch (requestMessage)
+        {
+        case HttpRequestMessage hrm:
+            _http_requester.Invoke(hrm);
+            break;
+        case AbystRequestMessage arm:
+            _abyst_requester.Invoke(arm);
+            break;
+        default:
+            throw new Exception("invalid request message type");
         }
     }
     public void Remove(string key)
@@ -69,7 +105,7 @@ public class Cache(Action<HttpRequestMessage> http_requester, Action<AbystReques
         }
     }
     private static readonly TimeSpan CacheTimeout = TimeSpan.FromMinutes(3);
-    public void RemoveOld()
+    public void Cleanup()
     {
         lock (_inner)
         {
@@ -87,7 +123,8 @@ public class Cache(Action<HttpRequestMessage> http_requester, Action<AbystReques
             }
             foreach (string old in olds)
             {
-                _ = _inner.Remove(old);
+                _ = _inner.Remove(old, out var value);
+                value.Dispose();
             }
 
             for (LinkedListNode<RcTaskCompletionSource<CachedResource>> node = _outdated_inner.First; node != null;)
@@ -95,6 +132,7 @@ public class Cache(Action<HttpRequestMessage> http_requester, Action<AbystReques
                 LinkedListNode<RcTaskCompletionSource<CachedResource>> next = node.Next;
                 if (node.Value.TryClose())
                 {
+                    node.Value.Dispose();
                     _outdated_inner.Remove(node);
                 }
                 node = next;

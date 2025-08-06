@@ -7,7 +7,7 @@ public class Document
 {
     internal readonly int _root_element_id = RenderID.ElementId;
     private readonly DeallocStack _dealloc_stack;
-    private readonly V8ScriptEngine _js_engine;
+    internal readonly V8ScriptEngine _js_engine;
     internal Document(DeallocStack dealloc_stack)
     {
         Client.Client.RenderWriter.CreateElement(0, _root_element_id);

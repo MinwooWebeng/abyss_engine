@@ -4,7 +4,7 @@ namespace AbyssCLI.AML;
 
 internal static class ParseUtil
 {
-    internal static async Task ParseAMLDocumentAsync(Document target, string document, CancellationToken token)
+    internal static void ParseAMLDocument(Document target, string document, CancellationToken token)
     {
         XmlDocument xml_document = new();
         xml_document.LoadXml(document);
@@ -53,7 +53,6 @@ internal static class ParseUtil
     }
     private static void ParseHead(Document document, XmlElement head_elem, CancellationToken token)
     {
-        Head target = document.head;
         foreach (XmlNode child in head_elem.ChildNodes)
         {
             if (child.NodeType != XmlNodeType.Element)
@@ -62,36 +61,48 @@ internal static class ParseUtil
             {
             case "script":
             {
-                XmlNode text_node = child.FirstChild;
-                if (text_node == null)
-                {
-                    Client.Client.CerrWriteLine("Warning: empty <script>");
-                }
-                if (text_node.NodeType != XmlNodeType.Text)
-                {
-                    Client.Client.CerrWriteLine("Warning: <script> tag must only have text content");
-                    continue;
-                }
-                target._scripts.Add(text_node.Value);
+                ParseScript(document.head, child as XmlElement, token);
             }
             break;
             case "title":
             {
                 XmlNode text_node = child.FirstChild;
                 if (text_node == null)
-                {
-                    Client.Client.CerrWriteLine("Warning: empty <script>");
-                }
+                    continue;
                 if (text_node.NodeType != XmlNodeType.Text)
                 {
-                    Client.Client.CerrWriteLine("Warning: <script> tag must only have text content");
+                    Client.Client.CerrWriteLine("Warning: <title> tag must only have text content");
                     continue;
                 }
-
+                Client.Client.RenderWriter.ItemSetTitle(document._root_element_id, text_node.Value);
             }
             break;
             }
         }
+    }
+    private static void ParseScript(Head head, XmlElement script_elem, CancellationToken token)
+    {
+        // src - defer is the default behavior.
+        string src = script_elem.GetAttribute("src");
+        if (src != null && src.Length > 0)
+        {
+            var script_src = Client.Client.Cache.GetReference(src);
+            head._scripts.Add((src, script_src));
+            return;
+        }
+
+        // direct text script
+        XmlNode text_node = script_elem.FirstChild;
+        if (text_node == null)
+        {
+            Client.Client.CerrWriteLine("Warning: empty <script>");
+        }
+        if (text_node.NodeType != XmlNodeType.Text)
+        {
+            Client.Client.CerrWriteLine("Warning: text <script> should only have text");
+            return;
+        }
+        head._scripts.Add((String.Empty, text_node.Value));
     }
     private static void ParseBody(Body target, XmlElement body_elem, CancellationToken token)
     {

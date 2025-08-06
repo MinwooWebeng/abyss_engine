@@ -1,18 +1,17 @@
 ﻿using AbyssCLI.AML;
+using AbyssCLI.Cache;
 using AbyssCLI.Tool;
 
 namespace AbyssCLI.HL;
 
 internal class Environment : ContextedTask
 {
-    private readonly AbyssLib.Host _host;
     private readonly AbyssURL _url;
-    private TaskCompletionReference<Cache.CachedResource> __document_cache_ref; //only to keep cache live.
+    private TaskCompletionReference<Cache.CachedResource> _document_cache_ref; //only to keep cache live.
     private readonly DeallocStack _dealloc_stack;
     private readonly Document _document;
-    public Environment(AbyssLib.Host host, AbyssURL url)
+    public Environment(AbyssURL url)
     {
-        _host = host;
         _url = url;
         _dealloc_stack = new();
         _document = new(_dealloc_stack);
@@ -23,36 +22,66 @@ internal class Environment : ContextedTask
         Client.Client.RenderWriter.ConsolePrint("||>opening environment(" + _url.ToString() + ")<||"); //debug
     protected override async Task AsyncTask(CancellationToken token)
     {
-        RcTaskCompletionSource<Cache.CachedResource> document_cache_entry = Client.Client.Cache.Get(_url.ToString());
-        if (!document_cache_entry.TryGetReference(out __document_cache_ref))
-        {
-            throw new Exception("fatal:::failed to get document resource reference");
-        }
-        Cache.CachedResource doc_resource = await __document_cache_ref.Task.WaitAsync(token);
+        _document_cache_ref = Client.Client.Cache.GetReference(_url.ToString());
+        Cache.CachedResource doc_resource = await _document_cache_ref.Task.WaitAsync(token);
         if (doc_resource is not Cache.Text || doc_resource.MIMEType != "text/aml")
         {
             throw new Exception("fatal:::MIME mismatch");
         }
         string raw_document = await (doc_resource as Cache.Text).ReadAsync(token);
 
-        await ParseUtil.ParseAMLDocumentAsync(_document, raw_document, token);
+        void ExecuteScript(string file_name, string script_text)
+        {
+            try
+            {
+                _document._js_engine.Execute(new Microsoft.ClearScript.DocumentInfo(file_name), script_text);
+            }
+            catch (Microsoft.ClearScript.ScriptEngineException ex)
+            {
+                Client.Client.CerrWriteLine("javascript error: " + ex.Message);
+                Client.Client.CerrWriteLine("stack trace: " + ex.ErrorDetails);
+            }
+        }
+
+        ParseUtil.ParseAMLDocument(_document, raw_document, token);
+        foreach (var script in _document.head._scripts)
+        {
+            switch (script)
+            {
+            case (string _, string script_text):
+                ExecuteScript("<script>", script_text);
+                break;
+            case (string file_name, TaskCompletionReference<CachedResource> script_ref):
+                CachedResource script_resource = await script_ref.Task.WaitAsync(token);
+                if (script_resource is not Cache.Text || script_resource.MIMEType != "text/javascript")
+                {
+                    Client.Client.CerrWriteLine("fatal:::script resource MIME mismatch: " + script_resource.MIMEType);
+                    continue;
+                }
+                string remote_script_text = await (script_resource as Cache.Text).ReadAsync(token);
+                ExecuteScript(file_name, remote_script_text);
+                break;
+            }
+        }
     }
     protected override void OnSuccess() =>
-        Client.Client.RenderWriter.ConsolePrint("||>loaded environment(" + _url.ToString() + ")<||"); //debug
-    protected override void OnStop() =>
+        Client.Client.RenderWriter.ConsolePrint("||>loaded environment(" + _url.ToString() + ") this should not be printed<||"); //debug
+    protected override void OnStop()
+    {
+        Client.Client.RenderWriter.MoveElement(_document._root_element_id, -1);
         Client.Client.RenderWriter.ConsolePrint("||>stopped loading environment(" + _url.ToString() + ")<||"); //debug
-    protected override void OnFail(Exception e) => Client.Client.CerrWriteLine(e.ToString());
+    }
+    protected override void OnFail(Exception e)
+    {
+        Client.Client.RenderWriter.MoveElement(_document._root_element_id, -1);
+        Client.Client.CerrWriteLine(e.ToString());
+    }
     protected override void SynchronousExit()
     {
         _dealloc_stack.FreeAll();
         Client.Client.RenderWriter.ConsolePrint("||>closed environment(" + _url.ToString() + ")<||"); //debug
     }
 
-    public override void Stop()
-    {
-        Client.Client.RenderWriter.MoveElement(_document._root_element_id, -1);
-        base.Stop();
-    }
     //public static new void Stop() => throw new InvalidOperationException("environment cannot be stopped directly, use Close() instead.");
     //public void Close()
     //{

@@ -19,6 +19,10 @@ public class CachedResource(HttpResponseMessage http_response) : IDisposable
             {
                 _http_response.Dispose();
             }
+            else
+            {
+                Client.Client.CerrWriteLine("CachedResource was not disposed properly. This is a bug.");
+            }
             _disposed = true;
         }
     }

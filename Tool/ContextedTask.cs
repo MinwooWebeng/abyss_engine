@@ -113,7 +113,7 @@ internal abstract class ContextedTask
             }
         }
     }
-    public virtual void Stop() => _self_stop_tcs.CancelAsync();//todo: delete from parent - mendatory to stop memory leak.//Todo: may propagate some information?
+    public void Stop() => _self_stop_tcs.CancelAsync();//todo: delete from parent - mendatory to stop memory leak.//Todo: may propagate some information?
     public void ClearDeadChildren() //this can be called to clear memory leak caused by repeateded children attaching and stopping. 
     {
         lock (_children_done)
