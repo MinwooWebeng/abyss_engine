@@ -8,7 +8,7 @@ public class World
     private readonly AbyssLib.Host _host;
     private readonly AbyssLib.World _world;
     private readonly ContextedTask.ContextedTaskRoot _ct_root = new();
-    private readonly HL.Content _environment;
+    internal readonly HL.Content _environment;
     private readonly Dictionary<string, HL.Member> _members = []; //peer hash - [uuid - item]
     private readonly Dictionary<Guid, HL.Item> _local_items = []; //UUID - item
     private readonly object _lock = new();
@@ -136,7 +136,7 @@ public class World
 
             Tuple<Guid, string, float[]>[] list_of_local_items = [.. _local_items
                 .Select(kvp => Tuple.Create(kvp.Key, kvp.Value._url.ToString(),
-                PosRotSerialize(kvp.Value._content._document._metadata.pos, kvp.Value._content._document._metadata.rot)))];
+                PosRotSerialize(kvp.Value._content._metadata.pos.Native, kvp.Value._content._metadata.rot.Native)))];
             if (list_of_local_items.Length != 0)
             {
                 _ = member.AppendObjects(list_of_local_items);

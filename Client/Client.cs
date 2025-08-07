@@ -54,7 +54,7 @@ public static partial class Client
             http_request => Task.Run(async () =>
             {
                 HttpResponseMessage result = await http_client.SendAsync(http_request);
-                Cache.Patch(http_request.RequestUri.ToString(), new(result));
+                Cache.Patch(http_request.RequestUri.ToString(), new Cache.Text(result));
             }),
             abyst_request => Task.Run(() =>
             {

@@ -9,12 +9,11 @@ public static partial class Client
     {
         if (!AbyssURLParser.TryParseFrom(args.WorldUrl, Host.local_aurl, out AbyssURL aurl))
         {
-            CerrWriteLine("MoveWorld: failed to parse world url");
+            CerrWriteLine("MoveWorld: failed to parse world url: " + args.WorldUrl);
             return;
         }
         SwapMainWorld(aurl);
     }
-
     private static void OnShareContent(UIAction.Types.ShareContent args)
     {
         if (!AbyssURLParser.TryParseFrom(args.Url, Host.local_aurl, out AbyssURL content_url))
@@ -24,13 +23,22 @@ public static partial class Client
         }
         _current_world.ShareItem(new Guid(args.Uuid.ToByteArray()), content_url, [args.Pos.X, args.Pos.Y, args.Pos.Z, args.Rot.W, args.Rot.X, args.Rot.Y, args.Rot.Z]);
     }
-
     private static void OnUnshareContent(UIAction.Types.UnshareContent args) => _current_world.UnshareItem(new Guid(args.Uuid.ToByteArray()));
     private static void OnConnectPeer(UIAction.Types.ConnectPeer args)
     {
         if (Host.OpenOutboundConnection(args.Aurl) != 0)
         {
             CerrWriteLine("failed to open outbound connection: " + args.Aurl);
+        }
+    }
+    private static void OnConsoleInput(UIAction.Types.ConsoleInput args)
+    {
+        if (args.ElementId == 0) //world environment content
+        {
+            if (!_current_world._environment._document._js_dispatcher.TryEnqueue("<console>", args.Text))
+            {
+                Client.CerrWriteLine("too many javascripts in queue");
+            }
         }
     }
 }

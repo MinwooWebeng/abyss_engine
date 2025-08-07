@@ -31,6 +31,11 @@ message UIAction {
 	message ConnectPeer {
 		string aurl = 1;
 	}
+	
+	message ConsoleInput {
+		int32 element_id = 1;
+		string text = 2;
+	}
 
 	oneof inner {
 		Init init = 1;
@@ -40,5 +45,7 @@ message UIAction {
 		UnshareContent unshare_content = 5;
 
 		ConnectPeer connect_peer = 10;
+
+		ConsoleInput console_input = 999;
 	}
 }

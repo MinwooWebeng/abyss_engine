@@ -16,13 +16,13 @@ public class Cache(Action<HttpRequestMessage> http_requester, Action<AbystReques
         {
             string s when s.StartsWith("http") => new HttpRequestMessage(HttpMethod.Get, uri),
             string s when s.StartsWith("abyst") => new AbystRequestMessage(HttpMethod.Get, uri),
-            _ => throw new Exception("invalid address"),
+            _ => throw new Exception("invalid address: " + uri),
         };
         string normalized_key = requestMessage switch
         {
             HttpRequestMessage hrm => hrm.RequestUri.ToString(),
             AbystRequestMessage arm => arm.ToString(),
-            _ => throw new Exception("invalid address"),
+            _ => throw new Exception("invalid address: " + uri),
         };
         return (requestMessage, normalized_key);
     }

@@ -7,6 +7,8 @@ public class AbyssURL
     public List<(string Ip, int Port)> AddressCandidates { get; set; } = [];
     public string Path { get; set; } = ""; // For abyss/abyst
     public Uri StandardUri { get; set; } // For standard and abyst URIs
+
+    public override string ToString() => Raw;
 }
 
 public static class AbyssURLParser

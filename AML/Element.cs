@@ -7,7 +7,7 @@ public class Element
 {
     internal readonly Dictionary<string, object> attributes = [];
     internal Element parent;
-    internal readonly List<Element> _children;
+    internal readonly List<Element> _children = [];
     internal Element(string tag, object options)
     {
         tagName = tag;

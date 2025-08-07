@@ -19,8 +19,8 @@ internal class Item
         _content = new(URL, new()
         {
             title = sharer_hash + ":" + uuid.ToString(),
-            pos = spawn_pos,
-            rot = spawn_rot,
+            pos = new(spawn_pos),
+            rot = new(spawn_rot),
             is_item = true,
             sharer_hash = sharer_hash,
             uuid = uuid

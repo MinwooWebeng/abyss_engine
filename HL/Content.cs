@@ -1,5 +1,4 @@
 ﻿using AbyssCLI.AML;
-using AbyssCLI.Cache;
 using AbyssCLI.Tool;
 
 namespace AbyssCLI.HL;
@@ -10,14 +9,15 @@ internal class Content : ContextedTask
     private TaskCompletionReference<Cache.CachedResource> _document_cache_ref; //only to keep cache live.
     private readonly DeallocStack _dealloc_stack;
     internal readonly Document _document;
-    private readonly AmlMetadata metadata;
-    private int _ui_element_id;
+    internal readonly AmlMetadata _metadata;
+    private readonly int _ui_element_id = RenderID.ComponentId;
 
     public Content(AbyssURL url, AmlMetadata metadata = default)
     {
         _url = url;
         _dealloc_stack = new();
         _document = new(_dealloc_stack);
+        _metadata = metadata;
     }
 
     protected override void OnNoExecution() { }
@@ -30,18 +30,17 @@ internal class Content : ContextedTask
         _dealloc_stack.Add(new(_document._root_element_id, DeallocEntry.EDeallocType.RendererElement));
 
         // parse metadata
-        if (metadata.is_item)
+        if (_metadata.is_item)
         {
-            _ui_element_id = RenderID.ComponentId;
             Client.Client.RenderWriter.CreateItem(
                 _ui_element_id,
-                metadata.sharer_hash,
-                Google.Protobuf.ByteString.CopyFrom(metadata.uuid.ToByteArray())
+                _metadata.sharer_hash,
+                Google.Protobuf.ByteString.CopyFrom(_metadata.uuid.ToByteArray())
             );
             _dealloc_stack.Add(new(_ui_element_id, DeallocEntry.EDeallocType.RendererUiItem));
-            _document.setTransformAsValues(metadata.pos, metadata.rot);
+            _document.setTransformAsValues(_metadata.pos, _metadata.rot);
         }
-        _document._title = metadata.title;
+        _document._title = _metadata.title;
     }
     protected override async Task AsyncTask(CancellationToken token)
     {
@@ -50,32 +49,12 @@ internal class Content : ContextedTask
         Cache.CachedResource doc_resource = await _document_cache_ref.Task.WaitAsync(token);
         if (doc_resource is not Cache.Text || doc_resource.MIMEType != "text/aml")
         {
-            throw new Exception("fatal:::MIME mismatch");
+            throw new Exception("fatal:::MIME mismatch: " + (doc_resource.MIMEType == "" ? "<unspecified>" : doc_resource.MIMEType));
         }
         string raw_document = await (doc_resource as Cache.Text).ReadAsync(token);
 
         ParseUtil.ParseAMLDocument(_document, raw_document, token);
-
-        // execute scripts in sequence.
-        foreach ((string, object) script in _document.head._scripts)
-        {
-            switch (script)
-            {
-            case (string _, string script_text):
-                _document.ExecuteScript("<script>", script_text);
-                break;
-            case (string file_name, TaskCompletionReference<CachedResource> script_ref):
-                CachedResource script_resource = await script_ref.Task.WaitAsync(token);
-                if (script_resource is not Cache.Text || script_resource.MIMEType != "text/javascript")
-                {
-                    Client.Client.CerrWriteLine("fatal:::script resource MIME mismatch: " + script_resource.MIMEType);
-                    continue;
-                }
-                string remote_script_text = await (script_resource as Cache.Text).ReadAsync(token);
-                _document.ExecuteScript(file_name, remote_script_text);
-                break;
-            }
-        }
+        _document._js_dispatcher.Start(token);
     }
     protected override void OnSuccess() =>
         Client.Client.RenderWriter.ConsolePrint("||>loaded content(" + _url.ToString() + ") this should not be printed<||"); //debug
@@ -87,10 +66,13 @@ internal class Content : ContextedTask
     protected override void OnFail(Exception e)
     {
         QuickHide();
+        Client.Client.RenderWriter.ConsolePrint("||>failed loading content(" + _url.ToString() + ")<||"); //debug
         Client.Client.CerrWriteLine(e.ToString());
     }
     protected override void SynchronousExit()
     {
+        _document._js_dispatcher.Interrupt(); // stop running scripts (if exists)
+        _document._js_dispatcher.Join();
         _dealloc_stack.FreeAll();
         Client.Client.RenderWriter.ConsolePrint("||>closed content(" + _url.ToString() + ")<||"); //debug
     }

@@ -21,13 +21,7 @@ internal abstract class ContextedTask
     {
         _ = Task.Run(async () =>
         {
-            (ContextedTask parent, TaskCompletionSource<CancellationTokenSource?> parent_init_tcs) = await _parent_init_tcs_tcs.Task;
-            //parent attached. currently, parrent object has no use.
-            //Console.WriteLine(debug_tag + "1");
-
-            CancellationTokenSource? parent_tcs = await parent_init_tcs.Task;
-            //Console.WriteLine(debug_tag + "2");
-            if (parent_tcs == null || parent_tcs.IsCancellationRequested)
+            void DoNoExecution()
             {
                 //parent was dead.
                 lock (_children_done)
@@ -40,6 +34,23 @@ internal abstract class ContextedTask
                 WaitChildren();
                 //Console.WriteLine(debug_tag + "2b");
                 _done.SetResult();
+            }
+
+            (ContextedTask? parent, TaskCompletionSource<CancellationTokenSource?> parent_init_tcs) = await _parent_init_tcs_tcs.Task;
+            if (parent == null)
+            {
+                //parent was dead.
+                DoNoExecution();
+                return;
+            }
+            //parent attached. currently, parrent object has no use.
+            //Console.WriteLine(debug_tag + "1");
+
+            CancellationTokenSource? parent_tcs = await parent_init_tcs.Task;
+            //Console.WriteLine(debug_tag + "2");
+            if (parent_tcs == null || parent_tcs.IsCancellationRequested)
+            {
+                DoNoExecution();
                 return;
             }
             var tcs = CancellationTokenSource.CreateLinkedTokenSource(parent_tcs.Token, _self_stop_tcs.Token);

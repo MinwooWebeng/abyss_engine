@@ -26,6 +26,7 @@ public partial class Client
         case UIAction.InnerOneofCase.ShareContent: OnShareContent(message.ShareContent); return true;
         case UIAction.InnerOneofCase.UnshareContent: OnUnshareContent(message.UnshareContent); return true;
         case UIAction.InnerOneofCase.ConnectPeer: OnConnectPeer(message.ConnectPeer); return true;
+        case UIAction.InnerOneofCase.ConsoleInput: OnConsoleInput(message.ConsoleInput); return true;
         default: throw new Exception("fatal: received invalid UI Action");
         }
     }

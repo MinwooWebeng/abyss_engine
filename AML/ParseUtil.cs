@@ -34,7 +34,7 @@ internal static class ParseUtil
             switch (node.Name)
             {
             case "head" when !is_head_parsed && !is_body_parsed: // head must be parsed before body
-                ParseHead(target, node as XmlElement, token);
+                ParseHead(target, node as XmlElement);
                 is_head_parsed = true;
                 break;
             case "body" when !is_body_parsed:
@@ -51,7 +51,7 @@ internal static class ParseUtil
             }
         }
     }
-    private static void ParseHead(Document document, XmlElement head_elem, CancellationToken token)
+    private static void ParseHead(Document document, XmlElement head_elem)
     {
         foreach (XmlNode child in head_elem.ChildNodes)
         {
@@ -61,7 +61,7 @@ internal static class ParseUtil
             {
             case "script":
             {
-                ParseScript(document.head, child as XmlElement, token);
+                ParseScript(document, child as XmlElement);
             }
             break;
             case "title":
@@ -80,14 +80,17 @@ internal static class ParseUtil
             }
         }
     }
-    private static void ParseScript(Head head, XmlElement script_elem, CancellationToken token)
+    private static void ParseScript(Document document, XmlElement script_elem)
     {
         // src - defer is the default behavior.
         string src = script_elem.GetAttribute("src");
         if (src != null && src.Length > 0)
         {
             Tool.TaskCompletionReference<Cache.CachedResource> script_src = Client.Client.Cache.GetReference(src);
-            head._scripts.Add((src, script_src));
+            if (!document._js_dispatcher.TryEnqueue(src, script_src))
+            {
+                Client.Client.CerrWriteLine("Ignored: too many scripts");
+            }
             return;
         }
 
@@ -99,10 +102,13 @@ internal static class ParseUtil
         }
         if (text_node.NodeType != XmlNodeType.Text)
         {
-            Client.Client.CerrWriteLine("Warning: text <script> should only have text");
+            Client.Client.CerrWriteLine("Error: text <script> should only have text");
             return;
         }
-        head._scripts.Add((string.Empty, text_node.Value));
+        if (!document._js_dispatcher.TryEnqueue(string.Empty, text_node.Value))
+        {
+            Client.Client.CerrWriteLine("Ignored: too many scripts");
+        }
     }
     private static void ParseBody(Body target, XmlElement body_elem, CancellationToken token)
     {
