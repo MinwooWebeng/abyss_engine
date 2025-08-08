@@ -1,4 +1,5 @@
 ﻿using System.Xml;
+using static Microsoft.ClearScript.V8.V8CpuProfile;
 
 namespace AbyssCLI.AML;
 
@@ -12,22 +13,14 @@ internal static class ParseUtil
         if (doctype != "aml" && doctype != "AML")
             throw new Exception("doctype mismatch: " + doctype);
 
-        XmlElement aml_elem = null;
-        foreach (XmlNode node in xml_document.DocumentElement.ChildNodes)
-        {
-            if (node.NodeType == XmlNodeType.Element)
-            {
-                aml_elem = node as XmlElement;
-                break; // Found the first element, exit the loop
-            }
-        }
-        if (aml_elem == null)
-            throw new Exception("<aml> tag not found");
+        XmlElement aml_elem = xml_document.DocumentElement;
+        if (aml_elem == null || aml_elem.NodeType != XmlNodeType.Element || aml_elem.Name != "aml")
+            throw new Exception("no <aml> : " + aml_elem?.Name ?? "");
 
         bool is_head_parsed = false;
         bool is_body_parsed = false;
         bool is_warned = false;
-        foreach (XmlNode node in aml_elem)
+        foreach (XmlNode node in aml_elem.ChildNodes)
         {
             if (node.NodeType != XmlNodeType.Element)
                 continue;
@@ -44,7 +37,7 @@ internal static class ParseUtil
             default:
                 if (!is_warned)
                 {
-                    Client.Client.CerrWriteLine("Warning: <aml> may only have a <head> and a <body>, where <head> must come before <body>");
+                    Client.Client.CerrWriteLine("Warning: found <" + node.Name + ">: <aml> may only have a <head> and a <body>, where <head> must come before <body>");
                     is_warned = true;
                 }
                 break;

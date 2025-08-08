@@ -12,46 +12,25 @@ public partial class Document
     {
         _dealloc_stack = dealloc_stack;
         _js_dispatcher = new(new(), this, new Console());
+        head = new(_dealloc_stack);
+        body = new(_dealloc_stack);
     }
 
     // inner attributes
     internal string _title; // TODO
-    internal object _transform = (new Vector3(), new Quaternion()); 
-    //(Vector3, Quaternion) or TaskCompletionReference<Cache.CachedResource>
 
     // exposed to JS
-    public readonly Head head = new();
-    public readonly Body body = new();
-    public readonly string doctype = "AML";
+    public readonly Head head;
+    public readonly Body body;
+    public string doctype => "AML";
     public string title
     {
         get => _title; set => _title = value; //TODO
     }
-    public Vector3 pos
-    {
-        get
-        {
-            return _transform switch
-            {
-                (Vector3 position, Quaternion _) => position,
-                _ => default,
-            };
-        }
-    }
-    public Quaternion rot
-    {
-        get
-        {
-            return _transform switch
-            {
-                (Vector3 _, Quaternion rotation) => rotation,
-                _ => default,
-            };
-        }
-    }
     public Element createElement(string tag, dynamic options) => tag switch
     {
-        _ => new Element(tag, options)
+        "o" => new Placement(_dealloc_stack, tag, options),
+        _ => new Element(_dealloc_stack, tag, options)
     };
     public Element getElementById(string id)
     {
@@ -63,14 +42,6 @@ public partial class Document
 
         res = body.getElementByIdHelper(id);
         return res;
-    }
-    //public void setTransform(object any)
-    //{
-    //}
-    public void setTransformAsValues(Vector3 pos, Quaternion rot)
-    {
-        _transform = (pos, rot);
-        Client.Client.RenderWriter.ElemSetTransform(_root_element_id, pos.MarshalForABI(), rot.MarshalForABI());
     }
 }
 #pragma warning restore IDE1006 //naming convension

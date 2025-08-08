@@ -5,11 +5,13 @@ namespace AbyssCLI.AML;
 #pragma warning disable IDE1006 //naming convension
 public class Element
 {
+    protected readonly DeallocStack _dealloc_stack; // reference, used by derived classes
     internal readonly Dictionary<string, object> attributes = [];
     internal Element parent;
     internal readonly List<Element> _children = [];
-    internal Element(string tag, object options)
+    internal Element(DeallocStack dealloc_stack, string tag, object options)
     {
+        _dealloc_stack = dealloc_stack;
         tagName = tag;
         if (options is ScriptObject optionsObj)
         {

@@ -38,7 +38,7 @@ internal class Content : ContextedTask
                 Google.Protobuf.ByteString.CopyFrom(_metadata.uuid.ToByteArray())
             );
             _dealloc_stack.Add(new(_ui_element_id, DeallocEntry.EDeallocType.RendererUiItem));
-            _document.setTransformAsValues(_metadata.pos, _metadata.rot);
+            _document.body.setTransformAsValues(_metadata.pos, _metadata.rot);
         }
         _document._title = _metadata.title;
     }

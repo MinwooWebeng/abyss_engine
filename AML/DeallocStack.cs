@@ -2,7 +2,7 @@
 /// <summary>
 /// Manual resource deallocation stack. This is not thread safe.
 /// </summary>
-internal class DeallocStack
+public class DeallocStack
 {
     internal LinkedList<DeallocEntry> stack = new();
     internal void Add(DeallocEntry entry)
