@@ -134,9 +134,17 @@ public class World
             static float[] PosRotSerialize(Vector3 pos, Quaternion rot) =>
                 [pos.X, pos.Y, pos.Z, rot.W, rot.X, rot.Y, rot.Z];
 
-            Tuple<Guid, string, float[]>[] list_of_local_items = [.. _local_items
-                .Select(kvp => Tuple.Create(kvp.Key, kvp.Value._url.ToString(),
-                PosRotSerialize(kvp.Value._content._metadata.pos.Native, kvp.Value._content._metadata.rot.Native)))];
+            Tuple<Guid, string, float[]>[] list_of_local_items =
+                [.. _local_items.Select(kvp =>
+                    Tuple.Create(
+                        kvp.Key,
+                        kvp.Value._url.ToString(),
+                        PosRotSerialize(
+                            kvp.Value._content.Document.Metadata.pos.Native,
+                            kvp.Value._content.Document.Metadata.rot.Native
+                        )
+                    )
+                )];
             if (list_of_local_items.Length != 0)
             {
                 _ = member.AppendObjects(list_of_local_items);

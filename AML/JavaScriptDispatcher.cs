@@ -21,6 +21,9 @@ namespace AbyssCLI.AML
             _engine.AddHostObject("document", document);
             _engine.AddHostObject("console", console);
 
+            _engine.AddHostType("Event", typeof(Event.Event));
+            _engine.AddHostType("KeyboardEvent", typeof(Event.KeyboardEvent));
+
             _thread = new Thread(new ParameterizedThreadStart(Run));
         }
         public bool TryEnqueue(string filename, object entry) =>

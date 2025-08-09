@@ -1,5 +1,4 @@
 ﻿using System.Xml;
-using static Microsoft.ClearScript.V8.V8CpuProfile;
 
 namespace AbyssCLI.AML;
 
@@ -10,7 +9,7 @@ internal static class ParseUtil
         XmlDocument xml_document = new();
         xml_document.LoadXml(document);
         string doctype = xml_document.DocumentType?.Name ?? string.Empty;
-        if (doctype != "aml" && doctype != "AML")
+        if (doctype != "aml")
             throw new Exception("doctype mismatch: " + doctype);
 
         XmlElement aml_elem = xml_document.DocumentElement;
@@ -67,7 +66,7 @@ internal static class ParseUtil
                     Client.Client.CerrWriteLine("Warning: <title> tag must only have text content");
                     continue;
                 }
-                Client.Client.RenderWriter.ItemSetTitle(document._root_element_id, text_node.Value);
+                document.title = text_node.Value;
             }
             break;
             }
@@ -80,7 +79,9 @@ internal static class ParseUtil
         if (src != null && src.Length > 0)
         {
             Tool.TaskCompletionReference<Cache.CachedResource> script_src = Client.Client.Cache.GetReference(src);
-            if (!document._js_dispatcher.TryEnqueue(src, script_src))
+            document.AddToDeallocStack(new(script_src));
+
+            if (!document.TryEnqueueJavaScript(src, script_src))
             {
                 Client.Client.CerrWriteLine("Ignored: too many scripts");
             }
@@ -98,7 +99,7 @@ internal static class ParseUtil
             Client.Client.CerrWriteLine("Error: text <script> should only have text");
             return;
         }
-        if (!document._js_dispatcher.TryEnqueue(string.Empty, text_node.Value))
+        if (!document.TryEnqueueJavaScript(string.Empty, text_node.Value))
         {
             Client.Client.CerrWriteLine("Ignored: too many scripts");
         }

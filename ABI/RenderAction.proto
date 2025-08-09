@@ -65,6 +65,10 @@ message RenderAction {
 		int32 element_id = 1;
 		int32 image_id = 2;
 	}
+	message ItemSetActive {
+		int32 element_id = 1;
+		bool active = 2;
+	}
 	message ItemAlert {
 		int32 element_id = 1;
 		string alert_msg = 2;
@@ -171,7 +175,8 @@ message RenderAction {
 		DeleteItem delete_item = 301;
 		ItemSetTitle item_set_title = 302;
 		ItemSetIcon item_set_icon = 303;
-		ItemAlert item_alert = 304;
+		ItemSetActive item_set_active = 304;
+		ItemAlert item_alert = 305;
 
 		MemberInfo member_info = 400;
 		MemberLeave member_leave = 401;

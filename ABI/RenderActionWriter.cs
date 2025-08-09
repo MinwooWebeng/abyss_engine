@@ -145,6 +145,19 @@ public void ItemSetIcon
         ImageId = image_id
     }
 });
+public void ItemSetActive
+(
+    int element_id,
+    bool active
+)
+=> Write(new RenderAction()
+{
+    ItemSetActive = new ItemSetActive
+    {
+        ElementId = element_id,
+        Active = active
+    }
+});
 public void ItemAlert
 (
     int element_id,

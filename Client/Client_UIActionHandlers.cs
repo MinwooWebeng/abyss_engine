@@ -35,7 +35,7 @@ public static partial class Client
     {
         if (args.ElementId == 0) //world environment content
         {
-            if (!_current_world._environment._document._js_dispatcher.TryEnqueue("<console>", args.Text))
+            if (!_current_world._environment.Document.TryEnqueueJavaScript("<console>", args.Text))
             {
                 Client.CerrWriteLine("too many javascripts in queue");
             }
