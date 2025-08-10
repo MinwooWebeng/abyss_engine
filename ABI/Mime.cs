@@ -22,7 +22,7 @@ public static partial class MimeReflection {
   static MimeReflection() {
     byte[] descriptorData = global::System.Convert.FromBase64String(
         string.Concat(
-          "CgptaW1lLnByb3RvKoeUBQoETUlNRRItCilNSU1FX2FwcGxpY2F0aW9uXzFk",
+          "CgptaW1lLnByb3RvKpuUBQoETUlNRRItCilNSU1FX2FwcGxpY2F0aW9uXzFk",
           "X2ludGVybGVhdmVkX3Bhcml0eWZlYxAAEisKJ01JTUVfYXBwbGljYXRpb25f",
           "M2dwZGFzaF9xb2VfcmVwb3J0X3htbBABEiEKHU1JTUVfYXBwbGljYXRpb25f",
           "M2dwcEhhbF9qc29uEAISJgoiTUlNRV9hcHBsaWNhdGlvbl8zZ3BwSGFsRm9y",
@@ -1899,8 +1899,8 @@ public static partial class MimeReflection {
           "dmlkZW9fdm5kX3NlYWxlZG1lZGlhX3NvZnRzZWFsX21vdhDmvwUSHQoXTUlN",
           "RV92aWRlb192bmRfdXZ2dV9tcDQQ578FEh8KGU1JTUVfdmlkZW9fdm5kX3lv",
           "dXR1YmVfeXQQ6L8FEhkKE01JTUVfdmlkZW9fdm5kX3Zpdm8Q6b8FEhQKDk1J",
-          "TUVfdmlkZW9fVlA4EOq/BRIUCg5NSU1FX3ZpZGVvX1ZQORDrvwViBnByb3Rv",
-          "Mw=="));
+          "TUVfdmlkZW9fVlA4EOq/BRIUCg5NSU1FX3ZpZGVvX1ZQORDrvwUSEgoMTUlN",
+          "RV9pbnZhbGlkEJ+NBmIGcHJvdG8z"));
     descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
         new pbr::FileDescriptor[] { },
         new pbr::GeneratedClrTypeInfo(new[] {typeof(global::MIME), }, null, null));
@@ -4046,6 +4046,7 @@ public enum MIME {
   [pbr::OriginalName("MIME_video_vnd_vivo")] VideoVndVivo = 90089,
   [pbr::OriginalName("MIME_video_VP8")] VideoVp8 = 90090,
   [pbr::OriginalName("MIME_video_VP9")] VideoVp9 = 90091,
+  [pbr::OriginalName("MIME_invalid")] Invalid = 99999,
 }
 
 #endregion

@@ -204,6 +204,30 @@ public void MemberLeave
         PeerHash = peer_hash
     }
 });
+public void OpenStaticResource
+(
+    MIME mime,
+    string file_name
+)
+=> Write(new RenderAction()
+{
+    OpenStaticResource = new OpenStaticResource
+    {
+        Mime = mime,
+        FileName = file_name
+    }
+});
+public void CloseStaticResource
+(
+    string file_name
+)
+=> Write(new RenderAction()
+{
+    CloseStaticResource = new CloseStaticResource
+    {
+        FileName = file_name
+    }
+});
 public void CreateImage
 (
     int image_id,

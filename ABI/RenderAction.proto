@@ -12,6 +12,11 @@ message File {
 	uint32 len = 4;
 }
 
+//element: has transform, type, (and slots)
+//slot: can have media
+//media: has resource, (and slots)
+//resource: from cache
+
 //if action is adding new file, ends with 'F'
 //if action is value-only, ends with 'V'
 //if action requires another component, ends with 'C'
@@ -63,7 +68,7 @@ message RenderAction {
 	}
 	message ItemSetIcon {
 		int32 element_id = 1;
-		int32 image_id = 2;
+		int32 component_id = 2;
 	}
 	message ItemSetActive {
 		int32 element_id = 1;
@@ -83,6 +88,15 @@ message RenderAction {
 	}
 	message MemberLeave {
 		string peer_hash = 1;
+	}
+	
+	message OpenStaticResource {
+		int32 component_id = 1;
+		MIME mime = 2;
+		string file_name = 3;
+	}
+	message CloseStaticResource {
+		int32 component_id = 1;
 	}
 
 	//components
@@ -182,25 +196,28 @@ message RenderAction {
 		MemberLeave member_leave = 401;
 		MemberSetProfile member_set_profile = 402;
 
-		CreateImage create_image = 500;
-		DeleteImage delete_image = 501;
+		OpenStaticResource open_static_resource = 500;
+		CloseStaticResource close_static_resource = 501;
 
-		CreateMaterialV create_material_v = 600;
-		CreateMaterialF create_material_f = 601;
-		MaterialSetParamV material_set_param_v = 602;
-		MaterialSetParamC material_set_param_c = 603;
-		DeleteMaterial delete_material = 604;
+		CreateImage create_image = 600;
+		DeleteImage delete_image = 601;
 
-		CreateStaticMesh create_static_mesh = 700;
-		StaticMeshSetMaterial static_mesh_set_material = 701;
-		ElemAttachStaticMesh elem_attach_static_mesh = 702;
-		DeleteStaticMesh delete_static_mesh = 703;
+		CreateMaterialV create_material_v = 700;
+		CreateMaterialF create_material_f = 701;
+		MaterialSetParamV material_set_param_v = 702;
+		MaterialSetParamC material_set_param_c = 703;
+		DeleteMaterial delete_material = 704;
+
+		CreateStaticMesh create_static_mesh = 800;
+		StaticMeshSetMaterial static_mesh_set_material = 801;
+		ElemAttachStaticMesh elem_attach_static_mesh = 802;
+		DeleteStaticMesh delete_static_mesh = 803;
 		
-		CreateAnimation create_animation = 800;
-		DeleteAnimation delete_animation = 801;
+		CreateAnimation create_animation = 900;
+		DeleteAnimation delete_animation = 901;
 
-		LocalInfo local_info = 900;
-		InfoContentShared info_content_shared = 901;
-		InfoContentDeleted info_content_deleted = 902;
+		LocalInfo local_info = 1000;
+		InfoContentShared info_content_shared = 1001;
+		InfoContentDeleted info_content_deleted = 1002;
 	}
 }

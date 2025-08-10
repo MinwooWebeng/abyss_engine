@@ -1608,6 +1608,7 @@ MIME_application_yin_xml = 1603;
 MIME_application_zip = 1604;
 MIME_application_zlib = 1605;
 MIME_application_zstd = 1606;
+
 MIME_audio_1d_interleaved_parityfec = 10000;
 MIME_audio_32kadpcm = 10001;
 MIME_audio_3gpp = 10002;
@@ -1769,15 +1770,18 @@ MIME_audio_vnd_sealedmedia_softseal_mpeg = 10157;
 MIME_audio_vnd_vmx_cvsd = 10158;
 MIME_audio_vorbis = 10159;
 MIME_audio_vorbis_config = 10160;
+
 MIME_font_collection = 20000;
 MIME_font_otf = 20001;
 MIME_font_sfnt = 20002;
 MIME_font_ttf = 20003;
 MIME_font_woff = 20004;
 MIME_font_woff2 = 20005;
+
 MIME_haptics_ivs = 30000;
 MIME_haptics_hjif = 30001;
 MIME_haptics_hmpg = 30002;
+
 MIME_image_aces = 40000;
 MIME_image_apng = 40001;
 MIME_image_avci = 40002;
@@ -1860,6 +1864,7 @@ MIME_image_webp = 40078;
 MIME_image_wmf = 40079;
 MIME_image_x_emf = 40080;
 MIME_image_x_wmf = 40081;
+
 MIME_message_bhttp = 50000;
 MIME_message_CPIM = 50001;
 MIME_message_delivery_status = 50002;
@@ -1885,6 +1890,7 @@ MIME_message_sipfrag = 50021;
 MIME_message_tracking_status = 50022;
 MIME_message_vnd_si_simp = 50023;
 MIME_message_vnd_wfa_wsc = 50024;
+
 MIME_model_3mf = 60000;
 MIME_model_e57 = 60001;
 MIME_model_example = 60002;
@@ -1947,6 +1953,7 @@ MIME_multipart_signed = 70013;
 MIME_multipart_vnd_bint_med_plus = 70014;
 MIME_multipart_voice_message = 70015;
 MIME_multipart_x_mixed_replace = 70016;
+
 MIME_text_1d_interleaved_parityfec = 80000;
 MIME_text_cache_manifest = 80001;
 MIME_text_calendar = 80002;
@@ -2043,6 +2050,7 @@ MIME_text_vtt = 80092;
 MIME_text_wgsl = 80093;
 MIME_text_xml = 80094;
 MIME_text_xml_external_parsed_entity = 80095;
+
 MIME_video_1d_interleaved_parityfec = 90000;
 MIME_video_3gpp = 90001;
 MIME_video_3gpp2 = 90002;
@@ -2136,4 +2144,5 @@ MIME_video_vnd_vivo = 90089;
 MIME_video_VP8 = 90090;
 MIME_video_VP9 = 90091;
 
+MIME_invalid = 99999;
 }

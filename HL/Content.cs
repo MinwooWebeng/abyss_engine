@@ -3,10 +3,15 @@ using AbyssCLI.Tool;
 
 namespace AbyssCLI.HL;
 
-internal class Content(AbyssURL url, AmlMetadata metadata = default) : ContextedTask
+internal class Content : ContextedTask
 {
-    private readonly AbyssURL _url = url;
-    internal readonly Document Document = new(metadata);
+    private readonly AbyssURL _url;
+    internal readonly Document Document;
+    internal Content(AbyssURL url, AmlMetadata metadata = default)
+    {
+        _url = url;
+        Document = new(this, metadata);
+    }
 
     protected override void OnNoExecution() { }
     protected override void SynchronousInit()

@@ -7,6 +7,7 @@ public static partial class Client
 {
     public static AbyssLib.Host Host { get; private set; }
     public static Cache.Cache Cache { get; private set; }
+    public static readonly SingleThreadTaskRunner CachedResourceWorker = new();
     public static readonly RenderActionWriter RenderWriter = new(Console.OpenStandardOutput())
     {
         AutoFlush = true
@@ -61,7 +62,8 @@ public static partial class Client
                 //TODO
                 //var result = await abyst_client.SendAsync(request);
             })
-        ); //TODO:
+        );
+        CachedResourceWorker.Start();
 
         string default_world_url_raw = "abyst:" + Host.local_aurl.Id;
         if (!AbyssURLParser.TryParse(default_world_url_raw, out AbyssURL default_world_url))

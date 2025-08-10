@@ -137,6 +137,7 @@ internal abstract class ContextedTask
         if (_children_done.Count > 0)
             Task.WaitAll([.. _children_done]);
     }
+    public virtual void Join() => _done.Task.Wait();
     public class ContextedTaskRoot : ContextedTask
     {
         public ContextedTaskRoot() : base()
@@ -154,6 +155,5 @@ internal abstract class ContextedTask
         protected override void OnStop() { }
         protected override void OnFail(Exception e) => throw new InvalidOperationException();
         protected override void SynchronousExit() { }
-        public Task Join() => _done.Task;
     }
 }

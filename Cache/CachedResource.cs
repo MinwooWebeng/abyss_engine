@@ -1,4 +1,6 @@
-﻿namespace AbyssCLI.Cache;
+﻿using AbyssCLI.AML;
+
+namespace AbyssCLI.Cache;
 
 public class CachedResource(HttpResponseMessage http_response) : IDisposable
 {

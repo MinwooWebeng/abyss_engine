@@ -31,7 +31,12 @@ namespace AbyssCLI.AML
         public void Start(CancellationToken token) =>
             _thread.Start(token);
         public void Interrupt() => _engine.Interrupt(); // call after token cancellation to kill running script
-        public void Join() => _thread.Join();
+        public void Join()
+        {
+            _thread.Join();
+            _queue.Dispose();
+            _engine.Dispose();
+        }
 
         private async void Run(object token_)
         {

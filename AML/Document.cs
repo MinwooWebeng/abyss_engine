@@ -1,10 +1,13 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using AbyssCLI.Tool;
+using Newtonsoft.Json.Linq;
+using System.Reflection;
 
 namespace AbyssCLI.AML;
 
 #pragma warning disable IDE1006 //naming convension
 public class Document
 {
+    private readonly ContextedTask _root_context;
     private readonly int _root_element_id = RenderID.ElementId;
     private int _ui_element_id = 0;
     private readonly AmlMetadata _metadata;
@@ -14,8 +17,9 @@ public class Document
     internal AmlMetadata Metadata => _metadata;
 
     //document constructor must not allocate any resource that needs to be deallocated.
-    internal Document(AmlMetadata metadata)
+    internal Document(ContextedTask root_context, AmlMetadata metadata)
     {
+        _root_context = root_context;
         _metadata = metadata;
         _dealloc_stack = new();
         _js_dispatcher = new(new(), this, new Console());
@@ -51,6 +55,13 @@ public class Document
     /// <param name="entry"></param>
     internal void AddToDeallocStack(DeallocEntry entry) =>
         _dealloc_stack.Add(entry);
+    internal MediaLink CreateMediaLink(string src)
+    {
+        MediaLink result = new(src);
+        _root_context.Attach(result);
+        return result;
+    }
+
     internal void StartJavaScript(CancellationToken token) =>
         _js_dispatcher.Start(token);
     /// <summary>
@@ -85,8 +96,7 @@ public class Document
 
     // inner attributes
     internal string _title;
-    internal string _icon_src;
-    internal DeallocEntry _icon_rsc_dealloc_entry = null;
+    internal MediaLink _iconSrc;
 
     // exposed to JS
     public readonly Head head;
@@ -102,15 +112,13 @@ public class Document
     }
     public string iconSrc
     {
-        get => _icon_src;
+        get => _iconSrc.src;
         set
         {
-            _icon_rsc_dealloc_entry?.Free();
+            _iconSrc.Stop();
+            _iconSrc.Join(); //clears previous media link. this is mendatory.
 
-            var _icon_rsc_ref = Client.Client.Cache.GetReference(value);
-            _icon_rsc_dealloc_entry = new(_icon_rsc_ref);
-            _dealloc_stack.Add(_icon_rsc_dealloc_entry);
-
+            _iconSrc = new MediaLink(_dealloc_stack, value);
             //TODO: pass icon resource to renderer.
         }
     }
