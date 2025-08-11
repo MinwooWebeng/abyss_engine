@@ -137,7 +137,7 @@ internal abstract class ContextedTask
         if (_children_done.Count > 0)
             Task.WaitAll([.. _children_done]);
     }
-    public virtual void Join() => _done.Task.Wait();
+    public void Join() => _done.Task.Wait();
     public class ContextedTaskRoot : ContextedTask
     {
         public ContextedTaskRoot() : base()

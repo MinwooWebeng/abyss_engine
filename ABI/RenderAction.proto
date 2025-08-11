@@ -1,6 +1,7 @@
 ﻿syntax = "proto3";
 
 import "mime.proto";
+import "mediaType.proto";
 import "commontype.proto";
 
 option csharp_namespace = "AbyssCLI.ABI";
@@ -12,9 +13,8 @@ message File {
 	uint32 len = 4;
 }
 
-//element: has transform, type, (and slots)
-//slot: can have media
-//media: has resource, (and slots)
+//element: has transform, type, and media
+//media: has resource, (and child media)
 //resource: from cache
 
 //if action is adding new file, ends with 'F'
@@ -31,7 +31,8 @@ message RenderAction {
 	message ConsolePrint {
 		string text = 1;
 	}
-
+	
+	//element
 	message CreateElement {
 		int32 parent_id = 1;
 		int32 element_id = 2;
@@ -53,7 +54,6 @@ message RenderAction {
 		Vec4 rot = 3;
 	}
 
-	//ui element
 	message CreateItem {
 		int32 element_id = 1;
 		string sharer_hash = 2;
@@ -68,7 +68,7 @@ message RenderAction {
 	}
 	message ItemSetIcon {
 		int32 element_id = 1;
-		int32 component_id = 2;
+		int32 resource_id = 2;
 	}
 	message ItemSetActive {
 		int32 element_id = 1;
@@ -77,6 +77,20 @@ message RenderAction {
 	message ItemAlert {
 		int32 element_id = 1;
 		string alert_msg = 2;
+	}
+
+	//resource
+	message OpenStaticResource {
+		int32 resource_id = 1;
+		MIME mime = 2;
+		string file_name = 3;
+	}
+	message CreateCompositeResource {
+		int32 resource_id = 1;
+		MediaType type = 2;
+	}
+	message CloseResource {
+		int32 resource_id = 1;
 	}
 
 	// member session join - leave
@@ -90,14 +104,6 @@ message RenderAction {
 		string peer_hash = 1;
 	}
 	
-	message OpenStaticResource {
-		int32 component_id = 1;
-		MIME mime = 2;
-		string file_name = 3;
-	}
-	message CloseStaticResource {
-		int32 component_id = 1;
-	}
 
 	//components
 	message CreateImage {
@@ -191,13 +197,14 @@ message RenderAction {
 		ItemSetIcon item_set_icon = 303;
 		ItemSetActive item_set_active = 304;
 		ItemAlert item_alert = 305;
+		
+		OpenStaticResource open_static_resource = 400;
+		CreateCompositeResource create_composite_resource = 401;
+		CloseResource close_resource = 402;
 
-		MemberInfo member_info = 400;
-		MemberLeave member_leave = 401;
-		MemberSetProfile member_set_profile = 402;
-
-		OpenStaticResource open_static_resource = 500;
-		CloseStaticResource close_static_resource = 501;
+		MemberInfo member_info = 500;
+		MemberLeave member_leave = 501;
+		MemberSetProfile member_set_profile = 502;
 
 		CreateImage create_image = 600;
 		DeleteImage delete_image = 601;

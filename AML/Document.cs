@@ -1,9 +1,9 @@
-﻿using AbyssCLI.Tool;
-using Newtonsoft.Json.Linq;
-using System.Reflection;
+﻿using AbyssCLI.Cache;
+using AbyssCLI.Tool;
 
 namespace AbyssCLI.AML;
 
+#nullable enable
 #pragma warning disable IDE1006 //naming convension
 public class Document
 {
@@ -25,12 +25,13 @@ public class Document
         _js_dispatcher = new(new(), this, new Console());
         head = new(_dealloc_stack);
         body = new(_dealloc_stack);
+        _title = string.Empty;
     }
     internal void Init()
     {
         Client.Client.RenderWriter.CreateElement(0, _root_element_id);
         _dealloc_stack.Add(new(_root_element_id, DeallocEntry.EDeallocType.RendererElement));
-        
+
         body.setTransformAsValues(_metadata.pos, _metadata.rot);
         title = _metadata.title;
 
@@ -47,6 +48,7 @@ public class Document
         );
         _dealloc_stack.Add(new(_ui_element_id, DeallocEntry.EDeallocType.RendererUiItem));
     }
+
     /// <summary>
     /// Add an entry to the deallocation stack. 
     /// warning: _dealloc_stack is not thread safe.
@@ -55,15 +57,24 @@ public class Document
     /// <param name="entry"></param>
     internal void AddToDeallocStack(DeallocEntry entry) =>
         _dealloc_stack.Add(entry);
-    internal MediaLink CreateMediaLink(string src)
-    {
-        MediaLink result = new(src);
-        _root_context.Attach(result);
-        return result;
-    }
+
+    /// <summary>
+    /// CreateResourceLink creates ResourceLink rooted on this content.
+    /// All ResourceLink variabls in this content must be generated here.
+    /// </summary>
+    /// <param name="src"></param>
+    /// <param name="async_deploy_action"></param>
+    /// <param name="async_remove_action"></param>
+    /// <returns></returns>
+    internal ResourceLink CreateResourceLink(string src,
+        Action<CachedResource> async_deploy_action,
+        Action<CachedResource> async_remove_action
+    ) => new(_root_context, _dealloc_stack, src,
+        async_deploy_action, async_remove_action);
 
     internal void StartJavaScript(CancellationToken token) =>
         _js_dispatcher.Start(token);
+
     /// <summary>
     /// Try to enqueue a javascript script to be executed.
     /// This is thread safe, but fails when the queue is full.
@@ -71,8 +82,9 @@ public class Document
     /// <param name="filename"></param>
     /// <param name="script"></param>
     /// <returns></returns>
-    internal bool TryEnqueueJavaScript(string filename, object script) => 
+    internal bool TryEnqueueJavaScript(string filename, object script) =>
         _js_dispatcher.TryEnqueue(filename, script);
+
     /// <summary>
     /// Interrupt javascript execution and deactivates document. 
     /// This must be called only after token cancellation.
@@ -84,6 +96,7 @@ public class Document
             Client.Client.RenderWriter.ItemSetActive(_ui_element_id, false);
         _js_dispatcher.Interrupt();
     }
+
     /// <summary>
     /// Waits for javascript dispatcher to finish execution and deallocates all resources.
     /// Calling this is mendatory.
@@ -96,30 +109,43 @@ public class Document
 
     // inner attributes
     internal string _title;
-    internal MediaLink _iconSrc;
+    internal ResourceLink? _iconSrc;
 
     // exposed to JS
     public readonly Head head;
     public readonly Body body;
     public string title
     {
-        get => _title; 
+        get => _title;
         set
         {
             _title = value;
             Client.Client.RenderWriter.ItemSetTitle(_ui_element_id, value);
         }
     }
-    public string iconSrc
+    public string? iconSrc
     {
-        get => _iconSrc.src;
+        get => _iconSrc?.Src;
         set
         {
-            _iconSrc.Stop();
-            _iconSrc.Join(); //clears previous media link. this is mendatory.
-
-            _iconSrc = new MediaLink(_dealloc_stack, value);
-            //TODO: pass icon resource to renderer.
+            if (value == null || value.Length == 0)
+            {
+                _iconSrc?.SynchronousCleanup();
+                _iconSrc = null;
+                return;
+            }
+            _iconSrc?.SynchronousCleanup(skip_remove: true);
+            _iconSrc = CreateResourceLink(value,
+                (resource) => //deploy
+                {
+                    if (resource is StaticResource staticResource)
+                        Client.Client.RenderWriter.ItemSetIcon(_ui_element_id, staticResource.ResourceID);
+                },
+                (resource) => //remove
+                {
+                    Client.Client.RenderWriter.ItemSetIcon(_ui_element_id, 0);
+                }
+            );
         }
     }
     public Element createElement(string tag, dynamic options) => tag switch
@@ -127,7 +153,7 @@ public class Document
         "o" => new Placement(_dealloc_stack, tag, options),
         _ => new Element(_dealloc_stack, tag, options)
     };
-    public Element getElementById(string id)
+    public Element? getElementById(string id)
     {
         if (id == null) return null;
         if (id.Length == 0) return null;
@@ -138,45 +164,41 @@ public class Document
         res = body.getElementByIdHelper(id);
         return res;
     }
-    public void addEventListener(string event_name, string id, dynamic callback)
+    public void setEventListener(string event_name, dynamic callback)
     {
         //If same id is used, throw an exception.
         switch (event_name)
         {
-            case "click":
-                break;
-            case "keydown":
-                break;
-            case "keyup":
-                break;
-            case "mousedown":
-                break;
-            case "mouseup":
-                break;
-            default:
-                throw new Exception("unknown event: " + event_name);
+        case "click":
+            break;
+        case "keydown":
+            break;
+        case "keyup":
+            break;
+        case "mousedown":
+            break;
+        case "mouseup":
+            break;
+        default:
+            throw new Exception("unknown event: " + event_name);
         }
     }
-    public void removeEventListener(string event_name, string id)
-    {
-        //TODO: remove event listener by id.
-    }
-    public void clearEventListeners(string event_name)
+    public void removeEventListener(string event_name)
     {
         switch (event_name)
         {
-            case "click":
-                break;
-            case "keydown":
-                break;
-            case "keyup":
-                break;
-            case "mousedown":
-                break;
-            case "mouseup":
-                break;
-            default:
-                throw new Exception("unknown event: " + event_name);
+        case "click":
+            break;
+        case "keydown":
+            break;
+        case "keyup":
+            break;
+        case "mousedown":
+            break;
+        case "mouseup":
+            break;
+        default:
+            throw new Exception("unknown event: " + event_name);
         }
     }
 }

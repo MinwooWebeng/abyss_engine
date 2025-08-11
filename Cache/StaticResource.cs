@@ -1,4 +1,5 @@
-﻿using System.Buffers;
+﻿using AbyssCLI.AML;
+using System.Buffers;
 using System.IO.MemoryMappedFiles;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -10,8 +11,9 @@ namespace AbyssCLI.Cache
     /// </summary>
     public class StaticResource : CachedResource
     {
+        public readonly int ResourceID = RenderID.ResourceId;
         const int BufferSize = 1024 * 1024 * 2; //2MB
-        private readonly TimeSpan RefreshDuration = TimeSpan.FromMilliseconds(200);
+        private TimeSpan RefreshDuration = TimeSpan.FromMilliseconds(200);
         private readonly CancellationTokenSource _cts = new();
         private readonly TaskCompletionSource<bool> _done = new();
         private readonly MemoryMappedFile _mmf;
@@ -33,7 +35,7 @@ namespace AbyssCLI.Cache
                 IsLoading = true
             };
             _accessor.Write(0, ref header);
-            Client.Client.RenderWriter.OpenStaticResource(GetMimeType(mime_type), _name);
+            Client.Client.RenderWriter.OpenStaticResource(ResourceID, GetMimeType(mime_type), _name);
             _ = LoadLoop();
         }
         private async Task LoadLoop()
@@ -53,6 +55,7 @@ namespace AbyssCLI.Cache
                 while (true)
                 {
                     using var refresh_cts = new CancellationTokenSource(RefreshDuration);
+                    RefreshDuration *= 1.2;
                     using var refresh_or_cancel_cts = CancellationTokenSource.CreateLinkedTokenSource(token, refresh_cts.Token);
                     var refresh_token = refresh_or_cancel_cts.Token;
                     var prev_pos = reader.Position;
@@ -117,7 +120,7 @@ namespace AbyssCLI.Cache
             _cts.Cancel();
             _done.Task.Wait();
             _mmf.Dispose();
-            Client.Client.RenderWriter.CloseStaticResource(_name);
+            Client.Client.RenderWriter.CloseResource(ResourceID);
         }
         private static MIME GetMimeType(string mime_type)
         {

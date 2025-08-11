@@ -8,7 +8,7 @@ public class CachedResource(HttpResponseMessage http_response) : IDisposable
     public string MIMEType => _http_response.Content.Headers.ContentType?.MediaType ?? "";
 
     private bool _disposed = false;
-    public void Dispose()
+    public void Dispose() //this is called by Cache, in RcTaskCompletionSource.
     {
         Dispose(disposing: true);
         GC.SuppressFinalize(this);
