@@ -53,6 +53,7 @@ namespace AbyssCLI.AML
         public Quaternion()
         {
             _inner = new();
+            _inner.W = 1;
         }
         public Quaternion(object x)
         {

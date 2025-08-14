@@ -33,7 +33,8 @@ namespace AbyssCLI.AML
         public void Interrupt() => _engine.Interrupt(); // call after token cancellation to kill running script
         public void Join()
         {
-            _thread.Join();
+            if (_thread.IsAlive)
+                _thread.Join();
             _queue.Dispose();
             _engine.Dispose();
         }
@@ -65,14 +66,18 @@ namespace AbyssCLI.AML
         {
             switch (_queue.Take(token))
             {
-            case (string _, string script_text):
+            case (string text_title, string script_text):
             {
+                Client.Client.RenderWriter.ConsolePrint("JsDispatcher: running " + (text_title.Length == 0 ? "<script>" : text_title));
                 _engine.Execute(new Microsoft.ClearScript.DocumentInfo("<script>"), script_text);
+                Client.Client.RenderWriter.ConsolePrint("JsDispatcher: finished " + (text_title.Length == 0 ? "<script>" : text_title));
                 break;
             }
             case (string file_name, TaskCompletionReference<CachedResource> script_ref):
             {
+                Client.Client.RenderWriter.ConsolePrint("JsDispatcher: loading " + file_name);
                 CachedResource script_resource = await script_ref.Task.WaitAsync(token);
+                Client.Client.RenderWriter.ConsolePrint("JsDispatcher: running " + file_name);
                 if (script_resource is not Cache.Text)
                 {
                     Client.Client.CerrWriteLine("invalid javascript resource");
@@ -85,6 +90,7 @@ namespace AbyssCLI.AML
                 }
                 string remote_script_text = await (script_resource as Cache.Text).ReadAsync(token);
                 _engine.Execute(new Microsoft.ClearScript.DocumentInfo(file_name), remote_script_text);
+                Client.Client.RenderWriter.ConsolePrint("JsDispatcher: finished " + file_name);
                 break;
             }
             default:

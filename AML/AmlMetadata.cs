@@ -8,10 +8,10 @@ namespace AbyssCLI.AML;
 /// </summary>
 public class AmlMetadata
 {
-    public string title;
-    public Vector3 pos;
-    public Quaternion rot;
-    public bool is_item;
-    public string sharer_hash; // only if is_item is true
-    public Guid uuid; // only if is_item is true
+    public string title = string.Empty;
+    public Vector3 pos = new();
+    public Quaternion rot = new();
+    public bool is_item = false;
+    public string sharer_hash = string.Empty; // only if is_item is true
+    public Guid uuid = Guid.Empty; // only if is_item is true
 }

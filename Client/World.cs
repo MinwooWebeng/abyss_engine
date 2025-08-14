@@ -90,7 +90,6 @@ public class World
 
     public void Leave()
     {
-        Client.CerrWriteLine("leaving: " + _world.url);
         _environment.Stop();
         if (_world.Leave() != 0)
         {

@@ -33,6 +33,7 @@ public static partial class Client
     }
     private static void OnConsoleInput(UIAction.Types.ConsoleInput args)
     {
+        Client.RenderWriter.ConsolePrint("console input: " + args.Text);
         if (args.ElementId == 0) //world environment content
         {
             if (!_current_world._environment.Document.TryEnqueueJavaScript("<console>", args.Text))

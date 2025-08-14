@@ -17,93 +17,102 @@ internal abstract class ContextedTask
     private readonly TaskCompletionSource _done = new();
     private readonly List<Task> _children_done = [];
     private bool _is_accepting_child = true;
-    public ContextedTask()
+    private readonly Action<Exception> _unhandled_exception_callback = (e) => { };
+    public ContextedTask(Action<Exception>? unhandled_exception_callback = null)
     {
+        _unhandled_exception_callback = unhandled_exception_callback ?? _unhandled_exception_callback;
         _ = Task.Run(async () =>
         {
-            void DoNoExecution()
-            {
-                //parent was dead.
-                lock (_children_done)
-                {
-                    _is_accepting_child = false;
-                }
-                _init_tcs.SetResult(null); //I die
-
-                OnNoExecution();
-                WaitChildren();
-                //Console.WriteLine(debug_tag + "2b");
-                _done.SetResult();
-            }
-
-            (ContextedTask? parent, TaskCompletionSource<CancellationTokenSource?> parent_init_tcs) = await _parent_init_tcs_tcs.Task;
-            if (parent == null)
-            {
-                //parent was dead.
-                DoNoExecution();
-                return;
-            }
-            //parent attached. currently, parrent object has no use.
-            //Console.WriteLine(debug_tag + "1");
-
-            CancellationTokenSource? parent_tcs = await parent_init_tcs.Task;
-            //Console.WriteLine(debug_tag + "2");
-            if (parent_tcs == null || parent_tcs.IsCancellationRequested)
-            {
-                DoNoExecution();
-                return;
-            }
-            var tcs = CancellationTokenSource.CreateLinkedTokenSource(parent_tcs.Token, _self_stop_tcs.Token);
-            if (parent_tcs.Token.IsCancellationRequested || _self_stop_tcs.Token.IsCancellationRequested)
-                tcs.Cancel();
-
-            SynchronousInit();
-            _init_tcs.SetResult(tcs);
-            //synchronous init finished, TCS setted -> children will start init.
-
             try
             {
-                await AsyncTask(tcs.Token);
-                //Console.WriteLine(debug_tag + "3");
-                try //waits for token invalidation.
+                void DoNoExecution()
                 {
-                    await Task.Delay(Timeout.Infinite, tcs.Token);
+                    //parent was dead.
+                    lock (_children_done)
+                    {
+                        _is_accepting_child = false;
+                    }
+                    _init_tcs.SetResult(null); //I die
+
+                    OnNoExecution();
+                    WaitChildren();
+                    //Console.WriteLine(debug_tag + "2b");
+                    _done.SetResult();
                 }
-                catch (TaskCanceledException) { }
-                //Console.WriteLine(debug_tag + "4");
-                lock (_children_done)
+
+                (ContextedTask? parent, TaskCompletionSource<CancellationTokenSource?> parent_init_tcs) = await _parent_init_tcs_tcs.Task;
+                if (parent == null)
                 {
-                    _is_accepting_child = false;
+                    //parent was dead.
+                    DoNoExecution();
+                    return;
                 }
-                OnSuccess();
+                //parent attached. currently, parrent object has no use.
+                //Console.WriteLine(debug_tag + "1");
+
+                CancellationTokenSource? parent_tcs = await parent_init_tcs.Task;
+                //Console.WriteLine(debug_tag + "2");
+                if (parent_tcs == null || parent_tcs.IsCancellationRequested)
+                {
+                    DoNoExecution();
+                    return;
+                }
+                var tcs = CancellationTokenSource.CreateLinkedTokenSource(parent_tcs.Token, _self_stop_tcs.Token);
+                if (parent_tcs.Token.IsCancellationRequested || _self_stop_tcs.Token.IsCancellationRequested)
+                    tcs.Cancel();
+
+                SynchronousInit();
+                _init_tcs.SetResult(tcs);
+                //synchronous init finished, TCS setted -> children will start init.
+
+                try
+                {
+                    await AsyncTask(tcs.Token);
+                    //Console.WriteLine(debug_tag + "3");
+                    try //waits for token invalidation.
+                    {
+                        await Task.Delay(Timeout.Infinite, tcs.Token);
+                    }
+                    catch (TaskCanceledException) { }
+                    //Console.WriteLine(debug_tag + "4");
+                    lock (_children_done)
+                    {
+                        _is_accepting_child = false;
+                    }
+                    OnSuccess();
+                }
+                catch (TaskCanceledException)
+                {
+                    //Console.WriteLine(debug_tag + "5");
+                    lock (_children_done)
+                    {
+                        _is_accepting_child = false;
+                    }
+                    OnStop();
+                }
+                catch (Exception e)
+                {
+                    //Console.WriteLine(debug_tag + "6");
+                    lock (_children_done)
+                    {
+                        _is_accepting_child = false;
+                    }
+                    OnFail(e);
+                }
+                finally
+                {
+                    //Console.WriteLine(debug_tag + "7");
+                    _ = tcs.CancelAsync();
+                    WaitChildren();
+                    //Console.WriteLine(debug_tag + "8");
+                    SynchronousExit();
+                    _done.SetResult();
+                    //Console.WriteLine(debug_tag + "9");
+                }
             }
-            catch (TaskCanceledException)
+            catch(Exception e)
             {
-                //Console.WriteLine(debug_tag + "5");
-                lock (_children_done)
-                {
-                    _is_accepting_child = false;
-                }
-                OnStop();
-            }
-            catch (Exception e)
-            {
-                //Console.WriteLine(debug_tag + "6");
-                lock (_children_done)
-                {
-                    _is_accepting_child = false;
-                }
-                OnFail(e);
-            }
-            finally
-            {
-                //Console.WriteLine(debug_tag + "7");
-                _ = tcs.CancelAsync();
-                WaitChildren();
-                //Console.WriteLine(debug_tag + "8");
-                SynchronousExit();
-                _done.SetResult();
-                //Console.WriteLine(debug_tag + "9");
+                _unhandled_exception_callback(e);
             }
         });
     }
@@ -124,7 +133,7 @@ internal abstract class ContextedTask
             }
         }
     }
-    public void Stop() => _self_stop_tcs.CancelAsync();//todo: delete from parent - mendatory to stop memory leak.//Todo: may propagate some information?
+    public void Stop() => _self_stop_tcs.Cancel();//todo: delete from parent - mendatory to stop memory leak.//Todo: may propagate some information?
     public void ClearDeadChildren() //this can be called to clear memory leak caused by repeateded children attaching and stopping. 
     {
         lock (_children_done)

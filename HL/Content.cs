@@ -7,10 +7,13 @@ internal class Content : ContextedTask
 {
     private readonly AbyssURL _url;
     internal readonly Document Document;
-    internal Content(AbyssURL url, AmlMetadata metadata = default)
+    internal Content(AbyssURL url, AmlMetadata metadata = null) : base((e) =>
+    {
+        Client.Client.CerrWriteLine("fatal:::unhandled content exception:" + e.ToString());
+    })
     {
         _url = url;
-        Document = new(this, metadata);
+        Document = new(this, metadata ?? new());
     }
 
     protected override void OnNoExecution() { }
