@@ -14,7 +14,7 @@ namespace AbyssCLI.AML
     /// </summary>
     internal class ResourceLink
     {
-        public readonly String Src;
+        public readonly string Src;
         public readonly DeallocEntry _dealloc_entry;
         private readonly ResourceLinkContextedTask _mlct;
         internal ResourceLink(ContextedTask parent_context, DeallocStack dealloc_stack, string src,
@@ -37,8 +37,14 @@ namespace AbyssCLI.AML
     }
     internal class ResourceLinkContextedTask(
         Task<Cache.CachedResource> resource_await,
-            Action<CachedResource> async_deploy_action,
-            Action<CachedResource> async_remove_action) : ContextedTask
+        Action<CachedResource> async_deploy_action,
+        Action<CachedResource> async_remove_action
+    ) : ContextedTask(
+        (e) =>
+        {
+            Client.Client.CerrWriteLine("fatal:::unhandled ResourceLinkContextedTask exception:" + e.ToString());
+        }
+    )
     {
         private CachedResource resource;
         /// <summary>
@@ -55,6 +61,7 @@ namespace AbyssCLI.AML
                 resource = null;
             }
         }
+
         protected override void OnNoExecution() { }
         protected override void SynchronousInit() { }
         protected override async Task AsyncTask(CancellationToken token)
@@ -73,6 +80,6 @@ namespace AbyssCLI.AML
         protected override void OnSuccess() { }
         protected override void OnStop() => throw new NotImplementedException();
         protected override void OnFail(Exception e) => throw new NotImplementedException();
-        protected override void SynchronousExit() => throw new NotImplementedException();
+        protected override void SynchronousExit() { }
     }
 }

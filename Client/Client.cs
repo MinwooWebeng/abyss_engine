@@ -1,5 +1,7 @@
 ﻿using AbyssCLI.ABI;
 using AbyssCLI.Tool;
+using System.Diagnostics.CodeAnalysis;
+using System.Net.Http.Headers;
 
 namespace AbyssCLI.Client;
 
@@ -55,7 +57,11 @@ public static partial class Client
             http_request => Task.Run(async () =>
             {
                 HttpResponseMessage result = await http_client.SendAsync(http_request);
-                Cache.Patch(http_request.RequestUri.ToString(), new Cache.Text(result));
+                Cache.Patch(http_request.RequestUri.ToString(), result.Content.Headers.ContentType.MediaType switch
+                {
+                    "text/aml" => new Cache.Text(result),
+                    _ => new Cache.StaticResource(result),
+                });
             }),
             abyst_request => Task.Run(() =>
             {

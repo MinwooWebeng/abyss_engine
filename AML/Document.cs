@@ -125,7 +125,7 @@ public class Document
     }
     public string? iconSrc
     {
-        get => _iconSrc?.Src;
+        get => _iconSrc?.Src ?? "";
         set
         {
             if (value == null || value.Length == 0)
@@ -138,8 +138,16 @@ public class Document
             _iconSrc = CreateResourceLink(value,
                 (resource) => //deploy
                 {
-                    if (resource is StaticResource staticResource)
+                    switch (resource)
+                    {
+                    case StaticResource staticResource:
+                        Client.Client.RenderWriter.ConsolePrint("icon attached");
                         Client.Client.RenderWriter.ItemSetIcon(_ui_element_id, staticResource.ResourceID);
+                        break;
+                    default:
+                        Client.Client.RenderWriter.ConsolePrint("invalid content for icon");
+                        break;
+                    }
                 },
                 (resource) => //remove
                 {
