@@ -1,4 +1,5 @@
 ﻿using AbyssCLI.Cache;
+using AbyssCLI.Client;
 using AbyssCLI.Tool;
 
 namespace AbyssCLI.AML;
@@ -8,7 +9,6 @@ namespace AbyssCLI.AML;
 public class Document
 {
     private readonly ContextedTask _root_context;
-    private readonly int _root_element_id = RenderID.ElementId;
     private int _ui_element_id = 0;
     private readonly AmlMetadata _metadata;
     private readonly DeallocStack _dealloc_stack;
@@ -29,9 +29,6 @@ public class Document
     }
     internal void Init()
     {
-        Client.Client.RenderWriter.CreateElement(0, _root_element_id);
-        _dealloc_stack.Add(new(_root_element_id, DeallocEntry.EDeallocType.RendererElement));
-
         body.setTransformAsValues(_metadata.pos, _metadata.rot);
         title = _metadata.title;
 
@@ -91,7 +88,7 @@ public class Document
     /// </summary>
     internal void Interrupt()
     {
-        Client.Client.RenderWriter.ElemSetActive(_root_element_id, false);
+        body.setActive(false);
         if (IsUiInitialized)
             Client.Client.RenderWriter.ItemSetActive(_ui_element_id, false);
         _js_dispatcher.Interrupt();
@@ -141,8 +138,10 @@ public class Document
                     switch (resource)
                     {
                     case StaticResource staticResource:
-                        Client.Client.RenderWriter.ConsolePrint("icon attached");
                         Client.Client.RenderWriter.ItemSetIcon(_ui_element_id, staticResource.ResourceID);
+                        break;
+                    case StaticSimpleResource staticSimpleResource:
+                        Client.Client.RenderWriter.ItemSetIcon(_ui_element_id, staticSimpleResource.ResourceID);
                         break;
                     default:
                         Client.Client.RenderWriter.ConsolePrint("invalid content for icon");

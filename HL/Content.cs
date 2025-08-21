@@ -42,7 +42,6 @@ internal class Content : ContextedTask
     protected override void OnSuccess()
     {
         Document.Interrupt();
-        Client.Client.RenderWriter.ConsolePrint("||>successfully operated content(" + _url.ToString() + ") this should not be printed<||"); //debug
     }
     protected override void OnStop()
     {

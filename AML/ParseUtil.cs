@@ -1,4 +1,5 @@
-﻿using System.Xml;
+﻿using System.IO.Pipes;
+using System.Xml;
 
 namespace AbyssCLI.AML;
 
@@ -30,7 +31,7 @@ internal static class ParseUtil
                 is_head_parsed = true;
                 break;
             case "body" when !is_body_parsed:
-                ParseBody(target.body, node as XmlElement, token);
+                ParseBody(target, node as XmlElement, token);
                 is_body_parsed = true;
                 break;
             default:
@@ -52,10 +53,8 @@ internal static class ParseUtil
             switch (child.Name)
             {
             case "script":
-            {
                 ParseScript(document, child as XmlElement);
-            }
-            break;
+                break;
             case "title":
             {
                 XmlNode text_node = child.FirstChild;
@@ -69,6 +68,11 @@ internal static class ParseUtil
                 document.title = text_node.Value;
             }
             break;
+            case "link":
+                ParseLink(document, child as XmlElement);
+                break;
+            default:
+                break;
             }
         }
     }
@@ -104,7 +108,50 @@ internal static class ParseUtil
             Client.Client.CerrWriteLine("Ignored: too many scripts");
         }
     }
-    private static void ParseBody(Body target, XmlElement body_elem, CancellationToken token)
+    private static void ParseLink(Document document, XmlElement link_elem)
     {
+        var href = link_elem.GetAttribute("href");
+        switch (link_elem.GetAttribute("rel"))
+        {
+        case "icon":
+            document.iconSrc = href;
+            break;
+        default:
+            return;
+        }
+    }
+    private static void ParseBody(Document document, XmlElement target_elem, CancellationToken token)
+    {
+        var body = document.body;
+        //body exists already in document.body, but we need to apply attributes.
+        foreach (XmlAttribute entry in target_elem.Attributes)
+        {
+            switch (entry.Name)
+            {
+            case "pos":
+                body.pos = entry.Value;
+                break;
+            case "rot":
+                body.rot = entry.Value;
+                break;
+            default:
+                break;
+            }
+        }
+
+        //children
+        ParseBodyElement(document, document.body, target_elem, token);
+    }
+    private static void ParseBodyElement(Document document, Element target, XmlElement target_elem, CancellationToken token)
+    {
+        foreach (XmlNode child in target_elem.ChildNodes)
+        {
+            if (child.NodeType != XmlNodeType.Element)
+                continue;
+
+            var elem = document.createElement(child.Name, child.Attributes);
+            target.appendChild(elem);
+            ParseBodyElement(document, elem, child as XmlElement, token);
+        }
     }
 }

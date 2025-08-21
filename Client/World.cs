@@ -91,6 +91,7 @@ public class World
     public void Leave()
     {
         _environment.Stop();
+        _environment.Join();
         if (_world.Leave() != 0)
         {
             Client.CerrWriteLine("failed to leave world");

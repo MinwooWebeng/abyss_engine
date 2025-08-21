@@ -1,5 +1,6 @@
 ﻿using AbyssCLI.AML;
 using System.Buffers;
+using System.Diagnostics;
 using System.IO.MemoryMappedFiles;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -12,13 +13,12 @@ namespace AbyssCLI.Cache
     public class StaticResource : CachedResource
     {
         public readonly int ResourceID = RenderID.ResourceId;
-        const int BufferSize = 1024 * 1024 * 2; //2MB
-        private TimeSpan RefreshDuration = TimeSpan.FromMilliseconds(200);
+        const int BufferSize = 12 * 1024; //12kB
         private readonly CancellationTokenSource _cts = new();
-        private readonly TaskCompletionSource<bool> _done = new();
         private readonly MemoryMappedFile _mmf;
         private readonly string _name = GetRandomName();
         private readonly MemoryMappedViewAccessor _accessor;
+        private readonly Task _loading_task;
         public StaticResource(HttpResponseMessage http_response) : base(http_response)
         {
             var mime_type = http_response.Content.Headers.ContentType?.MediaType ?? string.Empty;
@@ -35,13 +35,14 @@ namespace AbyssCLI.Cache
                 IsLoading = true
             };
             _accessor.Write(0, ref header);
+            //this has to be synchronous; as following actions may refer to this resource.
             Client.Client.RenderWriter.OpenStaticResource(ResourceID, GetMimeType(mime_type), _name);
-            _ = LoadLoop();
+            _loading_task = LoadLoop();
         }
         private async Task LoadLoop()
         {
             var token = _cts.Token;
-            var reader = await _http_response.Content.ReadAsStreamAsync(token);
+            using var reader = await _http_response.Content.ReadAsStreamAsync(token);
             var content_length = (int)(_http_response.Content.Headers.ContentLength ?? 0);
             var buffer = ArrayPool<byte>.Shared.Rent(Math.Min(BufferSize, content_length));
             var header = new StaticResourceHeader
@@ -52,30 +53,10 @@ namespace AbyssCLI.Cache
             };
             try
             {
-                while (true)
+                while (!token.IsCancellationRequested)
                 {
-                    using var refresh_cts = new CancellationTokenSource(RefreshDuration);
-                    RefreshDuration *= 1.2;
-                    using var refresh_or_cancel_cts = CancellationTokenSource.CreateLinkedTokenSource(token, refresh_cts.Token);
-                    var refresh_token = refresh_or_cancel_cts.Token;
-                    var prev_pos = reader.Position;
-                    try
-                    {
-                        _ = await reader.ReadAsync(buffer, refresh_token);
-                    }
-                    catch (Exception e)
-                    {
-                        if ((e is TaskCanceledException tce) && (tce.CancellationToken == refresh_token))
-                        {
-                            // time to update progress. OK to proceed.
-                        }
-                        else
-                        {
-                            break;
-                        }
-                    }
-                    var read_amount = (int)(reader.Position - prev_pos);
-                    var next_CurrentSize = header.CurrentSize + read_amount;
+                    int read = await reader.ReadAsync(buffer, token);
+                    var next_CurrentSize = header.CurrentSize + read;
                     if (next_CurrentSize > header.TotalSize)
                     {
                         Client.Client.CerrWriteLine("Received over Content-Length. faulty server");
@@ -86,25 +67,30 @@ namespace AbyssCLI.Cache
                         Marshal.SizeOf<StaticResourceHeader>() + header.CurrentSize,
                         buffer,
                         0,
-                        (int)read_amount
+                        read
                     );
                     header.CurrentSize = next_CurrentSize;
 
                     if (header.CurrentSize == header.TotalSize)
                         break;
+
+                    _accessor.Write(0, ref header);
                 }
+            }
+            catch (TaskCanceledException)
+            {
+                //canceled.
             }
             catch (Exception ex)
             {
-                Client.Client.CerrWriteLine("fatal:::StaticResource.LoadLoop throwed an unexpected exception: " + ex.Message);
+                Client.Client.CerrWriteLine("fatal:::StaticResource.LoadLoop throwed an unexpected exception: " + ex.ToString());
             }
             header.IsLoading = false;
             _accessor.Write(0, ref header);
-            _http_response.Dispose();
-            _done.SetResult(true);
+            _accessor.Dispose();
         }
         private static readonly Random random = new();
-        private static string GetRandomName()
+        public static string GetRandomName()
         {
             const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
             StringBuilder stringBuilder = new StringBuilder();
@@ -115,14 +101,24 @@ namespace AbyssCLI.Cache
             }
             return stringBuilder.ToString();
         }
-        protected override void Dispose(bool _)
+        private bool _disposed = false;
+        public override void Dispose()
         {
+            if (_disposed) return;
+
             _cts.Cancel();
-            _done.Task.Wait();
-            _mmf.Dispose();
+            _loading_task.Wait();
+
             Client.Client.RenderWriter.CloseResource(ResourceID);
+
+            _cts.Dispose();
+            _accessor.Dispose();
+            _mmf.Dispose();
+            base.Dispose();
+
+            _disposed = true;
         }
-        private static MIME GetMimeType(string mime_type)
+        public static MIME GetMimeType(string mime_type)
         {
             return mime_type switch
             {

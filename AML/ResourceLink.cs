@@ -47,9 +47,6 @@ namespace AbyssCLI.AML
     )
     {
         private CachedResource resource;
-        /// <summary>
-        /// Cleanup() must be called after Join().
-        /// </summary>
         public void SynchronousCleanup(bool skip_remove)
         {
             Stop();

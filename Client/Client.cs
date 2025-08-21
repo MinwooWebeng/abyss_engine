@@ -1,7 +1,5 @@
 ﻿using AbyssCLI.ABI;
 using AbyssCLI.Tool;
-using System.Diagnostics.CodeAnalysis;
-using System.Net.Http.Headers;
 
 namespace AbyssCLI.Client;
 
@@ -56,10 +54,15 @@ public static partial class Client
         Cache = new(
             http_request => Task.Run(async () =>
             {
-                HttpResponseMessage result = await http_client.SendAsync(http_request);
-                Cache.Patch(http_request.RequestUri.ToString(), result.Content.Headers.ContentType.MediaType switch
+                HttpResponseMessage result = await http_client.SendAsync(http_request, HttpCompletionOption.ResponseHeadersRead);
+
+                var mime = result.Content.Headers.ContentType.MediaType;
+                Cache.Patch(http_request.RequestUri.ToString(), mime switch
                 {
-                    "text/aml" => new Cache.Text(result),
+                    "model/obj" => new Cache.Text(result),
+                    "image/png" => new Cache.StaticSimpleResource(result),
+                    "image/jpeg" => new Cache.StaticResource(result),
+                    _ when mime.StartsWith("text/") => new Cache.Text(result),
                     _ => new Cache.StaticResource(result),
                 });
             }),

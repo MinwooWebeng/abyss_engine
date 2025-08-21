@@ -4,35 +4,73 @@
     // element that has transform.
     public class Placement : Element
     {
-        private readonly int _element_id = RenderID.ElementId;
-        internal object _transform = (new Vector3(), new Quaternion());
+        protected readonly int _element_id = RenderID.ElementId;
+        internal (Vector3, Quaternion) _transform = (new(), new());
         //(Vector3, Quaternion) or TaskCompletionReference<Cache.CachedResource>
-        internal Placement(DeallocStack _dealloc_stack, string tag, object options) : base(_dealloc_stack, tag, options)
+        internal Placement(DeallocStack dealloc_stack, string tag, object options) : base(dealloc_stack, tag, options)
         {
             Client.Client.RenderWriter.CreateElement(-1, _element_id);
-            _dealloc_stack.Add(new(_element_id, DeallocEntry.EDeallocType.RendererElement));
+            dealloc_stack.Add(new(_element_id, DeallocEntry.EDeallocType.RendererElement));
+
+            //apply attributes
+            foreach (var entry in _attributes)
+            {
+                switch (entry.Key)
+                {
+                case "pos":
+                    pos = entry.Value;
+                    break;
+                case "rot":
+                    rot = entry.Value;
+                    break;
+                default:
+                    break;
+                }
+            }
         }
-        public Vector3 pos
+        public string pos
         {
+            set
+            {
+                _transform.Item1 = new(value);
+                Client.Client.RenderWriter.ElemSetTransform(
+                    _element_id,
+                    _transform.Item1.MarshalForABI(),
+                    _transform.Item2.MarshalForABI()
+                );
+            }
             get
             {
                 return _transform switch
                 {
-                    (Vector3 position, Quaternion _) => position,
-                    _ => new(),
+                    (Vector3 position, Quaternion _) => position.ToString(),
+                    _ => "undefined",
                 };
             }
         }
-        public Quaternion rot
+        public string rot
         {
+            set
+            {
+                _transform.Item2 = new(value);
+                Client.Client.RenderWriter.ElemSetTransform(
+                    _element_id,
+                    _transform.Item1.MarshalForABI(),
+                    _transform.Item2.MarshalForABI()
+                );
+            }
             get
             {
                 return _transform switch
                 {
-                    (Vector3 _, Quaternion rotation) => rotation,
-                    _ => new(),
+                    (Vector3 _, Quaternion rotation) => rotation.ToString(),
+                    _ => "undefined",
                 };
             }
+        }
+        public void setActive(bool active)
+        {
+            Client.Client.RenderWriter.ElemSetActive(_element_id, active);
         }
         public void setTransformAsValues(Vector3 pos, Quaternion rot)
         {
