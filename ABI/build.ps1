@@ -1,4 +1,4 @@
 ﻿python ./RenderActionNumberGen.py
 ./build_protobuf.ps1
-./renderactiongen.exe RenderAction.proto RenderActionWriter.cs Render concurrent
-./renderactiongen.exe UIAction.proto UIActionWriter.cs UI
+./renderactiongen.exe RenderAction.proto
+./renderactiongen.exe UIAction.proto

@@ -1,58 +1,55 @@
 package main
 
 import (
-	"fmt"
-	"io"
 	"os"
 	"regexp"
 	"strings"
 )
 
-func readFile(path string) string {
-	inputFile, _ := os.Open(path)
-	defer inputFile.Close()
+func main() {
+	protobuf_file_path := os.Args[1]
+	protobuf_title := strings.Split(protobuf_file_path, ".")[0]
 
-	data, _ := io.ReadAll(inputFile)
-	return string(data)
+	protobuf_file_raw, _ := os.ReadFile(protobuf_file_path)
+
+	body := extractProtobufBody(string(protobuf_file_raw), protobuf_title)
+	generated_code := GenerateWriterCode(body, protobuf_title)
+	os.WriteFile(protobuf_title+"Writer.cs", []byte(generated_code), 0644)
 }
 
-func removeExtra(data string, name string) string {
-	d2 := data[strings.Index(data, "message "+name+"Action"):]
-	d3 := d2[strings.Index(d2, "\n"):]
-	d4 := d3[:strings.Index(d3, "oneof")]
+func extractProtobufBody(data string, title string) [][]string {
+	d2 := data[strings.Index(data, "message "+title):]
+	d3 := d2[strings.Index(d2, "\n")+1:]
+	message_define_section := strings.TrimSpace(d3[:strings.Index(d3, "oneof")])
 
-	re := regexp.MustCompile(`[^\S\r\n]+`)
-	d5 := re.ReplaceAllString(d4, " ")
-
-	lines := strings.Split(d5, "\n")
-	var result []string
+	re := regexp.MustCompile(`[^A-Za-z/\n_0-9= ]+`)
+	cleaned := re.ReplaceAllString(message_define_section, "")
+	lines := strings.Split(cleaned, "\n")
+	var result [][]string
+	var block []string
 	for _, line := range lines {
-		trimmedLine := strings.TrimSpace(line)
-		if !strings.HasPrefix(trimmedLine, "//") && len(trimmedLine) != 0 {
-			result = append(result, line)
+		if strings.HasPrefix(line, "message") {
+			if len(block) != 0 {
+				result = append(result, block)
+			}
+			block = make([]string, 0)
 		}
+
+		trimmed := strings.SplitN(line, "=", 2)[0]
+		trimmed = strings.TrimSpace(trimmed)
+		if strings.HasPrefix(trimmed, "//") {
+			continue
+		}
+		if len(trimmed) == 0 {
+			continue
+		}
+		block = append(block, trimmed)
 	}
+	result = append(result, block)
 
-	return strings.Join(result, "")
+	return result
 }
 
-func replaceTypes(data string) string {
-	return strings.ReplaceAll(
-		strings.ReplaceAll(
-			strings.ReplaceAll(
-				strings.ReplaceAll(
-					data, "int32", "int",
-				), "message", "public void",
-			), "{", "(",
-		), "}", ")>><<",
-	)
-}
-
-func splitEntry(data string) []string {
-	return strings.Split(data, ">><<")
-}
-
-// Converts snake_case to PascalCase
 func toPascalCase(snake string) string {
 	words := strings.Split(snake, "_")
 	var pascalCase string
@@ -66,127 +63,109 @@ func toPascalCase(snake string) string {
 	return pascalCase
 }
 
-func formatFunction(input string, name string) string {
-	input = strings.TrimSpace(input)
-	// Regex to match function name and parameters
-	re := regexp.MustCompile(`public void (\w+)\s*\(([^)]+)\)`)
-	matches := re.FindStringSubmatch(input)
-
-	if len(matches) < 3 {
-		return "Invalid input"
+func ConvertArgument(argument_line string) string {
+	if strings.HasPrefix(argument_line, "bytes ") {
+		return "ByteString " + argument_line[6:]
+	} else if strings.HasPrefix(argument_line, "int32 ") {
+		return "int " + argument_line[6:]
+	} else if strings.HasPrefix(argument_line, "repeated ") {
+		splits := strings.SplitN(argument_line, " ", 3)
+		return splits[1] + "[] " + splits[2]
 	}
-
-	functionName := matches[1]
-	params := matches[2]
-
-	// Split parameters and remove default values
-	paramList := strings.Split(params, ";")
-	var newParams []string
-	var paramNames []string
-	var originalParamNames []string // Store original parameter names for right side of assignment
-	for _, p := range paramList {
-		if trimmed := strings.TrimSpace(p); trimmed != "" {
-			equalIndex := strings.Index(trimmed, "=")
-			if equalIndex != -1 {
-				trimmed = trimmed[:equalIndex]
-			}
-			trimmed_new_param := strings.TrimSpace(trimmed)
-			if strings.HasPrefix(trimmed_new_param, "bytes ") {
-				trimmed_new_param = "ByteString " + trimmed_new_param[6:]
-			}
-			newParams = append(newParams, trimmed_new_param)
-			paramName := strings.TrimSpace(strings.Split(trimmed, " ")[1])
-			paramNames = append(paramNames, toPascalCase(paramName))
-			originalParamNames = append(originalParamNames, paramName) // Keep original format
-		}
-	}
-
-	formattedParams := strings.Join(newParams, ",\n    ")
-
-	// Build the formatted string with dynamic action construction
-	actionBody := fmt.Sprintf("%s = new %s\n    {", functionName, functionName)
-	for i, paramName := range paramNames {
-		actionBody += fmt.Sprintf("\n        %s = %s,", paramName, originalParamNames[i])
-	}
-	actionBody = strings.TrimRight(actionBody, ",") + "\n    }"
-
-	result := fmt.Sprintf("public void %s\n(\n    %s\n)\n=> Write(new "+name+"Action()\n{\n    %s\n});", functionName, formattedParams, actionBody)
-	return result
+	return argument_line
 }
 
-func main() {
-	is_concurrent := len(os.Args) >= 5 && os.Args[4] == "concurrent"
-
-	data := readFile(os.Args[1])
-	data = removeExtra(data, os.Args[3])
-	data = replaceTypes(data)
-	result := make([]string, 0)
-	split := splitEntry(data)
-	for i, e := range split {
-		if i == len(split)-1 {
-			continue
-		}
-		result = append(result, formatFunction(e, os.Args[3]))
+func ConvertArgumentList(param_lines []string) string {
+	var argument_lines []string
+	for _, line := range param_lines {
+		argument_lines = append(argument_lines, ConvertArgument(line))
 	}
-	data = strings.Join(result, "\n")
-	data = `
-// <auto-generated>
-//     This code was generated by a tool.
-//     Changes to this file may cause incorrect behavior and will be lost if the code is regenerated.
-// </auto-generated>
+	return strings.Join(argument_lines, `,
+			`)
+}
 
+func ConvertAssignments(param_lines []string, block_subject string) (string, string) {
+	var simple_lines []string
+	var manual_lines []string
+	for _, line := range param_lines {
+		if strings.HasPrefix(line, "repeated") {
+			param_name := strings.Split(line, " ")[2]
+			manual_lines = append(manual_lines,
+				"action."+block_subject+
+					"."+toPascalCase(param_name)+
+					".Add( "+param_name+" );")
+		} else {
+			param_name := strings.Split(line, " ")[1]
+			simple_lines = append(simple_lines,
+				toPascalCase(param_name)+" = "+param_name)
+		}
+	}
+	return strings.Join(simple_lines, `,
+                    `),
+		strings.Join(manual_lines, `
+            `)
+}
+
+func GenerateMethod(block []string, title string) string {
+	block_subject := block[0][8:]
+	simple_assignment, manual_assignment := ConvertAssignments(block[1:], block_subject)
+	return `
+		public void ` + block_subject + `
+		(
+			` + ConvertArgumentList(block[1:]) + `
+		)
+		{
+			var action = new ` + title + `
+			{
+				` + block_subject + ` = new()
+				{
+					` + simple_assignment + `
+				}
+			};
+			` + manual_assignment + `
+			Write(action);
+		}`
+}
+
+func GenerateWriterCode(data [][]string, title string) string {
+	var methods []string
+	for _, block := range data {
+		methods = append(methods, GenerateMethod(block, title))
+	}
+
+	return `
 using Google.Protobuf;
-using static AbyssCLI.ABI.` + os.Args[3] + `Action.Types;
-using System.IO;
 using System;
+using System.CodeDom.Compiler;
 
 namespace AbyssCLI.ABI
 {
-    public class ` + os.Args[3] + `ActionWriter
-    {
-		public ` + os.Args[3] + `ActionWriter(System.IO.Stream stream) {
-			_out_stream = stream;
-		}
-		
-` + data + `
+    [GeneratedCodeAttribute("` + title + `Gen", "1.0.0")]
+	public class ` + title + `Writer
+	{
+        private readonly System.IO.Stream _stream;
+        public bool AutoFlush = false;
+        public ` + title + `Writer(System.IO.Stream stream)
+        {
+            _stream = stream;
+        }
+        private void Write(` + title + ` msg)
+        {
+            var msg_len = msg.CalculateSize();
 
-		public void Flush()
-		{
-			_out_stream.Flush();
-		}
-
-		private void Write(` + os.Args[3] + `Action msg)
-		{
-			var msg_len = msg.CalculateSize();
-` +
-		func() string {
-			if is_concurrent {
-				return `
-			lock (_out_stream)
-			{`
-			}
-			return ""
-		}() + `
-			_out_stream.Write(BitConverter.GetBytes(msg_len));
-			msg.WriteTo(_out_stream);
-` +
-		func() string {
-			if is_concurrent {
-				return `
-			}`
-			}
-			return ""
-		}() + `
-            if(AutoFlush)
+            lock (_stream)
             {
-                _out_stream.Flush();
+                _stream.Write(BitConverter.GetBytes(msg_len));
+                msg.WriteTo(_stream);
+
             }
-		}
-		public bool AutoFlush = false;
-		private readonly System.IO.Stream _out_stream;
+            if (AutoFlush)
+            {
+                _stream.Flush();
+            }
+        }
+		` + strings.Join(methods, "") + `
 	}
 }
 `
-
-	os.WriteFile(os.Args[2], []byte(data), 0644)
 }

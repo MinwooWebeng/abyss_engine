@@ -1,7 +1,6 @@
 ﻿using AbyssCLI.Client;
 internal class Program
 {
-    [Obsolete]
     public static void Main()
     {
         try
