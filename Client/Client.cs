@@ -59,8 +59,7 @@ public static partial class Client
                 var mime = result.Content.Headers.ContentType.MediaType;
                 Cache.Patch(http_request.RequestUri.ToString(), mime switch
                 {
-                    "model/obj" => new Cache.Text(result),
-                    "image/png" => new Cache.StaticSimpleResource(result),
+                    "model/obj" or "image/png" => new Cache.StaticSimpleResource(result),
                     "image/jpeg" => new Cache.StaticResource(result),
                     _ when mime.StartsWith("text/") => new Cache.Text(result),
                     _ => new Cache.StaticResource(result),

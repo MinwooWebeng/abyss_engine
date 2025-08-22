@@ -1,7 +1,7 @@
 ﻿syntax = "proto3";
 
 import "mime.proto";
-import "mediaType.proto";
+import "ResourceRole.proto";
 import "commontype.proto";
 
 option csharp_namespace = "AbyssCLI.ABI";
@@ -19,7 +19,7 @@ option csharp_namespace = "AbyssCLI.ABI";
 
 message ResourceComponent {
 	int32 resource_id = 1;
-	MediaType media_type = 2;
+	ResourceRole media_type = 2;
 }
 
 // render element and ui element works independently.
@@ -51,6 +51,10 @@ message RenderAction {
 		Vec4 rot = 3;
 	}
 	message ElemAttachResource {
+		int32 element_id = 1;
+		int32 resource_id = 2;
+	}
+	message ElemDetachResource {
 		int32 element_id = 1;
 		int32 resource_id = 2;
 	}
@@ -131,6 +135,7 @@ message RenderAction {
 		ElemSetActive elem_set_active = 203;
 		ElemSetTransform elem_set_transform = 204;
 		ElemAttachResource elem_attach_resource = 205;
+		ElemDetachResource elem_detach_resource = 206;
 		
 		CreateItem create_item = 300;
 		DeleteItem delete_item = 301;

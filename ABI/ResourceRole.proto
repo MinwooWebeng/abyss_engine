@@ -1,5 +1,5 @@
 syntax = "proto3";
 
-enum MediaType {
+enum ResourceRole {
 	Texture = 0;
 }

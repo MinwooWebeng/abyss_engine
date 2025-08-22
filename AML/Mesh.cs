@@ -9,16 +9,19 @@ namespace AbyssCLI.AML
     {
         private readonly Document _document;
         internal ResourceLink? _mesh = null;
-        internal Mesh(DeallocStack dealloc_stack, Document document, string tag, object options) : base(dealloc_stack, tag, options)
+        internal Mesh(DeallocStack dealloc_stack, Document document, object options) : base(dealloc_stack, "obj", options)
         {
             _document = document;
+
+            Client.Client.RenderWriter.ConsolePrint("making mesh element");
 
             if (!_attributes.TryGetValue("src", out var mesh_src)) return;
             src = mesh_src;
         }
 
-        public string src
+        public string? src
         {
+            get => _mesh?.Src;
             set
             {
                 if (value == null || value.Length == 0)
@@ -27,18 +30,25 @@ namespace AbyssCLI.AML
                     _mesh = null;
                     return;
                 }
-                _mesh?.SynchronousCleanup(skip_remove: true);
+                _mesh?.SynchronousCleanup();
+
+                //variable to be captured
+                int resource_id = 0;
                 _mesh = _document.CreateResourceLink(value,
                     (resource) =>
                     {
-                        switch (resource)
+                        if (resource is not StaticSimpleResource mesh_file)
                         {
-                            //case StaticSimpleResource
+                            Client.Client.RenderWriter.ConsolePrint("invalid content type for mesh");
+                            return;
                         }
+                        resource_id = mesh_file.ResourceID;
+                        Client.Client.RenderWriter.ElemAttachResource(_element_id, resource_id);
                     },
                     (resource) =>
                     {
-                        //Client.Client.RenderWriter.
+                        if (resource_id > 0)
+                            Client.Client.RenderWriter.ElemDetachResource(_element_id, resource_id);
                     }
                 );
             }

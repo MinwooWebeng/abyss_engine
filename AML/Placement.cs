@@ -80,7 +80,9 @@
         public override void appendChild(Element child)
         {
             if (child is Placement p_child)
+            {
                 Client.Client.RenderWriter.MoveElement(p_child._element_id, _element_id);
+            }
             base.appendChild(child);
         }
     }

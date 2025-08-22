@@ -122,6 +122,7 @@ namespace AbyssCLI.Cache
         {
             return mime_type switch
             {
+                "model/obj" => MIME.ModelObj,
                 "image/png" => MIME.ImagePng,
                 "image/jpeg" => MIME.ImageJpeg,
                 "image/gif" => MIME.ImageGif,

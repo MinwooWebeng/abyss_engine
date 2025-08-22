@@ -147,6 +147,23 @@ namespace AbyssCLI.ABI
 			
 			Write(action);
 		}
+		public void ElemDetachResource
+		(
+			int element_id,
+			int resource_id
+		)
+		{
+			var action = new RenderAction
+			{
+				ElemDetachResource = new()
+				{
+					ElementId = element_id,
+                    ResourceId = resource_id
+				}
+			};
+			
+			Write(action);
+		}
 		public void CreateItem
 		(
 			int element_id,

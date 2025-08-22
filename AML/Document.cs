@@ -122,7 +122,7 @@ public class Document
     }
     public string? iconSrc
     {
-        get => _iconSrc?.Src ?? "";
+        get => _iconSrc?.Src;
         set
         {
             if (value == null || value.Length == 0)
@@ -158,6 +158,7 @@ public class Document
     public Element createElement(string tag, dynamic options) => tag switch
     {
         "o" => new Placement(_dealloc_stack, tag, options),
+        "obj" => new Mesh(_dealloc_stack, this, options),
         _ => new Element(_dealloc_stack, tag, options)
     };
     public Element? getElementById(string id)
