@@ -13,8 +13,6 @@ namespace AbyssCLI.AML
         {
             _document = document;
 
-            Client.Client.RenderWriter.ConsolePrint("making mesh element");
-
             if (!_attributes.TryGetValue("src", out var mesh_src)) return;
             src = mesh_src;
         }

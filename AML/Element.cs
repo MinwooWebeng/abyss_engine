@@ -10,7 +10,7 @@ public class Element
     internal readonly Dictionary<string, string> _attributes = [];
     internal Element _parent;
     internal readonly List<Element> _children = [];
-    internal Element(DeallocStack dealloc_stack, string tag, dynamic options)
+    internal Element(DeallocStack dealloc_stack, string tag, object options)
     {
         _dealloc_stack = dealloc_stack;
         tagName = tag;

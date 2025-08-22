@@ -85,6 +85,11 @@
             }
             base.appendChild(child);
         }
+        public override void remove()
+        {
+            Client.Client.RenderWriter.MoveElement(_element_id, -1);
+            base.remove();
+        }
     }
 #pragma warning restore IDE1006 //naming convension
 }
