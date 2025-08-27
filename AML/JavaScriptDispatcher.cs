@@ -3,28 +3,43 @@ using AbyssCLI.Tool;
 using Microsoft.ClearScript;
 using Microsoft.ClearScript.V8;
 using System.Collections.Concurrent;
+using System.Linq;
+//using static System.Runtime.InteropServices.JavaScript.JSType;
 
+#nullable enable
 namespace AbyssCLI.AML
 {
-    internal class JavaScriptDispatcher
+    public class JavaScriptDispatcher
     {
         private readonly V8ScriptEngine _engine;
         private readonly BlockingCollection<(string, object)> _queue = []; // by default, 100 scripts can be queued at once
         private readonly Thread _thread;
 
-        public JavaScriptDispatcher(V8RuntimeConstraints constraints, Document document, Console console)
+        public JavaScriptDispatcher(V8RuntimeConstraints constraints, Document document, Console console, Action<int> element_gc_callback)
         {
-            _engine = new V8ScriptEngine(constraints);
+            _engine = new V8ScriptEngine(constraints, V8ScriptEngineFlags.DisableGlobalMembers);
             _engine.AddHostType("Vector3", typeof(Vector3));
             _engine.AddHostType("Quaternion", typeof(Quaternion));
 
-            _engine.AddHostObject("document", document);
+            _engine.AddHostObject("document", new JavaScriptAPI.Document(this, document));
             _engine.AddHostObject("console", console);
 
             _engine.AddHostType("Event", typeof(Event.Event));
             _engine.AddHostType("KeyboardEvent", typeof(Event.KeyboardEvent));
 
-            _thread = new Thread(new ParameterizedThreadStart(Run));
+            _engine.AddHostObject("gc", () =>
+            {
+                _engine.CollectGarbage(true);
+                GC.Collect();
+                GC.WaitForPendingFinalizers();
+                GC.Collect();
+            });
+
+            _engine.AddHostObject("elem_gc_callback", element_gc_callback);
+
+            _engine.Execute("const __aml_elem_dtor_reg = new FinalizationRegistry(elem_gc_callback);");
+
+            _thread = new Thread(new ParameterizedThreadStart(Run!));
         }
         public bool TryEnqueue(string filename, object entry) =>
             _queue.TryAdd((filename, entry));
@@ -88,7 +103,7 @@ namespace AbyssCLI.AML
                     Client.Client.CerrWriteLine("javascript MIME mismatch: " + script_resource.MIMEType);
                     return;
                 }
-                string remote_script_text = await (script_resource as Cache.Text).ReadAsync(token);
+                string remote_script_text = await (script_resource as Cache.Text)!.ReadAsync(token);
                 _engine.Execute(new Microsoft.ClearScript.DocumentInfo(file_name), remote_script_text);
                 Client.Client.RenderWriter.ConsolePrint("JsDispatcher: finished " + file_name);
                 break;
@@ -96,6 +111,24 @@ namespace AbyssCLI.AML
             default:
                 throw new InvalidOperationException("Unsupported script type (fatal internal error)");
             }
+        }
+        //for JavaScript API
+        public object MarshalElement(AML.Element element)
+        {
+            element.RefCount++;
+            var result = element switch
+            {
+                AML.Body body => new JavaScriptAPI.Body(this, body),
+                AML.Transform transform => new JavaScriptAPI.Transform(this, transform),
+                _ => throw new NotImplementedException()
+            };
+            _engine.Script.__aml_elem_dtor_reg.register(result);
+            return result;
+        }
+        public object[] MarshalElementArray(List<AML.Element> elements)
+        {
+            return elements.Select(MarshalElement)
+               .ToArray()!;
         }
     }
 }

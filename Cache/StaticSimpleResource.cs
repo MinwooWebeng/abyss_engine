@@ -8,7 +8,6 @@ namespace AbyssCLI.Cache
 {
     public class StaticSimpleResource : CachedResource
     {
-        public readonly int ResourceID = RenderID.ResourceId;
         private readonly string _mime_type;
         private readonly int _content_length;
         private readonly MemoryMappedFile _mmf;

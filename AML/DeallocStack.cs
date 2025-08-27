@@ -4,13 +4,13 @@
 /// </summary>
 public class DeallocStack
 {
-    internal LinkedList<DeallocEntry> stack = new();
-    internal void Add(DeallocEntry entry)
+    public LinkedList<DeallocEntry> stack = new();
+    public void Add(DeallocEntry entry)
     {
         entry.stack_node = stack.AddLast(entry);
         entry.stack = stack;
     }
-    internal void FreeAll()
+    public void FreeAll()
     {
         LinkedListNode<DeallocEntry> entry = stack.First;
         while (entry != null)
@@ -28,9 +28,9 @@ public class DeallocStack
         }
     }
 }
-internal class DeallocEntry
+public class DeallocEntry
 {
-    internal enum EDeallocType
+    public enum EDeallocType
     {
         IDisposable,
         RendererElement,

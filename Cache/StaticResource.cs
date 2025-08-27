@@ -11,7 +11,6 @@ namespace AbyssCLI.Cache
     /// </summary>
     public class StaticResource : CachedResource
     {
-        public readonly int ResourceID = RenderID.ResourceId;
         const int BufferSize = 12 * 1024; //12kB
         private readonly CancellationTokenSource _cts = new();
         private readonly MemoryMappedFile _mmf;

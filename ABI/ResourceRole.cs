@@ -22,8 +22,10 @@ public static partial class ResourceRoleReflection {
   static ResourceRoleReflection() {
     byte[] descriptorData = global::System.Convert.FromBase64String(
         string.Concat(
-          "ChJSZXNvdXJjZVJvbGUucHJvdG8qGwoMUmVzb3VyY2VSb2xlEgsKB1RleHR1",
-          "cmUQAGIGcHJvdG8z"));
+          "ChJSZXNvdXJjZVJvbGUucHJvdG8qdQoMUmVzb3VyY2VSb2xlEggKBE1lc2gQ",
+          "ABIKCgZBbGJlZG8QARIKCgZOb3JtYWwQAhINCglSb3VnaG5lc3MQAxILCgdN",
+          "ZXRhbGljEAQSDAoIU3BlY3VsYXIQBRILCgdPcGFjaXR5EAYSDAoIRW1pc3Np",
+          "b24QB2IGcHJvdG8z"));
     descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
         new pbr::FileDescriptor[] { },
         new pbr::GeneratedClrTypeInfo(new[] {typeof(global::ResourceRole), }, null, null));
@@ -33,7 +35,14 @@ public static partial class ResourceRoleReflection {
 }
 #region Enums
 public enum ResourceRole {
-  [pbr::OriginalName("Texture")] Texture = 0,
+  [pbr::OriginalName("Mesh")] Mesh = 0,
+  [pbr::OriginalName("Albedo")] Albedo = 1,
+  [pbr::OriginalName("Normal")] Normal = 2,
+  [pbr::OriginalName("Roughness")] Roughness = 3,
+  [pbr::OriginalName("Metalic")] Metalic = 4,
+  [pbr::OriginalName("Specular")] Specular = 5,
+  [pbr::OriginalName("Opacity")] Opacity = 6,
+  [pbr::OriginalName("Emission")] Emission = 7,
 }
 
 #endregion

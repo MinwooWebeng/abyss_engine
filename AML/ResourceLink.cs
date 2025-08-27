@@ -5,19 +5,19 @@ namespace AbyssCLI.AML
 {
     /// <summary>
     /// When a resource source is attached to dom elements, they are attached as a ResourceLink object.
-    /// This is not exposed to JS, and only exists internally.
+    /// This is not exposed to JS, and only exists publicly.
     /// When ResourceLink object is active, it waits for TaskCompletionReference<CachedResource>.
     /// When CachedResource arrives, it fires UIActions.
     /// When this object is removed from DOM, it must be called SynchronousCleanup()
     /// This should revert UIActions.
     /// The two actions should never throw.
     /// </summary>
-    internal class ResourceLink
+    public class ResourceLink : IDisposable
     {
         public readonly string Src;
         public readonly DeallocEntry _dealloc_entry;
         private readonly ResourceLinkContextedTask _mlct;
-        internal ResourceLink(ContextedTask parent_context, DeallocStack dealloc_stack, string src,
+        public ResourceLink(ContextedTask parent_context, DeallocStack dealloc_stack, string src,
             Action<CachedResource> async_deploy_action,
             Action<CachedResource> async_remove_action)
         {
@@ -34,15 +34,24 @@ namespace AbyssCLI.AML
             _mlct.SynchronousCleanup(skip_remove);
             _dealloc_entry.Free(); //clears TaskCompletionReference
         }
+        private bool _disposed = false;
+        public void Dispose()
+        {
+            if (_disposed) return;
+
+            SynchronousCleanup();
+
+            _disposed = true;
+        }
     }
-    internal class ResourceLinkContextedTask(
+    public class ResourceLinkContextedTask(
         Task<Cache.CachedResource> resource_await,
         Action<CachedResource> async_deploy_action,
         Action<CachedResource> async_remove_action
     ) : ContextedTask(
         (e) =>
         {
-            Client.Client.CerrWriteLine("fatal:::unhandled ResourceLinkContextedTask exception:" + e.ToString());
+            Client.Client.RenderWriter.ConsolePrint("fatal:::unhandled ResourceLinkContextedTask exception:" + e.ToString());
         }
     )
     {

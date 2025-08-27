@@ -1,0 +1,39 @@
+﻿using Microsoft.ClearScript;
+
+#nullable enable
+#pragma warning disable IDE1006 //naming convension
+namespace AbyssCLI.AML.JavaScriptAPI
+{
+    public class Document
+    {
+        private readonly JavaScriptDispatcher _js_dispatcher;
+        private readonly AML.Document _origin;
+        internal Document(JavaScriptDispatcher js_dispatcher, AML.Document origin)
+        {
+            _js_dispatcher = js_dispatcher;
+            _origin = origin;
+        }
+        public override string ToString() => "[object AMLDocument]";
+
+        public string title
+        {
+            get => _origin.title;
+            set => _origin.title = value;
+        }
+        public string? iconSrc
+        {
+            get => _origin.iconSrc;
+            set => _origin.iconSrc = value;
+        }
+        public object body => _js_dispatcher.MarshalElement(_origin.body)!;
+        public object createElement(string tag, dynamic options) =>
+            _js_dispatcher.MarshalElement(_origin.createElement(tag, options));
+        public object? getElementById(string id) {
+            var result = _origin.getElementById(id);
+            if (result == null) return null;
+
+            return _js_dispatcher.MarshalElement(result);
+        }
+        public void debugCleanupOrphans() => _origin._elem_lifespan_man.CleanupOrphans();
+    }
+}

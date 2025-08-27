@@ -1,21 +1,21 @@
 ﻿#nullable enable
 
-using AbyssCLI.Cache;
-
 namespace AbyssCLI.AML
 {
 #pragma warning disable IDE1006 //naming convension
-    public class Mesh : Placement
+    public class StaticMesh : Transform
     {
         private readonly Document _document;
-        internal ResourceLink? _mesh = null;
-        internal Mesh(DeallocStack dealloc_stack, Document document, object options) : base(dealloc_stack, "obj", options)
+        public ResourceLink? _mesh = null;
+        public StaticMesh(Document document, object options) : base(document, "obj", options)
         {
             _document = document;
 
-            if (!_attributes.TryGetValue("src", out var mesh_src)) return;
+            if (!Attributes.TryGetValue("src", out var mesh_src)) return;
             src = mesh_src;
         }
+        public override bool IsChildAllowed(Element child) =>
+            child is PbrMaterial;
 
         public string? src
         {
@@ -30,23 +30,23 @@ namespace AbyssCLI.AML
                 }
                 _mesh?.SynchronousCleanup();
 
-                //variable to be captured
+                //variable to be captured, shared within this resource link.
                 int resource_id = 0;
                 _mesh = _document.CreateResourceLink(value,
                     (resource) =>
                     {
-                        if (resource is not StaticSimpleResource mesh_file)
+                        if (!resource.MIMEType.StartsWith("model"))
                         {
                             Client.Client.RenderWriter.ConsolePrint("invalid content type for mesh");
                             return;
                         }
-                        resource_id = mesh_file.ResourceID;
-                        Client.Client.RenderWriter.ElemAttachResource(_element_id, resource_id);
+                        resource_id = resource.ResourceID;
+                        Client.Client.RenderWriter.ElemAttachResource(ElementId, resource_id, ResourceRole.Mesh);
                     },
                     (resource) =>
                     {
                         if (resource_id > 0)
-                            Client.Client.RenderWriter.ElemDetachResource(_element_id, resource_id);
+                            Client.Client.RenderWriter.ElemDetachResource(ElementId, resource_id);
                     }
                 );
             }

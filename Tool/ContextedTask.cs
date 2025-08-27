@@ -1,7 +1,7 @@
 ﻿#nullable enable
 namespace AbyssCLI.Tool;
 
-internal abstract class ContextedTask
+public abstract class ContextedTask
 {
     protected abstract void OnNoExecution();
     protected abstract void SynchronousInit();

@@ -133,7 +133,8 @@ namespace AbyssCLI.ABI
 		public void ElemAttachResource
 		(
 			int element_id,
-			int resource_id
+			int resource_id,
+			ResourceRole role
 		)
 		{
 			var action = new RenderAction
@@ -141,7 +142,8 @@ namespace AbyssCLI.ABI
 				ElemAttachResource = new()
 				{
 					ElementId = element_id,
-                    ResourceId = resource_id
+                    ResourceId = resource_id,
+                    Role = role
 				}
 			};
 			

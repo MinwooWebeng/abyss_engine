@@ -19,7 +19,7 @@ option csharp_namespace = "AbyssCLI.ABI";
 
 message ResourceComponent {
 	int32 resource_id = 1;
-	ResourceRole media_type = 2;
+	ResourceRole role = 2;
 }
 
 // render element and ui element works independently.
@@ -53,6 +53,7 @@ message RenderAction {
 	message ElemAttachResource {
 		int32 element_id = 1;
 		int32 resource_id = 2;
+		ResourceRole role = 3;
 	}
 	message ElemDetachResource {
 		int32 element_id = 1;

@@ -1,33 +1,49 @@
 ﻿using AbyssCLI.Cache;
-using AbyssCLI.Client;
 using AbyssCLI.Tool;
+using Microsoft.ClearScript.V8;
+using System.Collections.Concurrent;
 
 namespace AbyssCLI.AML;
 
 #nullable enable
 #pragma warning disable IDE1006 //naming convension
+/// <summary>
+/// [MEMO]
+/// When disposing elements in _detached_elements,
+/// it should be noted that some of them may have Rc.DoRefExist == false, but
+/// actually it may be before the initial reference creation.
+/// </summary>
 public class Document
 {
     private readonly ContextedTask _root_context;
     private int _ui_element_id = 0;
     private readonly AmlMetadata _metadata;
     private readonly DeallocStack _dealloc_stack;
+    public ElementLifespanMan _elem_lifespan_man;
     private readonly JavaScriptDispatcher _js_dispatcher;
-    internal bool IsUiInitialized => _ui_element_id == 0;
-    internal AmlMetadata Metadata => _metadata;
+    public bool IsUiInitialized => _ui_element_id == 0;
+    public AmlMetadata Metadata => _metadata;
 
     //document constructor must not allocate any resource that needs to be deallocated.
-    internal Document(ContextedTask root_context, AmlMetadata metadata)
+    public Document(ContextedTask root_context, AmlMetadata metadata)
     {
         _root_context = root_context;
         _metadata = metadata;
         _dealloc_stack = new();
-        _js_dispatcher = new(new(), this, new Console());
-        head = new(_dealloc_stack);
-        body = new(_dealloc_stack);
+        _elem_lifespan_man = new();
+        var js_engine_constraints = new V8RuntimeConstraints();
+        _js_dispatcher = new(js_engine_constraints, this, new Console(),
+            (element_id) =>
+            {
+                var elem = _elem_lifespan_man.Find(element_id);
+                elem.RefCount--;
+            }
+        );
+        head = new();
+        body = new(this);
         _title = string.Empty;
     }
-    internal void Init()
+    public void Init()
     {
         body.setTransformAsValues(_metadata.pos, _metadata.rot);
         title = _metadata.title;
@@ -52,7 +68,7 @@ public class Document
     /// All calls of this must be called synchronously by architecture.
     /// </summary>
     /// <param name="entry"></param>
-    internal void AddToDeallocStack(DeallocEntry entry) =>
+    public void AddToDeallocStack(DeallocEntry entry) =>
         _dealloc_stack.Add(entry);
 
     /// <summary>
@@ -63,13 +79,13 @@ public class Document
     /// <param name="async_deploy_action"></param>
     /// <param name="async_remove_action"></param>
     /// <returns></returns>
-    internal ResourceLink CreateResourceLink(string src,
+    public ResourceLink CreateResourceLink(string src,
         Action<CachedResource> async_deploy_action,
         Action<CachedResource> async_remove_action
     ) => new(_root_context, _dealloc_stack, src,
         async_deploy_action, async_remove_action);
 
-    internal void StartJavaScript(CancellationToken token) =>
+    public void StartJavaScript(CancellationToken token) =>
         _js_dispatcher.Start(token);
 
     /// <summary>
@@ -79,14 +95,14 @@ public class Document
     /// <param name="filename"></param>
     /// <param name="script"></param>
     /// <returns></returns>
-    internal bool TryEnqueueJavaScript(string filename, object script) =>
+    public bool TryEnqueueJavaScript(string filename, object script) =>
         _js_dispatcher.TryEnqueue(filename, script);
 
     /// <summary>
     /// Interrupt javascript execution and deactivates document. 
     /// This must be called only after token cancellation.
     /// </summary>
-    internal void Interrupt()
+    public void Interrupt()
     {
         body.setActive(false);
         if (IsUiInitialized)
@@ -98,15 +114,19 @@ public class Document
     /// Waits for javascript dispatcher to finish execution and deallocates all resources.
     /// Calling this is mendatory.
     /// </summary>
-    internal void Join()
+    public void Join()
     {
         _js_dispatcher.Join();
         _dealloc_stack.FreeAll();
+        _elem_lifespan_man.Clear();
+        Client.Client.RenderWriter.DeleteElement(body.ElementId);
+        if (IsUiInitialized)
+            Client.Client.RenderWriter.DeleteItem(_ui_element_id);
     }
 
     // inner attributes
-    internal string _title;
-    internal ResourceLink? _iconSrc;
+    public string _title;
+    public ResourceLink? _iconSrc;
 
     // exposed to JS
     public readonly Head head;
@@ -155,22 +175,24 @@ public class Document
             );
         }
     }
-    public Element createElement(string tag, dynamic options) => tag switch
+    public Element createElement(string tag, dynamic options)
     {
-        "o" => new Placement(_dealloc_stack, tag, options),
-        "obj" => new Mesh(_dealloc_stack, this, options),
-        _ => new Element(_dealloc_stack, tag, options)
-    };
+        Element result = tag switch
+        {
+            "o" => new Transform(this, tag, options),
+            "obj" => new StaticMesh(this, options),
+            "pbrm" => new PbrMaterial(this, options),
+            _ => throw new ArgumentException("invalid tag")
+        };
+        _elem_lifespan_man.Add(result);
+        return result;
+    }
     public Element? getElementById(string id)
     {
         if (id == null) return null;
         if (id.Length == 0) return null;
 
-        Element res = head.getElementByIdHelper(id);
-        if (res != null) return res;
-
-        res = body.getElementByIdHelper(id);
-        return res;
+        return body.getElementByIdHelper(id);
     }
     public void setEventListener(string event_name, dynamic callback)
     {

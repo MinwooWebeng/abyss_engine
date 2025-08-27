@@ -1,5 +1,12 @@
 syntax = "proto3";
 
 enum ResourceRole {
-	Texture = 0;
+	Mesh = 0;
+	Albedo = 1;
+	Normal = 2;
+	Roughness = 3;
+	Metalic = 4;
+	Specular = 5;
+	Opacity = 6;
+	Emission = 7;
 }

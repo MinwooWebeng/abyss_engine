@@ -1,5 +1,6 @@
 ﻿using System.IO.Pipes;
 using System.Xml;
+using System.Xml.Serialization;
 
 namespace AbyssCLI.AML;
 

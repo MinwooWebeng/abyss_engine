@@ -1,62 +1,106 @@
-﻿using Microsoft.ClearScript;
+﻿using AbyssCLI.Tool;
+using Microsoft.ClearScript;
 using System.Xml;
 
 namespace AbyssCLI.AML;
 
+#nullable enable
 #pragma warning disable IDE1006 //naming convension
-public class Element
+public class Element : IDisposable
 {
-    protected readonly DeallocStack _dealloc_stack; // reference, used by derived classes
-    internal readonly Dictionary<string, string> _attributes = [];
-    internal Element _parent;
-    internal readonly List<Element> _children = [];
-    internal Element(DeallocStack dealloc_stack, string tag, object options)
+    private readonly Document _document;
+    //public readonly Rc<Element> Rc; //for JavaScript exposure
+    public int RefCount;
+    public readonly int ElementId = RenderID.ElementId;
+    public readonly string tagName;
+    public readonly Dictionary<string, string> Attributes = [];
+    public Element? Parent;
+    public readonly List<Element> Children = [];
+    public Element(Document document, string tag, object options)
     {
-        _dealloc_stack = dealloc_stack;
+        _document = document;
+        //Rc = new(this);
+        RefCount = 0;
+        Client.Client.RenderWriter.CreateElement(-1, ElementId);
+
         tagName = tag;
         if (options is ScriptObject optionsObj)
         {
             foreach (var prop in optionsObj.PropertyNames)
             {
-                string value = optionsObj.GetProperty(prop)?.ToString();
+                string? value = optionsObj.GetProperty(prop)?.ToString();
                 if (value != null)
-                    _attributes[prop] = value;
+                    Attributes[prop] = value;
             }
         }
         else if (options is XmlAttributeCollection xmlAttributes)
         {
             foreach (XmlAttribute entry in xmlAttributes)
             {
-                _attributes[entry.Name] = entry.Value;
+                Attributes[entry.Name] = entry.Value;
             }
         }
     }
-    internal Element getElementByIdHelper(string _id)
+    public Element? getElementByIdHelper(string _id)
     {
-        if (_attributes.TryGetValue("id", out string id) && id == _id)
+        if (Attributes.TryGetValue("id", out string? id) && id == _id)
         {
             return this;
         }
+        foreach(var child in Children)
+        {
+            var result = child.getElementByIdHelper(_id);
+            if (result != null)
+                return result;
+        }
         return null;
     }
+    public virtual bool IsParentAllowed(Element element) => true;
+    public virtual bool IsParentAllowed(string parent_tag) => true;
+    public virtual bool IsChildAllowed(Element child) => true;
+    public virtual bool IsChildAllowed(string child_tag) => true;
 
-    //properties
-    public Element[] children => [.. _children];
-    public readonly string tagName;
-
-    //methods
+    //JavaScript API exposable
+    public void setActive(bool active) =>
+        Client.Client.RenderWriter.ElemSetActive(ElementId, active);
     public virtual void appendChild(Element child)
     {
+        if (!child.IsParentAllowed(this) || !IsChildAllowed(child))
+            throw new InvalidOperationException(
+                "<" + tagName + "> cannot have <" + child.tagName + "> as a child");
+
         if (child == null) return;
-        if (child._parent != null) child.remove();
-        child._parent = this;
-        _children.Add(child);
+        if (child.Parent == this) return;
+
+        if (child.Parent == null)
+            _document._elem_lifespan_man.Connect(child);
+        else
+            _ = child.Parent.Children.Remove(child);
+
+        child.Parent = this;
+        Children.Add(child);
+        Client.Client.RenderWriter.MoveElement(child.ElementId, ElementId);
     }
     public virtual void remove()
     {
-        if (_parent == null) return;
-        _ = _parent._children.Remove(this);
+        if (Parent == null) return;
+        _ = Parent.Children.Remove(this);
+        Parent = null;
+
+        _document._elem_lifespan_man.Isolate(this);
+        Client.Client.RenderWriter.MoveElement(ElementId, -1);
     }
+    private bool _disposed = false;
+    public void Dispose()
+    {
+        if (_disposed) return;
+
+        Client.Client.RenderWriter.DeleteElement(ElementId);
+        GC.SuppressFinalize(this);
+
+        _disposed = true;
+    }
+    ~Element() => Client.Client.CerrWriteLine("fatal:::Element finialized without disposing. This is bug");
 }
 #pragma warning restore IDE1006 //naming convension
 

@@ -1,9 +1,13 @@
-﻿namespace AbyssCLI.AML;
+﻿using Microsoft.ClearScript.V8;
 
-public class Body : Placement
+namespace AbyssCLI.AML;
+
+public class Body : Transform
 {
-    internal Body(DeallocStack _dealloc_stack) : base(_dealloc_stack, "body", null)
+    public Body(Document document) : base(document, "body", null)
     {
-        Client.Client.RenderWriter.MoveElement(_element_id, 0);
+        Client.Client.RenderWriter.MoveElement(ElementId, 0);
     }
+    public override void remove() =>
+        throw new InvalidOperationException("<body> cannot be removed");
 }
