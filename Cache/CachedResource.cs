@@ -15,6 +15,7 @@ public class CachedResource(HttpResponseMessage http_response) : IDisposable
 
         _http_response.Dispose();
 
+        GC.SuppressFinalize(this);
         _disposed = true;
     }
     public static CachedResource DefaultFailedResource => default;

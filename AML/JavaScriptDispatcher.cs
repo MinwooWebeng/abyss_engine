@@ -4,18 +4,26 @@ using Microsoft.ClearScript;
 using Microsoft.ClearScript.V8;
 using System.Collections.Concurrent;
 using System.Linq;
-//using static System.Runtime.InteropServices.JavaScript.JSType;
 
 #nullable enable
 namespace AbyssCLI.AML
 {
+    public class JavaScriptGcCallback(ElementLifespanMan elem_lifespan_man)
+    {
+        public void on_gc(int element_id)
+        {
+            var elem = elem_lifespan_man.Find(element_id);
+            elem.RefCount--;
+            Client.Client.RenderWriter.ConsolePrint("+++ JsEngine returned an element handle: " + element_id);
+        }
+    }
     public class JavaScriptDispatcher
     {
         private readonly V8ScriptEngine _engine;
         private readonly BlockingCollection<(string, object)> _queue = []; // by default, 100 scripts can be queued at once
         private readonly Thread _thread;
 
-        public JavaScriptDispatcher(V8RuntimeConstraints constraints, Document document, Console console, Action<int> element_gc_callback)
+        public JavaScriptDispatcher(V8RuntimeConstraints constraints, Document document, Console console, JavaScriptGcCallback gc_callback)
         {
             _engine = new V8ScriptEngine(constraints, V8ScriptEngineFlags.DisableGlobalMembers);
             _engine.AddHostType("Vector3", typeof(Vector3));
@@ -27,17 +35,18 @@ namespace AbyssCLI.AML
             _engine.AddHostType("Event", typeof(Event.Event));
             _engine.AddHostType("KeyboardEvent", typeof(Event.KeyboardEvent));
 
-            _engine.AddHostObject("gc", () =>
-            {
-                _engine.CollectGarbage(true);
-                GC.Collect();
-                GC.WaitForPendingFinalizers();
-                GC.Collect();
-            });
+            _engine.AddHostObject("elem_gc_callback", gc_callback);
 
-            _engine.AddHostObject("elem_gc_callback", element_gc_callback);
+            _engine.Execute(@"
+const version = '0.9.24';
 
-            _engine.Execute("const __aml_elem_dtor_reg = new FinalizationRegistry(elem_gc_callback);");
+const __aml_elem_finreg = new FinalizationRegistry(heldValue => elem_gc_callback.on_gc(heldValue));
+function __aml_elem_dtor_reg(target, heldValue) {
+    __aml_elem_finreg.register(target, heldValue);
+    return target;
+}
+"
+            );
 
             _thread = new Thread(new ParameterizedThreadStart(Run!));
         }
@@ -83,16 +92,23 @@ namespace AbyssCLI.AML
             {
             case (string text_title, string script_text):
             {
-                Client.Client.RenderWriter.ConsolePrint("JsDispatcher: running " + (text_title.Length == 0 ? "<script>" : text_title));
+                //Client.Client.RenderWriter.ConsolePrint("JsDispatcher: running " + (text_title.Length == 0 ? "<script>" : text_title));
                 _engine.Execute(new Microsoft.ClearScript.DocumentInfo("<script>"), script_text);
-                Client.Client.RenderWriter.ConsolePrint("JsDispatcher: finished " + (text_title.Length == 0 ? "<script>" : text_title));
+
+                ///debug - GC
+                _engine.CollectGarbage(true);
+                GC.Collect(); 
+                GC.WaitForPendingFinalizers(); 
+                GC.Collect();
+                _engine.Execute("void 0");
+                //Client.Client.RenderWriter.ConsolePrint("JsDispatcher: finished " + (text_title.Length == 0 ? "<script>" : text_title));
                 break;
             }
             case (string file_name, TaskCompletionReference<CachedResource> script_ref):
             {
-                Client.Client.RenderWriter.ConsolePrint("JsDispatcher: loading " + file_name);
+                //Client.Client.RenderWriter.ConsolePrint("JsDispatcher: loading " + file_name);
                 CachedResource script_resource = await script_ref.Task.WaitAsync(token);
-                Client.Client.RenderWriter.ConsolePrint("JsDispatcher: running " + file_name);
+                //Client.Client.RenderWriter.ConsolePrint("JsDispatcher: running " + file_name);
                 if (script_resource is not Cache.Text)
                 {
                     Client.Client.CerrWriteLine("invalid javascript resource");
@@ -105,9 +121,12 @@ namespace AbyssCLI.AML
                 }
                 string remote_script_text = await (script_resource as Cache.Text)!.ReadAsync(token);
                 _engine.Execute(new Microsoft.ClearScript.DocumentInfo(file_name), remote_script_text);
-                Client.Client.RenderWriter.ConsolePrint("JsDispatcher: finished " + file_name);
+                //Client.Client.RenderWriter.ConsolePrint("JsDispatcher: finished " + file_name);
                 break;
             }
+            case (_, Action action):
+                action();
+                break;
             default:
                 throw new InvalidOperationException("Unsupported script type (fatal internal error)");
             }
@@ -115,6 +134,7 @@ namespace AbyssCLI.AML
         //for JavaScript API
         public object MarshalElement(AML.Element element)
         {
+            Client.Client.RenderWriter.ConsolePrint("++JsEngine claims an element handle: " + element.ElementId);
             element.RefCount++;
             var result = element switch
             {
@@ -122,8 +142,7 @@ namespace AbyssCLI.AML
                 AML.Transform transform => new JavaScriptAPI.Transform(this, transform),
                 _ => throw new NotImplementedException()
             };
-            _engine.Script.__aml_elem_dtor_reg.register(result);
-            return result;
+            return _engine.Script.__aml_elem_dtor_reg(result, element.ElementId);
         }
         public object[] MarshalElementArray(List<AML.Element> elements)
         {

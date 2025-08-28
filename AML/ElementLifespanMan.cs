@@ -35,6 +35,16 @@
                     OrphanedElementIterHelper(residue, child);
             }
 
+            //isolate residue from their parents
+            foreach (var entry in residue)
+            {
+                if (entry.Parent != null)
+                {
+                    _ = entry.Parent.Children.Remove(entry);
+                    entry.Parent = null;
+                }
+            }
+
             //actual disposal
             foreach (var entry in disposing)
             {
@@ -48,20 +58,23 @@
         {
             if (element.RefCount > 0) //found alive
             {
-                if (element.Parent != null)
-                {
-                    _ = element.Parent.Children.Remove(element);
-                    element.Parent = null;
-                }
                 _ = residue.Add(element);
                 return;
             }
             foreach (var child in element.Children)
                 OrphanedElementIterHelper(residue, child);
         }
-        public void Clear()
+        private void DisposalIterHelper(int element_id)
         {
-            foreach (var entry in _all.Values)
+            _ = _all.Remove(element_id, out var element);
+            foreach(var child in element.Children)
+            {
+                DisposalIterHelper(child.ElementId);
+            }
+        }
+        public void ClearIsolated()
+        {
+            foreach (var entry in _isolated)
                 entry.Dispose();
         }
     }

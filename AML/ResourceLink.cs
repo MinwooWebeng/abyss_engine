@@ -12,7 +12,7 @@ namespace AbyssCLI.AML
     /// This should revert UIActions.
     /// The two actions should never throw.
     /// </summary>
-    public class ResourceLink : IDisposable
+    public class ResourceLink
     {
         public readonly string Src;
         public readonly DeallocEntry _dealloc_entry;
@@ -33,16 +33,12 @@ namespace AbyssCLI.AML
         {
             _mlct.SynchronousCleanup(skip_remove);
             _dealloc_entry.Free(); //clears TaskCompletionReference
-        }
-        private bool _disposed = false;
-        public void Dispose()
-        {
-            if (_disposed) return;
 
-            SynchronousCleanup();
-
-            _disposed = true;
+#pragma warning disable CA1816 // GC.SuppressFinalize outside Dispose
+            GC.SuppressFinalize(this);
+#pragma warning restore CA1816 // GC.SuppressFinalize outside Dispose
         }
+        ~ResourceLink() => Client.Client.RenderWriter.ConsolePrint("ResourceLink is not cleaned up. This is bug");
     }
     public class ResourceLinkContextedTask(
         Task<Cache.CachedResource> resource_await,

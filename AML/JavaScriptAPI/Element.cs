@@ -10,7 +10,6 @@ namespace AbyssCLI.AML.JavaScriptAPI
         protected readonly AML.Element _origin;
         internal Element(JavaScriptDispatcher js_dispatcher, AML.Element origin)
         {
-            Client.Client.RenderWriter.ConsolePrint("exposed an Element: " + origin.ElementId);
             _js_dispatcher = js_dispatcher;
             _origin = origin;
         }
@@ -18,7 +17,7 @@ namespace AbyssCLI.AML.JavaScriptAPI
         public override string ToString() => "[object AML" + GetType().Name + "]";
         public object[] children => _js_dispatcher.MarshalElementArray(_origin.Children);
         public void setActive(bool active) => _origin.setActive(active);
-        public void appendChild(Element child) => _origin.appendChild(child._origin);
+        public object appendChild(Element child) => _origin.appendChild(child._origin);
         public void remove() => _origin.remove();
     }
 }

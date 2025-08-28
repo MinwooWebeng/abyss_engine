@@ -34,6 +34,5 @@ namespace AbyssCLI.AML.JavaScriptAPI
 
             return _js_dispatcher.MarshalElement(result);
         }
-        public void debugCleanupOrphans() => _origin._elem_lifespan_man.CleanupOrphans();
     }
 }

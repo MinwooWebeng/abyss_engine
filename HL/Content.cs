@@ -38,6 +38,11 @@ internal class Content : ContextedTask
 
         ParseUtil.ParseAMLDocument(Document, raw_document, token);
         Document.StartJavaScript(token);
+        while(true)
+        { //temporary: fixed duration cleanup
+            await Task.Delay(1000, token);
+            Document.ScheduleOphanedElementCleanup();
+        }
     }
     protected override void OnSuccess()
     {

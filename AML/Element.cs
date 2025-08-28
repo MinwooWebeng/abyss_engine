@@ -1,5 +1,6 @@
 ﻿using AbyssCLI.Tool;
 using Microsoft.ClearScript;
+using Microsoft.ClearScript.JavaScript;
 using System.Xml;
 
 namespace AbyssCLI.AML;
@@ -9,7 +10,6 @@ namespace AbyssCLI.AML;
 public class Element : IDisposable
 {
     private readonly Document _document;
-    //public readonly Rc<Element> Rc; //for JavaScript exposure
     public int RefCount;
     public readonly int ElementId = RenderID.ElementId;
     public readonly string tagName;
@@ -19,7 +19,6 @@ public class Element : IDisposable
     public Element(Document document, string tag, object options)
     {
         _document = document;
-        //Rc = new(this);
         RefCount = 0;
         Client.Client.RenderWriter.CreateElement(-1, ElementId);
 
@@ -40,6 +39,7 @@ public class Element : IDisposable
                 Attributes[entry.Name] = entry.Value;
             }
         }
+        GC.AddMemoryPressure(1_000_000_000); //debug
     }
     public Element? getElementByIdHelper(string _id)
     {
@@ -63,14 +63,14 @@ public class Element : IDisposable
     //JavaScript API exposable
     public void setActive(bool active) =>
         Client.Client.RenderWriter.ElemSetActive(ElementId, active);
-    public virtual void appendChild(Element child)
+    public virtual Element appendChild(Element child)
     {
         if (!child.IsParentAllowed(this) || !IsChildAllowed(child))
             throw new InvalidOperationException(
                 "<" + tagName + "> cannot have <" + child.tagName + "> as a child");
 
-        if (child == null) return;
-        if (child.Parent == this) return;
+        if (child == null) throw new ArgumentException("[null] is not AmlElement");
+        if (child.Parent == this) return child;
 
         if (child.Parent == null)
             _document._elem_lifespan_man.Connect(child);
@@ -80,15 +80,18 @@ public class Element : IDisposable
         child.Parent = this;
         Children.Add(child);
         Client.Client.RenderWriter.MoveElement(child.ElementId, ElementId);
+        return child;
     }
     public virtual void remove()
     {
         if (Parent == null) return;
+
         _ = Parent.Children.Remove(this);
         Parent = null;
-
         _document._elem_lifespan_man.Isolate(this);
+
         Client.Client.RenderWriter.MoveElement(ElementId, -1);
+        return;
     }
     private bool _disposed = false;
     public void Dispose()
@@ -97,6 +100,8 @@ public class Element : IDisposable
 
         Client.Client.RenderWriter.DeleteElement(ElementId);
         GC.SuppressFinalize(this);
+
+        GC.RemoveMemoryPressure(1_000_000_000); //debug
 
         _disposed = true;
     }

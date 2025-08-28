@@ -32,13 +32,7 @@ public class Document
         _dealloc_stack = new();
         _elem_lifespan_man = new();
         var js_engine_constraints = new V8RuntimeConstraints();
-        _js_dispatcher = new(js_engine_constraints, this, new Console(),
-            (element_id) =>
-            {
-                var elem = _elem_lifespan_man.Find(element_id);
-                elem.RefCount--;
-            }
-        );
+        _js_dispatcher = new(js_engine_constraints, this, new Console(), new(_elem_lifespan_man));
         head = new();
         body = new(this);
         _title = string.Empty;
@@ -98,6 +92,9 @@ public class Document
     public bool TryEnqueueJavaScript(string filename, object script) =>
         _js_dispatcher.TryEnqueue(filename, script);
 
+    public void ScheduleOphanedElementCleanup() =>
+        _js_dispatcher.TryEnqueue(string.Empty, new Action(_elem_lifespan_man.CleanupOrphans));
+
     /// <summary>
     /// Interrupt javascript execution and deactivates document. 
     /// This must be called only after token cancellation.
@@ -118,7 +115,7 @@ public class Document
     {
         _js_dispatcher.Join();
         _dealloc_stack.FreeAll();
-        _elem_lifespan_man.Clear();
+        _elem_lifespan_man.ClearIsolated();
         Client.Client.RenderWriter.DeleteElement(body.ElementId);
         if (IsUiInitialized)
             Client.Client.RenderWriter.DeleteItem(_ui_element_id);
@@ -128,7 +125,6 @@ public class Document
     public string _title;
     public ResourceLink? _iconSrc;
 
-    // exposed to JS
     public readonly Head head;
     public readonly Body body;
     public string title
