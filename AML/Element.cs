@@ -16,6 +16,7 @@ public class Element : IDisposable
     public readonly Dictionary<string, string> Attributes = [];
     public Element? Parent;
     public readonly List<Element> Children = [];
+    public bool IsDeleteElementRequired = true; // this can be set to false when its parent is deleted in rendering engine.
     public Element(Document document, string tag, object options)
     {
         _document = document;
@@ -98,11 +99,12 @@ public class Element : IDisposable
     {
         if (_disposed) return;
 
-        Client.Client.RenderWriter.DeleteElement(ElementId);
-        GC.SuppressFinalize(this);
+        if(IsDeleteElementRequired)
+            Client.Client.RenderWriter.DeleteElement(ElementId);
 
         GC.RemoveMemoryPressure(1_000_000_000); //debug
 
+        GC.SuppressFinalize(this);
         _disposed = true;
     }
     ~Element() => Client.Client.CerrWriteLine("fatal:::Element finialized without disposing. This is bug");

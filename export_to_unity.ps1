@@ -1,4 +1,8 @@
-﻿Write-Output "Deleting \AbyssUI\AbyssCLI"
+﻿# Optional
+python.exe ./Tool/ExternData.py
+dotnet build AbyssCLI.csproj --configuration Debug
+
+Write-Output "Deleting \AbyssUI\AbyssCLI"
 Remove-Item D:\unity\AbyssUI\AbyssCLI\* -Recurse
 
 Write-Output "Deleting \AbyssUIBuild\AbyssCLI"

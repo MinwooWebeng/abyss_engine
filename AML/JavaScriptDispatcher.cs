@@ -14,7 +14,7 @@ namespace AbyssCLI.AML
         {
             var elem = elem_lifespan_man.Find(element_id);
             elem.RefCount--;
-            Client.Client.RenderWriter.ConsolePrint("+++ JsEngine returned an element handle: " + element_id);
+            //Client.Client.RenderWriter.ConsolePrint("+++ JsEngine returned an element handle: " + element_id);
         }
     }
     public class JavaScriptDispatcher
@@ -38,7 +38,7 @@ namespace AbyssCLI.AML
             _engine.AddHostObject("elem_gc_callback", gc_callback);
 
             _engine.Execute(@"
-const version = '0.9.24';
+const version = '" + Tool.ExternData.BuildTime + @"';
 
 const __aml_elem_finreg = new FinalizationRegistry(heldValue => elem_gc_callback.on_gc(heldValue));
 function __aml_elem_dtor_reg(target, heldValue) {
@@ -97,8 +97,8 @@ function __aml_elem_dtor_reg(target, heldValue) {
 
                 ///debug - GC
                 _engine.CollectGarbage(true);
-                GC.Collect(); 
-                GC.WaitForPendingFinalizers(); 
+                GC.Collect();
+                GC.WaitForPendingFinalizers();
                 GC.Collect();
                 _engine.Execute("void 0");
                 //Client.Client.RenderWriter.ConsolePrint("JsDispatcher: finished " + (text_title.Length == 0 ? "<script>" : text_title));
@@ -134,7 +134,7 @@ function __aml_elem_dtor_reg(target, heldValue) {
         //for JavaScript API
         public object MarshalElement(AML.Element element)
         {
-            Client.Client.RenderWriter.ConsolePrint("++JsEngine claims an element handle: " + element.ElementId);
+            //Client.Client.RenderWriter.ConsolePrint("++JsEngine claims an element handle: " + element.ElementId);
             element.RefCount++;
             var result = element switch
             {
