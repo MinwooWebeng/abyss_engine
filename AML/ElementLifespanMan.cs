@@ -1,9 +1,19 @@
 ﻿namespace AbyssCLI.AML
 {
-    public class ElementLifespanMan
+    public class ElementLifespanMan(Body body)
     {
+        /// <summary>
+        /// Future improvement:
+        /// actual disposal (using RecursiveElementDelete) may stall 
+        /// as it waits for internal resource link to be killed and joined.
+        /// Move actual disposal to separate job queue to let CleanupOrphans return early.
+        /// Actual disposal of elements can run concurrent to javascript if _all is ConcurrentDictionary, but
+        /// CleanupOrphans call must be synchronous to javascript engine.
+        /// </summary>
         private readonly Dictionary<int, Element> _all = [];
         private HashSet<Element> _isolated = [];
+        private readonly Body _body = body;
+
         public void Add(Element element)
         {
             //at first, isolated.
@@ -47,10 +57,7 @@
 
             //actual disposal
             foreach (var entry in disposing)
-            {
-                _ = _all.Remove(entry, out var element);
-                element.Dispose();
-            }
+                RecursiveElementDelete(entry);
 
             _isolated = residue; //update
         }
@@ -64,18 +71,44 @@
             foreach (var child in element.Children)
                 OrphanedElementIterHelper(residue, child);
         }
-        private void DisposalIterHelper(int element_id)
+        private void RecursiveElementDelete(int root_element_id)
         {
-            _ = _all.Remove(element_id, out var element);
-            foreach(var child in element.Children)
+            _ = _all.Remove(root_element_id, out var root_element);
+            RecursiveElementDeleteHelper(root_element);
+            root_element.IsDeleteElementRequired = true;
+            root_element.Dispose();
+        }
+        private void RecursiveElementDeleteHelper(Element element)
+        {
+            foreach (var child in element.Children)
             {
-                DisposalIterHelper(child.ElementId);
+                _ = _all.Remove(child.ElementId);
+                RecursiveElementDeleteHelper(child);
+                child.Dispose();
             }
         }
-        public void ClearIsolated()
+        public void ClearAll()
         {
-            foreach (var entry in _isolated)
-                entry.Dispose();
+            foreach (var isolate in _isolated)
+            {
+                RecursiveElementDeleteWithoutCheckingHelper(isolate);
+                isolate.IsDeleteElementRequired = true;
+                isolate.Dispose();
+            }
+            RecursiveElementDeleteWithoutCheckingHelper(_body);
+            _body.IsDeleteElementRequired = true;
+            _body.Dispose();
+
+            _all.Clear();
+            _isolated.Clear();
+        }
+        private static void RecursiveElementDeleteWithoutCheckingHelper(Element element)
+        {
+            foreach (var child in element.Children)
+            {
+                RecursiveElementDeleteWithoutCheckingHelper(child);
+                child.Dispose();
+            }
         }
     }
 }

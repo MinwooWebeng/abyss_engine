@@ -99,7 +99,6 @@ function __aml_elem_dtor_reg(target, heldValue) {
                 _engine.CollectGarbage(true);
                 GC.Collect();
                 GC.WaitForPendingFinalizers();
-                GC.Collect();
                 _engine.Execute("void 0");
                 //Client.Client.RenderWriter.ConsolePrint("JsDispatcher: finished " + (text_title.Length == 0 ? "<script>" : text_title));
                 break;

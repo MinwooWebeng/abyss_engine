@@ -30,11 +30,11 @@ public class Document
         _root_context = root_context;
         _metadata = metadata;
         _dealloc_stack = new();
-        _elem_lifespan_man = new();
-        var js_engine_constraints = new V8RuntimeConstraints();
-        _js_dispatcher = new(js_engine_constraints, this, new Console(), new(_elem_lifespan_man));
         head = new();
         body = new(this);
+        _elem_lifespan_man = new(body);
+        var js_engine_constraints = new V8RuntimeConstraints();
+        _js_dispatcher = new(js_engine_constraints, this, new Console(), new(_elem_lifespan_man));
         _title = string.Empty;
     }
     public void Init()
@@ -115,8 +115,7 @@ public class Document
     {
         _js_dispatcher.Join();
         _dealloc_stack.FreeAll();
-        _elem_lifespan_man.ClearIsolated();
-        Client.Client.RenderWriter.DeleteElement(body.ElementId);
+        _elem_lifespan_man.ClearAll();
         if (IsUiInitialized)
             Client.Client.RenderWriter.DeleteItem(_ui_element_id);
     }

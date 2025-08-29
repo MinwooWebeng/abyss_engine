@@ -16,7 +16,7 @@ public class Element : IDisposable
     public readonly Dictionary<string, string> Attributes = [];
     public Element? Parent;
     public readonly List<Element> Children = [];
-    public bool IsDeleteElementRequired = true; // this can be set to false when its parent is deleted in rendering engine.
+    public bool IsDeleteElementRequired = false; // this can be set to false when its parent is deleted in rendering engine.
     public Element(Document document, string tag, object options)
     {
         _document = document;
