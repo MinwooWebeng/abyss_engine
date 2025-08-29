@@ -1,7 +1,6 @@
 ﻿using AbyssCLI.Cache;
 using AbyssCLI.Tool;
 using Microsoft.ClearScript.V8;
-using System.Collections.Concurrent;
 
 namespace AbyssCLI.AML;
 
@@ -114,6 +113,7 @@ public class Document
     public void Join()
     {
         _js_dispatcher.Join();
+        _iconSrc?.Dispose();
         _dealloc_stack.FreeAll();
         _elem_lifespan_man.ClearAll();
         if (IsUiInitialized)
@@ -122,10 +122,12 @@ public class Document
 
     // inner attributes
     public string _title;
-    public ResourceLink? _iconSrc;
+    public BetterResourceLink? _iconSrc;
 
     public readonly Head head;
     public readonly Body body;
+
+    //features
     public string title
     {
         get => _title;
@@ -142,12 +144,17 @@ public class Document
         {
             if (value == null || value.Length == 0)
             {
-                _iconSrc?.SynchronousCleanup();
+                _iconSrc?.Dispose();
                 _iconSrc = null;
                 return;
             }
-            _iconSrc?.SynchronousCleanup(skip_remove: true);
-            _iconSrc = CreateResourceLink(value,
+            if (_iconSrc != null)
+            {
+                _iconSrc.IsRemovalRequired = false;
+                _iconSrc.Dispose();
+            }
+            _iconSrc = new(
+                value,
                 (resource) => //deploy
                 {
                     switch (resource)
