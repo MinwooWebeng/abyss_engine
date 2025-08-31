@@ -1,7 +1,6 @@
-﻿namespace AbyssCLI.Tool
+﻿namespace AbyssCLI.Tool;
+
+public static class ExternData
 {
-    public static class ExternData
-    {
-        public const string BuildTime = "2025-08-30:00:15";
-    }
+    public const string BuildTime = "2025-08-30:00:15";
 }

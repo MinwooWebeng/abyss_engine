@@ -1,6 +1,4 @@
-﻿using Microsoft.ClearScript.V8;
-
-namespace AbyssCLI.AML;
+﻿namespace AbyssCLI.AML;
 
 public class Body : Transform
 {

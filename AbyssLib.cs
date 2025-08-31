@@ -9,7 +9,10 @@ namespace AbyssCLI;
 
 public class AbystResponseHeaderJson
 {
-    public int Code { get; set; }
+    public int Code
+    {
+        get; set;
+    }
     public string Status { get; set; } = "";
     public Dictionary<string, string[]> Header { get; set; } = [];
 }
@@ -517,10 +520,19 @@ public static class AbyssLib
     }
     public class ObjectInfoFormat
     {
-        public required string ID { get; set; }
-        public required string Addr { get; set; }
+        public required string ID
+        {
+            get; set;
+        }
+        public required string Addr
+        {
+            get; set;
+        }
 
-        public required float[] Transform { get; set; }
+        public required float[] Transform
+        {
+            get; set;
+        }
     }
     private static string BytesToHex(byte[] input)
     {

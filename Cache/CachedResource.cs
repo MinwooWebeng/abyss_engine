@@ -11,7 +11,8 @@ public class CachedResource(HttpResponseMessage http_response) : IDisposable
     private bool _disposed = false;
     public virtual void Dispose() //this is called by Cache, in RcTaskCompletionSource.
     {
-        if (_disposed) return;
+        if (_disposed)
+            return;
 
         _http_response.Dispose();
 

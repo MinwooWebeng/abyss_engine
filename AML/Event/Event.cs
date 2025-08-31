@@ -1,6 +1,5 @@
-﻿namespace AbyssCLI.AML.Event
+﻿namespace AbyssCLI.AML.Event;
+
+public class Event
 {
-    public class Event
-    {
-    }
 }

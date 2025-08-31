@@ -1,11 +1,7 @@
-﻿using AbyssCLI.Tool;
+﻿#nullable enable
+namespace AbyssCLI.AML.JavaScriptAPI;
 
-#nullable enable
-#pragma warning disable IDE1006 //naming convension
-namespace AbyssCLI.AML.JavaScriptAPI
+internal class Body : Transform
 {
-    internal class Body : Transform
-    {
-        internal Body(JavaScriptDispatcher js_dispatcher, AML.Element origin) : base(js_dispatcher, origin) { }
-    }
+    internal Body(JavaScriptDispatcher js_dispatcher, AML.Element origin) : base(js_dispatcher, origin) { }
 }

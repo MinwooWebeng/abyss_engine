@@ -5,8 +5,14 @@ namespace AbyssCLI.Client;
 
 public static partial class Client
 {
-    public static AbyssLib.Host Host { get; private set; }
-    public static Cache.Cache Cache { get; private set; }
+    public static AbyssLib.Host Host
+    {
+        get; private set;
+    }
+    public static Cache.Cache Cache
+    {
+        get; private set;
+    }
     public static readonly SingleThreadTaskRunner CachedResourceWorker = new();
     public static readonly RenderActionWriter RenderWriter = new(Console.OpenStandardOutput())
     {
@@ -56,7 +62,7 @@ public static partial class Client
             {
                 HttpResponseMessage result = await http_client.SendAsync(http_request, HttpCompletionOption.ResponseHeadersRead);
 
-                var mime = result.Content.Headers.ContentType.MediaType;
+                string mime = result.Content.Headers.ContentType.MediaType;
                 Cache.Patch(http_request.RequestUri.ToString(), mime switch
                 {
                     "model/obj" or "image/png" => new Cache.StaticSimpleResource(result),

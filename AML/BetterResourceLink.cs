@@ -1,50 +1,49 @@
-﻿using AbyssCLI.Cache;
-using AbyssCLI.Tool;
-using System.Text;
+﻿using AbyssCLI.Tool;
 
 #nullable enable
-namespace AbyssCLI.AML
+namespace AbyssCLI.AML;
+
+public abstract class BetterResourceLink : IDisposable
 {
-    public sealed class BetterResourceLink : IDisposable
+    public readonly string Src;
+    public bool IsRemovalRequired = true;
+    private readonly TaskCompletionSource<byte> _tcs = new();
+    private readonly Task _inner_task;
+    protected Cache.CachedResource? Resource;
+    public BetterResourceLink(string src)
     {
-        public readonly string Src;
-        private readonly Action<CachedResource> _remove_action;
-        public bool IsRemovalRequired = true;
-        private readonly TaskCompletionSource<byte> _tcs = new();
-        private readonly Task<Cache.CachedResource?> _inner_task;
-        public BetterResourceLink(
-            string src,
-            Action<CachedResource> deploy_action,
-            Action<CachedResource> remove_action)
+        Src = src;
+        _inner_task = Task.Run(async () =>
         {
-            Src = src;
-            _remove_action = remove_action;
-            _inner_task = Task.Run(async () =>
+            using TaskCompletionReference<Cache.CachedResource> cache_rsc_ref = Client.Client.Cache.GetReference(src);
+
+            if (await Task.WhenAny(cache_rsc_ref.Task, _tcs.Task)
+            is not Task<Cache.CachedResource> resource_task) //cancelled
             {
-                using TaskCompletionReference<CachedResource> cache_rsc_ref = Client.Client.Cache.GetReference(src);
+                return;
+            }
 
-                if (await Task.WhenAny(cache_rsc_ref.Task, _tcs.Task)
-                is not Task<Cache.CachedResource> resource_task) //cancelled
-                    return null;
+            Cache.CachedResource resource = resource_task.Result;
+            Resource = resource;
+            Deploy();
+        });
+    }
 
-                var resource = resource_task.Result;
-                deploy_action(resource);
-                return resource;
-            });
-        }
+    public abstract void Deploy();
+    public abstract void Remove();
 
-        private bool _disposed = false;
-        public void Dispose()
-        {
-            if (_disposed) return;
+    private bool _disposed = false;
+    public void Dispose()
+    {
+        if (_disposed)
+            return;
 
-            _tcs.SetResult(0);
-            _inner_task.Wait(); //This is kinda unavoidable; JS main is expected to call Dispose().
-            var resource = _inner_task.Result;
-            if (IsRemovalRequired && resource != null)
-                _remove_action(resource);
+        _tcs.SetResult(0);
+        _inner_task.Wait(); //This is kinda unavoidable; JS main is expected to call Dispose().
+        if (IsRemovalRequired && Resource != null)
+            Remove();
 
-            _disposed = true;
-        }
+        GC.SuppressFinalize(this);
+        _disposed = true;
     }
 }

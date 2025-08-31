@@ -1,6 +1,4 @@
-﻿using System.IO.Pipes;
-using System.Xml;
-using System.Xml.Serialization;
+﻿using System.Xml;
 
 namespace AbyssCLI.AML;
 
@@ -111,7 +109,7 @@ internal static class ParseUtil
     }
     private static void ParseLink(Document document, XmlElement link_elem)
     {
-        var href = link_elem.GetAttribute("href");
+        string href = link_elem.GetAttribute("href");
         switch (link_elem.GetAttribute("rel"))
         {
         case "icon":
@@ -123,7 +121,7 @@ internal static class ParseUtil
     }
     private static void ParseBody(Document document, XmlElement target_elem, CancellationToken token)
     {
-        var body = document.body;
+        Body body = document.body;
         //body exists already in document.body, but we need to apply attributes.
         foreach (XmlAttribute entry in target_elem.Attributes)
         {
@@ -150,8 +148,8 @@ internal static class ParseUtil
             if (child.NodeType != XmlNodeType.Element)
                 continue;
 
-            var elem = document.createElement(child.Name, child.Attributes);
-            target.appendChild(elem);
+            Element elem = document.createElement(child.Name, child.Attributes);
+            _ = target.appendChild(elem);
             ParseBodyElement(document, elem, child as XmlElement, token);
         }
     }

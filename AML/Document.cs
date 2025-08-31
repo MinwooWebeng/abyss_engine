@@ -16,18 +16,20 @@ public class Document
 {
     private readonly ContextedTask _root_context;
     private int _ui_element_id = 0;
-    private readonly AmlMetadata _metadata;
     private readonly DeallocStack _dealloc_stack;
     public ElementLifespanMan _elem_lifespan_man;
     private readonly JavaScriptDispatcher _js_dispatcher;
     public bool IsUiInitialized => _ui_element_id == 0;
-    public AmlMetadata Metadata => _metadata;
+    public AmlMetadata Metadata
+    {
+        get;
+    }
 
     //document constructor must not allocate any resource that needs to be deallocated.
     public Document(ContextedTask root_context, AmlMetadata metadata)
     {
         _root_context = root_context;
-        _metadata = metadata;
+        Metadata = metadata;
         _dealloc_stack = new();
         head = new();
         body = new(this);
@@ -38,10 +40,11 @@ public class Document
     }
     public void Init()
     {
-        body.setTransformAsValues(_metadata.pos, _metadata.rot);
-        title = _metadata.title;
+        body.setTransformAsValues(Metadata.pos, Metadata.rot);
+        title = Metadata.title;
 
-        if (_metadata.is_item) InitUI();
+        if (Metadata.is_item)
+            InitUI();
     }
     private void InitUI()
     {
@@ -49,8 +52,8 @@ public class Document
 
         Client.Client.RenderWriter.CreateItem(
             _ui_element_id,
-            _metadata.sharer_hash,
-            Google.Protobuf.ByteString.CopyFrom(_metadata.uuid.ToByteArray())
+            Metadata.sharer_hash,
+            Google.Protobuf.ByteString.CopyFrom(Metadata.uuid.ToByteArray())
         );
         _dealloc_stack.Add(new(_ui_element_id, DeallocEntry.EDeallocType.RendererUiItem));
     }
@@ -121,8 +124,8 @@ public class Document
     }
 
     // inner attributes
-    public string _title;
-    public BetterResourceLink? _iconSrc;
+    private string _title;
+    private DocumentIconResourceLink? _iconSrc;
 
     public readonly Head head;
     public readonly Body body;
@@ -153,29 +156,28 @@ public class Document
                 _iconSrc.IsRemovalRequired = false;
                 _iconSrc.Dispose();
             }
-            _iconSrc = new(
-                value,
-                (resource) => //deploy
-                {
-                    switch (resource)
-                    {
-                    case StaticResource staticResource:
-                        Client.Client.RenderWriter.ItemSetIcon(_ui_element_id, staticResource.ResourceID);
-                        break;
-                    case StaticSimpleResource staticSimpleResource:
-                        Client.Client.RenderWriter.ItemSetIcon(_ui_element_id, staticSimpleResource.ResourceID);
-                        break;
-                    default:
-                        Client.Client.RenderWriter.ConsolePrint("invalid content for icon");
-                        break;
-                    }
-                },
-                (resource) => //remove
-                {
-                    Client.Client.RenderWriter.ItemSetIcon(_ui_element_id, 0);
-                }
-            );
+            _iconSrc = new(_ui_element_id, value);
         }
+    }
+    class DocumentIconResourceLink(int ui_element_id, string src) : BetterResourceLink(src)
+    {
+        public override void Deploy()
+        {
+            switch (Resource)
+            {
+            case StaticResource staticResource:
+                Client.Client.RenderWriter.ItemSetIcon(ui_element_id, staticResource.ResourceID);
+                break;
+            case StaticSimpleResource staticSimpleResource:
+                Client.Client.RenderWriter.ItemSetIcon(ui_element_id, staticSimpleResource.ResourceID);
+                break;
+            default:
+                Client.Client.RenderWriter.ConsolePrint("invalid content for icon");
+                break;
+            }
+        }
+        public override void Remove() =>
+            Client.Client.RenderWriter.ItemSetIcon(ui_element_id, 0);
     }
     public Element createElement(string tag, dynamic options)
     {
@@ -191,8 +193,10 @@ public class Document
     }
     public Element? getElementById(string id)
     {
-        if (id == null) return null;
-        if (id.Length == 0) return null;
+        if (id == null)
+            return null;
+        if (id.Length == 0)
+            return null;
 
         return body.getElementByIdHelper(id);
     }

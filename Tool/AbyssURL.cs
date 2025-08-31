@@ -1,12 +1,21 @@
 ﻿namespace AbyssCLI.Tool;
 public class AbyssURL
 {
-    public string Raw { get; set; }
-    public string Scheme { get; set; }
+    public string Raw
+    {
+        get; set;
+    }
+    public string Scheme
+    {
+        get; set;
+    }
     public string Id { get; set; } = ""; // For abyss/abyst
     public List<(string Ip, int Port)> AddressCandidates { get; set; } = [];
     public string Path { get; set; } = ""; // For abyss/abyst
-    public Uri StandardUri { get; set; } // For standard and abyst URIs
+    public Uri StandardUri
+    {
+        get; set;
+    } // For standard and abyst URIs
 
     public override string ToString() => Raw;
 }

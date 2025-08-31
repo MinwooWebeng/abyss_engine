@@ -110,7 +110,7 @@ public abstract class ContextedTask
                     //Console.WriteLine(debug_tag + "9");
                 }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 _unhandled_exception_callback(e);
             }
@@ -158,11 +158,19 @@ public abstract class ContextedTask
             _virtual_parent_init_tcs.SetResult(_virtual_parent_cts);
         }
         protected override void OnNoExecution() => throw new InvalidOperationException();
-        protected override void SynchronousInit() { }
+        protected override void SynchronousInit()
+        {
+        }
         protected override Task AsyncTask(CancellationToken token) => Task.CompletedTask;
-        protected override void OnSuccess() { }
-        protected override void OnStop() { }
+        protected override void OnSuccess()
+        {
+        }
+        protected override void OnStop()
+        {
+        }
         protected override void OnFail(Exception e) => throw new InvalidOperationException();
-        protected override void SynchronousExit() { }
+        protected override void SynchronousExit()
+        {
+        }
     }
 }

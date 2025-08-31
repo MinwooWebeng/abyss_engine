@@ -2,7 +2,10 @@
 
 public interface IError
 {
-    string Message { get; }
+    string Message
+    {
+        get;
+    }
 }
 
 public class StringError(string message) : IError

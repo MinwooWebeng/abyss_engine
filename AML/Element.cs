@@ -1,6 +1,4 @@
-﻿using AbyssCLI.Tool;
-using Microsoft.ClearScript;
-using Microsoft.ClearScript.JavaScript;
+﻿using Microsoft.ClearScript;
 using System.Xml;
 
 namespace AbyssCLI.AML;
@@ -26,7 +24,7 @@ public class Element : IDisposable
         tagName = tag;
         if (options is ScriptObject optionsObj)
         {
-            foreach (var prop in optionsObj.PropertyNames)
+            foreach (string? prop in optionsObj.PropertyNames)
             {
                 string? value = optionsObj.GetProperty(prop)?.ToString();
                 if (value != null)
@@ -48,9 +46,9 @@ public class Element : IDisposable
         {
             return this;
         }
-        foreach(var child in Children)
+        foreach (Element child in Children)
         {
-            var result = child.getElementByIdHelper(_id);
+            Element? result = child.getElementByIdHelper(_id);
             if (result != null)
                 return result;
         }
@@ -67,11 +65,15 @@ public class Element : IDisposable
     public virtual Element appendChild(Element child)
     {
         if (!child.IsParentAllowed(this) || !IsChildAllowed(child))
+        {
             throw new InvalidOperationException(
                 "<" + tagName + "> cannot have <" + child.tagName + "> as a child");
+        }
 
-        if (child == null) throw new ArgumentException("[null] is not AmlElement");
-        if (child.Parent == this) return child;
+        if (child == null)
+            throw new ArgumentException("[null] is not AmlElement");
+        if (child.Parent == this)
+            return child;
 
         if (child.Parent == null)
             _document._elem_lifespan_man.Connect(child);
@@ -85,7 +87,8 @@ public class Element : IDisposable
     }
     public virtual void remove()
     {
-        if (Parent == null) return;
+        if (Parent == null)
+            return;
 
         _ = Parent.Children.Remove(this);
         Parent = null;
@@ -97,9 +100,10 @@ public class Element : IDisposable
     private bool _disposed = false;
     public void Dispose()
     {
-        if (_disposed) return;
+        if (_disposed)
+            return;
 
-        if(IsDeleteElementRequired)
+        if (IsDeleteElementRequired)
             Client.Client.RenderWriter.DeleteElement(ElementId);
 
         GC.RemoveMemoryPressure(1_000_000_000); //debug

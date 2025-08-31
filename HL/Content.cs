@@ -16,7 +16,9 @@ internal class Content : ContextedTask
         Document = new(this, metadata ?? new());
     }
 
-    protected override void OnNoExecution() { }
+    protected override void OnNoExecution()
+    {
+    }
     protected override void SynchronousInit()
     {
         Client.Client.RenderWriter.ConsolePrint("||>opening content(" + _url.ToString() + ")<||"); //debug
@@ -26,7 +28,7 @@ internal class Content : ContextedTask
     protected override async Task AsyncTask(CancellationToken token)
     {
         // load main document. this may override metadata.
-        var _document_cache_ref = Client.Client.Cache.GetReference(_url.ToString());
+        TaskCompletionReference<Cache.CachedResource> _document_cache_ref = Client.Client.Cache.GetReference(_url.ToString());
         Document.AddToDeallocStack(new(_document_cache_ref));
 
         Cache.CachedResource doc_resource = await _document_cache_ref.Task.WaitAsync(token);
@@ -38,16 +40,13 @@ internal class Content : ContextedTask
 
         ParseUtil.ParseAMLDocument(Document, raw_document, token);
         Document.StartJavaScript(token);
-        while(true)
+        while (true)
         { //temporary: fixed duration cleanup
             await Task.Delay(1000, token);
             Document.ScheduleOphanedElementCleanup();
         }
     }
-    protected override void OnSuccess()
-    {
-        Document.Interrupt();
-    }
+    protected override void OnSuccess() => Document.Interrupt();
     protected override void OnStop()
     {
         Document.Interrupt();
