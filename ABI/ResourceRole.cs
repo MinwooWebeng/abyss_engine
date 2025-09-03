@@ -25,10 +25,11 @@ public static partial class ResourceRoleReflection {
           "ChJSZXNvdXJjZVJvbGUucHJvdG8qdQoMUmVzb3VyY2VSb2xlEggKBE1lc2gQ",
           "ABIKCgZBbGJlZG8QARIKCgZOb3JtYWwQAhINCglSb3VnaG5lc3MQAxILCgdN",
           "ZXRhbGljEAQSDAoIU3BlY3VsYXIQBRILCgdPcGFjaXR5EAYSDAoIRW1pc3Np",
-          "b24QB2IGcHJvdG8z"));
+          "b24QByomCgpFbGVtZW50VGFnEgUKAU8QABIHCgNPYmoQARIICgRQYnJtEAJi",
+          "BnByb3RvMw=="));
     descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
         new pbr::FileDescriptor[] { },
-        new pbr::GeneratedClrTypeInfo(new[] {typeof(global::ResourceRole), }, null, null));
+        new pbr::GeneratedClrTypeInfo(new[] {typeof(global::ResourceRole), typeof(global::ElementTag), }, null, null));
   }
   #endregion
 
@@ -43,6 +44,12 @@ public enum ResourceRole {
   [pbr::OriginalName("Specular")] Specular = 5,
   [pbr::OriginalName("Opacity")] Opacity = 6,
   [pbr::OriginalName("Emission")] Emission = 7,
+}
+
+public enum ElementTag {
+  [pbr::OriginalName("O")] O = 0,
+  [pbr::OriginalName("Obj")] Obj = 1,
+  [pbr::OriginalName("Pbrm")] Pbrm = 2,
 }
 
 #endregion

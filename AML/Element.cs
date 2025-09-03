@@ -19,7 +19,14 @@ public class Element : IDisposable
     {
         _document = document;
         RefCount = 0;
-        Client.Client.RenderWriter.CreateElement(-1, ElementId);
+        Client.Client.RenderWriter.CreateElement(-1, ElementId, tag switch
+        {
+            "o" => ElementTag.O,
+            "obj" => ElementTag.Obj,
+            "pbrm" => ElementTag.Pbrm,
+            "body" => ElementTag.O,
+            _ => throw new InvalidOperationException()
+        });
 
         tagName = tag;
         if (options is ScriptObject optionsObj)

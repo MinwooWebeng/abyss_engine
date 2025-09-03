@@ -27,7 +27,7 @@ namespace AbyssCLI.ABI {
             "ChJSZW5kZXJBY3Rpb24ucHJvdG8aCm1pbWUucHJvdG8aElJlc291cmNlUm9s",
             "ZS5wcm90bxoQY29tbW9udHlwZS5wcm90byJFChFSZXNvdXJjZUNvbXBvbmVu",
             "dBITCgtyZXNvdXJjZV9pZBgBIAEoBRIbCgRyb2xlGAIgASgOMg0uUmVzb3Vy",
-            "Y2VSb2xlIpkVCgxSZW5kZXJBY3Rpb24SMwoNY29uc29sZV9wcmludBhkIAEo",
+            "Y2VSb2xlIrMVCgxSZW5kZXJBY3Rpb24SMwoNY29uc29sZV9wcmludBhkIAEo",
             "CzIaLlJlbmRlckFjdGlvbi5Db25zb2xlUHJpbnRIABI2Cg5jcmVhdGVfZWxl",
             "bWVudBjIASABKAsyGy5SZW5kZXJBY3Rpb24uQ3JlYXRlRWxlbWVudEgAEjIK",
             "DG1vdmVfZWxlbWVudBjJASABKAsyGS5SZW5kZXJBY3Rpb24uTW92ZUVsZW1l",
@@ -57,44 +57,44 @@ namespace AbyssCLI.ABI {
             "bmZvSAASPwoTaW5mb19jb250ZW50X3NoYXJlZBjZBCABKAsyHy5SZW5kZXJB",
             "Y3Rpb24uSW5mb0NvbnRlbnRTaGFyZWRIABJBChRpbmZvX2NvbnRlbnRfZGVs",
             "ZXRlZBjaBCABKAsyIC5SZW5kZXJBY3Rpb24uSW5mb0NvbnRlbnREZWxldGVk",
-            "SAAaHAoMQ29uc29sZVByaW50EgwKBHRleHQYASABKAkaNgoNQ3JlYXRlRWxl",
-            "bWVudBIRCglwYXJlbnRfaWQYASABKAUSEgoKZWxlbWVudF9pZBgCIAEoBRo4",
-            "CgtNb3ZlRWxlbWVudBISCgplbGVtZW50X2lkGAEgASgFEhUKDW5ld19wYXJl",
-            "bnRfaWQYAiABKAUaIwoNRGVsZXRlRWxlbWVudBISCgplbGVtZW50X2lkGAEg",
-            "ASgFGjMKDUVsZW1TZXRBY3RpdmUSEgoKZWxlbWVudF9pZBgBIAEoBRIOCgZh",
-            "Y3RpdmUYAiABKAgaTgoQRWxlbVNldFRyYW5zZm9ybRISCgplbGVtZW50X2lk",
-            "GAEgASgFEhIKA3BvcxgCIAEoCzIFLlZlYzMSEgoDcm90GAMgASgLMgUuVmVj",
-            "NBpaChJFbGVtQXR0YWNoUmVzb3VyY2USEgoKZWxlbWVudF9pZBgBIAEoBRIT",
-            "CgtyZXNvdXJjZV9pZBgCIAEoBRIbCgRyb2xlGAMgASgOMg0uUmVzb3VyY2VS",
-            "b2xlGj0KEkVsZW1EZXRhY2hSZXNvdXJjZRISCgplbGVtZW50X2lkGAEgASgF",
-            "EhMKC3Jlc291cmNlX2lkGAIgASgFGkMKCkNyZWF0ZUl0ZW0SEgoKZWxlbWVu",
-            "dF9pZBgBIAEoBRITCgtzaGFyZXJfaGFzaBgCIAEoCRIMCgR1dWlkGAMgASgM",
-            "GiAKCkRlbGV0ZUl0ZW0SEgoKZWxlbWVudF9pZBgBIAEoBRoxCgxJdGVtU2V0",
-            "VGl0bGUSEgoKZWxlbWVudF9pZBgBIAEoBRINCgV0aXRsZRgCIAEoCRo2CgtJ",
-            "dGVtU2V0SWNvbhISCgplbGVtZW50X2lkGAEgASgFEhMKC3Jlc291cmNlX2lk",
-            "GAIgASgFGjMKDUl0ZW1TZXRBY3RpdmUSEgoKZWxlbWVudF9pZBgBIAEoBRIO",
-            "CgZhY3RpdmUYAiABKAgaMgoJSXRlbUFsZXJ0EhIKCmVsZW1lbnRfaWQYASAB",
-            "KAUSEQoJYWxlcnRfbXNnGAIgASgJGlEKEk9wZW5TdGF0aWNSZXNvdXJjZRIT",
-            "CgtyZXNvdXJjZV9pZBgBIAEoBRITCgRtaW1lGAIgASgOMgUuTUlNRRIRCglm",
-            "aWxlX25hbWUYAyABKAkacAoXQ3JlYXRlQ29tcG9zaXRlUmVzb3VyY2USEwoL",
-            "cmVzb3VyY2VfaWQYASABKAUSGAoQYmFzZV9yZXNvdXJjZV9pZBgCIAEoBRIm",
-            "Cgpjb21wb25lbnRzGAMgAygLMhIuUmVzb3VyY2VDb21wb25lbnQaJAoNQ2xv",
-            "c2VSZXNvdXJjZRITCgtyZXNvdXJjZV9pZBgBIAEoBRofCgpNZW1iZXJJbmZv",
-            "EhEKCXBlZXJfaGFzaBgBIAEoCRokChBNZW1iZXJTZXRQcm9maWxlEhAKCGlt",
-            "YWdlX2lkGAEgASgFGiAKC01lbWJlckxlYXZlEhEKCXBlZXJfaGFzaBgBIAEo",
-            "CRotCglMb2NhbEluZm8SDAoEYXVybBgBIAEoCRISCgpsb2NhbF9oYXNoGAIg",
-            "ASgJGmcKEUluZm9Db250ZW50U2hhcmVkEhQKDGNvbnRlbnRfdXVpZBgBIAEo",
-            "CRITCgtjb250ZW50X3VybBgCIAEoCRITCgtzaGFyZXJfaGFzaBgDIAEoCRIS",
-            "Cgp3b3JsZF91dWlkGAQgASgJGlMKEkluZm9Db250ZW50RGVsZXRlZBIUCgxj",
-            "b250ZW50X3V1aWQYASABKAkSEwoLc2hhcmVyX2hhc2gYAyABKAkSEgoKd29y",
-            "bGRfdXVpZBgEIAEoCUIHCgVpbm5lckIPqgIMQWJ5c3NDTEkuQUJJYgZwcm90",
-            "bzM="));
+            "SAAaHAoMQ29uc29sZVByaW50EgwKBHRleHQYASABKAkaUAoNQ3JlYXRlRWxl",
+            "bWVudBIRCglwYXJlbnRfaWQYASABKAUSEgoKZWxlbWVudF9pZBgCIAEoBRIY",
+            "CgN0YWcYAyABKA4yCy5FbGVtZW50VGFnGjgKC01vdmVFbGVtZW50EhIKCmVs",
+            "ZW1lbnRfaWQYASABKAUSFQoNbmV3X3BhcmVudF9pZBgCIAEoBRojCg1EZWxl",
+            "dGVFbGVtZW50EhIKCmVsZW1lbnRfaWQYASABKAUaMwoNRWxlbVNldEFjdGl2",
+            "ZRISCgplbGVtZW50X2lkGAEgASgFEg4KBmFjdGl2ZRgCIAEoCBpOChBFbGVt",
+            "U2V0VHJhbnNmb3JtEhIKCmVsZW1lbnRfaWQYASABKAUSEgoDcG9zGAIgASgL",
+            "MgUuVmVjMxISCgNyb3QYAyABKAsyBS5WZWM0GloKEkVsZW1BdHRhY2hSZXNv",
+            "dXJjZRISCgplbGVtZW50X2lkGAEgASgFEhMKC3Jlc291cmNlX2lkGAIgASgF",
+            "EhsKBHJvbGUYAyABKA4yDS5SZXNvdXJjZVJvbGUaPQoSRWxlbURldGFjaFJl",
+            "c291cmNlEhIKCmVsZW1lbnRfaWQYASABKAUSEwoLcmVzb3VyY2VfaWQYAiAB",
+            "KAUaQwoKQ3JlYXRlSXRlbRISCgplbGVtZW50X2lkGAEgASgFEhMKC3NoYXJl",
+            "cl9oYXNoGAIgASgJEgwKBHV1aWQYAyABKAwaIAoKRGVsZXRlSXRlbRISCgpl",
+            "bGVtZW50X2lkGAEgASgFGjEKDEl0ZW1TZXRUaXRsZRISCgplbGVtZW50X2lk",
+            "GAEgASgFEg0KBXRpdGxlGAIgASgJGjYKC0l0ZW1TZXRJY29uEhIKCmVsZW1l",
+            "bnRfaWQYASABKAUSEwoLcmVzb3VyY2VfaWQYAiABKAUaMwoNSXRlbVNldEFj",
+            "dGl2ZRISCgplbGVtZW50X2lkGAEgASgFEg4KBmFjdGl2ZRgCIAEoCBoyCglJ",
+            "dGVtQWxlcnQSEgoKZWxlbWVudF9pZBgBIAEoBRIRCglhbGVydF9tc2cYAiAB",
+            "KAkaUQoST3BlblN0YXRpY1Jlc291cmNlEhMKC3Jlc291cmNlX2lkGAEgASgF",
+            "EhMKBG1pbWUYAiABKA4yBS5NSU1FEhEKCWZpbGVfbmFtZRgDIAEoCRpwChdD",
+            "cmVhdGVDb21wb3NpdGVSZXNvdXJjZRITCgtyZXNvdXJjZV9pZBgBIAEoBRIY",
+            "ChBiYXNlX3Jlc291cmNlX2lkGAIgASgFEiYKCmNvbXBvbmVudHMYAyADKAsy",
+            "Ei5SZXNvdXJjZUNvbXBvbmVudBokCg1DbG9zZVJlc291cmNlEhMKC3Jlc291",
+            "cmNlX2lkGAEgASgFGh8KCk1lbWJlckluZm8SEQoJcGVlcl9oYXNoGAEgASgJ",
+            "GiQKEE1lbWJlclNldFByb2ZpbGUSEAoIaW1hZ2VfaWQYASABKAUaIAoLTWVt",
+            "YmVyTGVhdmUSEQoJcGVlcl9oYXNoGAEgASgJGi0KCUxvY2FsSW5mbxIMCgRh",
+            "dXJsGAEgASgJEhIKCmxvY2FsX2hhc2gYAiABKAkaZwoRSW5mb0NvbnRlbnRT",
+            "aGFyZWQSFAoMY29udGVudF91dWlkGAEgASgJEhMKC2NvbnRlbnRfdXJsGAIg",
+            "ASgJEhMKC3NoYXJlcl9oYXNoGAMgASgJEhIKCndvcmxkX3V1aWQYBCABKAka",
+            "UwoSSW5mb0NvbnRlbnREZWxldGVkEhQKDGNvbnRlbnRfdXVpZBgBIAEoCRIT",
+            "CgtzaGFyZXJfaGFzaBgDIAEoCRISCgp3b3JsZF91dWlkGAQgASgJQgcKBWlu",
+            "bmVyQg+qAgxBYnlzc0NMSS5BQkliBnByb3RvMw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::MimeReflection.Descriptor, global::ResourceRoleReflection.Descriptor, global::AbyssCLI.ABI.CommontypeReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
             new pbr::GeneratedClrTypeInfo(typeof(global::AbyssCLI.ABI.ResourceComponent), global::AbyssCLI.ABI.ResourceComponent.Parser, new[]{ "ResourceId", "Role" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::AbyssCLI.ABI.RenderAction), global::AbyssCLI.ABI.RenderAction.Parser, new[]{ "ConsolePrint", "CreateElement", "MoveElement", "DeleteElement", "ElemSetActive", "ElemSetTransform", "ElemAttachResource", "ElemDetachResource", "CreateItem", "DeleteItem", "ItemSetTitle", "ItemSetIcon", "ItemSetActive", "ItemAlert", "OpenStaticResource", "CreateCompositeResource", "CloseResource", "MemberInfo", "MemberLeave", "MemberSetProfile", "LocalInfo", "InfoContentShared", "InfoContentDeleted" }, new[]{ "Inner" }, null, null, new pbr::GeneratedClrTypeInfo[] { new pbr::GeneratedClrTypeInfo(typeof(global::AbyssCLI.ABI.RenderAction.Types.ConsolePrint), global::AbyssCLI.ABI.RenderAction.Types.ConsolePrint.Parser, new[]{ "Text" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::AbyssCLI.ABI.RenderAction.Types.CreateElement), global::AbyssCLI.ABI.RenderAction.Types.CreateElement.Parser, new[]{ "ParentId", "ElementId" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::AbyssCLI.ABI.RenderAction.Types.CreateElement), global::AbyssCLI.ABI.RenderAction.Types.CreateElement.Parser, new[]{ "ParentId", "ElementId", "Tag" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::AbyssCLI.ABI.RenderAction.Types.MoveElement), global::AbyssCLI.ABI.RenderAction.Types.MoveElement.Parser, new[]{ "ElementId", "NewParentId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::AbyssCLI.ABI.RenderAction.Types.DeleteElement), global::AbyssCLI.ABI.RenderAction.Types.DeleteElement.Parser, new[]{ "ElementId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::AbyssCLI.ABI.RenderAction.Types.ElemSetActive), global::AbyssCLI.ABI.RenderAction.Types.ElemSetActive.Parser, new[]{ "ElementId", "Active" }, null, null, null, null),
@@ -2011,6 +2011,7 @@ namespace AbyssCLI.ABI {
         public CreateElement(CreateElement other) : this() {
           parentId_ = other.parentId_;
           elementId_ = other.elementId_;
+          tag_ = other.tag_;
           _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
         }
 
@@ -2044,6 +2045,18 @@ namespace AbyssCLI.ABI {
           }
         }
 
+        /// <summary>Field number for the "tag" field.</summary>
+        public const int TagFieldNumber = 3;
+        private global::ElementTag tag_ = global::ElementTag.O;
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+        public global::ElementTag Tag {
+          get { return tag_; }
+          set {
+            tag_ = value;
+          }
+        }
+
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
         [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public override bool Equals(object other) {
@@ -2061,6 +2074,7 @@ namespace AbyssCLI.ABI {
           }
           if (ParentId != other.ParentId) return false;
           if (ElementId != other.ElementId) return false;
+          if (Tag != other.Tag) return false;
           return Equals(_unknownFields, other._unknownFields);
         }
 
@@ -2070,6 +2084,7 @@ namespace AbyssCLI.ABI {
           int hash = 1;
           if (ParentId != 0) hash ^= ParentId.GetHashCode();
           if (ElementId != 0) hash ^= ElementId.GetHashCode();
+          if (Tag != global::ElementTag.O) hash ^= Tag.GetHashCode();
           if (_unknownFields != null) {
             hash ^= _unknownFields.GetHashCode();
           }
@@ -2096,6 +2111,10 @@ namespace AbyssCLI.ABI {
             output.WriteRawTag(16);
             output.WriteInt32(ElementId);
           }
+          if (Tag != global::ElementTag.O) {
+            output.WriteRawTag(24);
+            output.WriteEnum((int) Tag);
+          }
           if (_unknownFields != null) {
             _unknownFields.WriteTo(output);
           }
@@ -2114,6 +2133,10 @@ namespace AbyssCLI.ABI {
             output.WriteRawTag(16);
             output.WriteInt32(ElementId);
           }
+          if (Tag != global::ElementTag.O) {
+            output.WriteRawTag(24);
+            output.WriteEnum((int) Tag);
+          }
           if (_unknownFields != null) {
             _unknownFields.WriteTo(ref output);
           }
@@ -2129,6 +2152,9 @@ namespace AbyssCLI.ABI {
           }
           if (ElementId != 0) {
             size += 1 + pb::CodedOutputStream.ComputeInt32Size(ElementId);
+          }
+          if (Tag != global::ElementTag.O) {
+            size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) Tag);
           }
           if (_unknownFields != null) {
             size += _unknownFields.CalculateSize();
@@ -2147,6 +2173,9 @@ namespace AbyssCLI.ABI {
           }
           if (other.ElementId != 0) {
             ElementId = other.ElementId;
+          }
+          if (other.Tag != global::ElementTag.O) {
+            Tag = other.Tag;
           }
           _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
         }
@@ -2175,6 +2204,10 @@ namespace AbyssCLI.ABI {
                 ElementId = input.ReadInt32();
                 break;
               }
+              case 24: {
+                Tag = (global::ElementTag) input.ReadEnum();
+                break;
+              }
             }
           }
         #endif
@@ -2200,6 +2233,10 @@ namespace AbyssCLI.ABI {
               }
               case 16: {
                 ElementId = input.ReadInt32();
+                break;
+              }
+              case 24: {
+                Tag = (global::ElementTag) input.ReadEnum();
                 break;
               }
             }

@@ -134,9 +134,11 @@ function __aml_elem_dtor_reg(target, heldValue) {
     {
         //Client.Client.RenderWriter.ConsolePrint("++JsEngine claims an element handle: " + element.ElementId);
         element.RefCount++;
-        JavaScriptAPI.Transform result = element switch
+        JavaScriptAPI.Element result = element switch
         {
             AML.Body body => new JavaScriptAPI.Body(this, body),
+            AML.StaticMesh static_mesh => new JavaScriptAPI.StaticMesh(this, static_mesh),
+            AML.PbrMaterial pbr_material => new JavaScriptAPI.PbrMaterial(this, pbr_material),
             AML.Transform transform => new JavaScriptAPI.Transform(this, transform),
             _ => throw new NotImplementedException()
         };

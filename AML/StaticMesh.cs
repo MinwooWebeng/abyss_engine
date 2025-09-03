@@ -5,12 +5,9 @@ namespace AbyssCLI.AML;
 #pragma warning disable IDE1006 //naming convension
 public class StaticMesh : Transform
 {
-    private readonly Document _document;
-    public ResourceLink? _mesh = null;
+    public StaticMeshResourceLink? _mesh = null;
     public StaticMesh(Document document, object options) : base(document, "obj", options)
     {
-        _document = document;
-
         if (!Attributes.TryGetValue("src", out string? mesh_src))
             return;
         src = mesh_src;
@@ -25,33 +22,33 @@ public class StaticMesh : Transform
         {
             if (value == null || value.Length == 0)
             {
-                _mesh?.SynchronousCleanup();
+                _mesh?.Dispose();
                 _mesh = null;
                 return;
             }
-            _mesh?.SynchronousCleanup();
-
-            //variable to be captured, shared within this resource link.
-            int resource_id = 0;
-            _mesh = _document.CreateResourceLink(value,
-                (resource) =>
-                {
-                    if (!resource.MIMEType.StartsWith("model"))
-                    {
-                        Client.Client.RenderWriter.ConsolePrint("invalid content type for mesh");
-                        return;
-                    }
-                    resource_id = resource.ResourceID;
-                    Client.Client.RenderWriter.ElemAttachResource(ElementId, resource_id, ResourceRole.Mesh);
-                },
-                (resource) =>
-                {
-                    if (resource_id > 0)
-                        Client.Client.RenderWriter.ElemDetachResource(ElementId, resource_id);
-                }
-            );
+            _mesh?.Dispose();
+            _mesh = new(value, ElementId);
+        }
+    }
+    public class StaticMeshResourceLink(string src, int element_id) : BetterResourceLink(src)
+    {
+        public override void Deploy()
+        {
+            if (Resource == null)
+                return;
+            if (!Resource.MIMEType.StartsWith("model"))
+            {
+                Client.Client.RenderWriter.ConsolePrint("invalid content type for mesh");
+                return;
+            }
+            Client.Client.RenderWriter.ElemAttachResource(element_id, Resource.ResourceID, ResourceRole.Mesh);
+        }
+        public override void Remove()
+        {
+            if (Resource == null)
+                return;
+            Client.Client.RenderWriter.ElemDetachResource(element_id, Resource.ResourceID);
         }
     }
 }
 #pragma warning restore IDE1006 //naming convension
-

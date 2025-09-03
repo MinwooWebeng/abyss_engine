@@ -134,6 +134,7 @@ func GenerateWriterCode(data [][]string, title string) string {
 	}
 
 	return `
+#region Designer generated code
 using Google.Protobuf;
 using System;
 using System.CodeDom.Compiler;
@@ -167,5 +168,6 @@ namespace AbyssCLI.ABI
 		` + strings.Join(methods, "") + `
 	}
 }
+#endregion Designer generated code
 `
 }

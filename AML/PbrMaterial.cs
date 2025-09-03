@@ -2,17 +2,49 @@
 namespace AbyssCLI.AML;
 
 #pragma warning disable IDE1006 //naming convension
-public class PbrMaterial(Document document, object options) : Element(document, "pbrm", options)
+public class PbrMaterial : Element
 {
-    private PbrTextureResourceLink? _albedo = null;
-    private PbrTextureResourceLink? _normal = null;
-    private PbrTextureResourceLink? _roughness = null;
-    private PbrTextureResourceLink? _metalic = null;
-    private PbrTextureResourceLink? _specular = null;
-    private PbrTextureResourceLink? _opacity = null;
-    private PbrTextureResourceLink? _emission = null;
+    private PbrTextureResourceLink? _albedo;
+    private PbrTextureResourceLink? _normal;
+    private PbrTextureResourceLink? _roughness;
+    private PbrTextureResourceLink? _metalic;
+    private PbrTextureResourceLink? _specular;
+    private PbrTextureResourceLink? _opacity;
+    private PbrTextureResourceLink? _emission;
 
-    public override bool IsParentAllowed(Element element) => element is StaticMesh;
+    internal PbrMaterial(Document document, object options) : base(document, "pbrm", options)
+    {
+        if (!Attributes.TryGetValue("albedo", out string? albedo_src))
+            return;
+        albedo = albedo_src;
+
+        if (!Attributes.TryGetValue("normal", out string? normal_src))
+            return;
+        normal = normal_src;
+
+        if (!Attributes.TryGetValue("roughness", out string? roughness_src))
+            return;
+        roughness = roughness_src;
+
+        if (!Attributes.TryGetValue("metalic", out string? metalic_src))
+            return;
+        metalic = metalic_src;
+
+        if (!Attributes.TryGetValue("specular", out string? specular_src))
+            return;
+        specular = specular_src;
+
+        if (!Attributes.TryGetValue("opacity", out string? opacity_src))
+            return;
+        opacity = opacity_src;
+
+        if (!Attributes.TryGetValue("emission", out string? emission_src))
+            return;
+        emission = emission_src;
+    }
+
+    public override bool IsParentAllowed(Element element) =>
+        element is StaticMesh;
     public string? albedo
     {
         get => _albedo?.Src;
@@ -61,7 +93,7 @@ public class PbrMaterial(Document document, object options) : Element(document, 
         if (target != null)
         {
             target.IsRemovalRequired = false;
-            target?.Dispose();
+            target.Dispose();
         }
 
         target = new PbrTextureResourceLink(value, ElementId, role);

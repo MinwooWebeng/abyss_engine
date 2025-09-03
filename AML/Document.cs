@@ -159,7 +159,7 @@ public class Document
             _iconSrc = new(_ui_element_id, value);
         }
     }
-    class DocumentIconResourceLink(int ui_element_id, string src) : BetterResourceLink(src)
+    private class DocumentIconResourceLink(int ui_element_id, string src) : BetterResourceLink(src)
     {
         public override void Deploy()
         {

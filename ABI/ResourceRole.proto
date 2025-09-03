@@ -10,3 +10,9 @@ enum ResourceRole {
 	Opacity = 6;
 	Emission = 7;
 }
+
+enum ElementTag {
+	O = 0;
+	Obj = 1;
+	Pbrm = 2;
+}
