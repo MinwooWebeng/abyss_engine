@@ -1,6 +1,7 @@
 ﻿using AbyssCLI.Cache;
 using AbyssCLI.Tool;
 using Microsoft.ClearScript;
+using Microsoft.ClearScript.JavaScript;
 using Microsoft.ClearScript.V8;
 using System.Collections.Concurrent;
 
@@ -22,14 +23,22 @@ public class JavaScriptDispatcher
     private readonly BlockingCollection<(string, object)> _queue = []; // by default, 100 scripts can be queued at once
     private readonly Thread _thread;
 
+    private readonly JavaScriptAPI.Timer _timer = new();
+    private readonly JavaScriptAPI.FetchApi _fetch;
+
     public JavaScriptDispatcher(V8RuntimeConstraints constraints, Document document, Console console, JavaScriptGcCallback gc_callback)
     {
         _engine = new V8ScriptEngine(constraints, V8ScriptEngineFlags.DisableGlobalMembers);
+        _fetch = new(_engine);
+
         _engine.AddHostType("Vector3", typeof(Vector3));
         _engine.AddHostType("Quaternion", typeof(Quaternion));
 
         _engine.AddHostObject("document", new JavaScriptAPI.Document(this, document));
         _engine.AddHostObject("console", console);
+        _engine.AddHostObject("setTimeout", new Action<ScriptObject, int>(_timer.SetTimeout));
+        _engine.AddHostObject("fetch", new Func<string, ScriptObject, object>(_fetch.FetchAsync));
+        _engine.AddHostObject("sleep", new Func<int, object>(t=>JavaScriptExtensions.ToPromise(Task.Delay(t))));
 
         _engine.AddHostType("Event", typeof(Event.Event));
         _engine.AddHostType("KeyboardEvent", typeof(Event.KeyboardEvent));
@@ -53,9 +62,14 @@ function __aml_elem_dtor_reg(target, heldValue) {
         _queue.TryAdd((filename, entry));
     public void Start(CancellationToken token) =>
         _thread.Start(token);
-    public void Interrupt() => _engine.Interrupt(); // call after token cancellation to kill running script
+    public void Interrupt()
+    {
+        _timer.Interrupt();
+        _engine.Interrupt();
+    }
     public void Join()
     {
+        _timer.Join();
         if (_thread.IsAlive)
             _thread.Join();
         _queue.Dispose();

@@ -18,6 +18,10 @@ public static partial class Client
     {
         AutoFlush = true
     };
+    public static readonly HttpClient HttpClient = new()
+    {
+        Timeout = TimeSpan.FromSeconds(10)
+    };
 
     private static readonly BinaryReader _cin = new(Console.OpenStandardInput());
     private static readonly StreamWriter _cerr = new(Stream.Synchronized(Console.OpenStandardError()))
@@ -27,6 +31,7 @@ public static partial class Client
     private static AbyssLib.SimplePathResolver _resolver;
     private static World _current_world;
     private static readonly object _world_move_lock = new();
+
     public static void CerrWriteLine(string message) => _cerr.WriteLine(message);
 
     public static void Init()
