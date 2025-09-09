@@ -1,6 +1,7 @@
 ﻿using AbyssCLI.Cache;
 using AbyssCLI.Tool;
 using Microsoft.ClearScript.V8;
+using System.Text;
 
 namespace AbyssCLI.AML;
 
@@ -236,6 +237,23 @@ public class Document
         default:
             throw new Exception("unknown event: " + event_name);
         }
+    }
+
+    public string GetStatistics(string prefix)
+    {
+        StringBuilder sb = new();
+        _ = sb.AppendLine(prefix + "title: " + title);
+        _ = sb.AppendLine(prefix + "iconSrc: " + (iconSrc ?? "<none>"));
+        _ = sb.AppendLine(prefix + "Metadata:");
+        _ = sb.AppendLine(prefix + "  title: " + Metadata.title);
+        _ = sb.AppendLine(prefix + "  pos: " + Metadata.pos.ToString());
+        _ = sb.AppendLine(prefix + "  rot: " + Metadata.rot.ToString());
+        _ = sb.AppendLine(prefix + "  is_item: " + Metadata.is_item.ToString());
+        _ = sb.AppendLine(prefix + "  sharer_hash: " + Metadata.sharer_hash);
+        _ = sb.AppendLine(prefix + "  uuid: " + Metadata.uuid.ToString());
+        _ = sb.AppendLine(prefix + "ElementLifespanMan:");
+        _elem_lifespan_man.GetStatistics(sb, prefix + "  ");
+        return sb.ToString();
     }
 }
 #pragma warning restore IDE1006 //naming convension

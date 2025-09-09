@@ -34,4 +34,9 @@ public class Document
 
         return _js_dispatcher.MarshalElement(result);
     }
+
+    public void debug_stat()
+    {
+        Client.Client.RenderWriter.ConsolePrint(_origin.GetStatistics(""));
+    }
 }

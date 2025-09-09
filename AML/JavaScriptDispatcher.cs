@@ -4,6 +4,7 @@ using Microsoft.ClearScript;
 using Microsoft.ClearScript.JavaScript;
 using Microsoft.ClearScript.V8;
 using System.Collections.Concurrent;
+using System.Text;
 
 #nullable enable
 namespace AbyssCLI.AML;
@@ -39,6 +40,7 @@ public class JavaScriptDispatcher
         _engine.AddHostObject("setTimeout", new Action<ScriptObject, int>(_timer.SetTimeout));
         _engine.AddHostObject("fetch", new Func<string, ScriptObject, object>(_fetch.FetchAsync));
         _engine.AddHostObject("sleep", new Func<int, object>(t=>JavaScriptExtensions.ToPromise(Task.Delay(t))));
+        _engine.AddHostObject("host", new JavaScriptAPI.Host());
 
         _engine.AddHostType("Event", typeof(Event.Event));
         _engine.AddHostType("KeyboardEvent", typeof(Event.KeyboardEvent));

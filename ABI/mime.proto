@@ -1608,6 +1608,7 @@ MIME_application_yin_xml = 1603;
 MIME_application_zip = 1604;
 MIME_application_zlib = 1605;
 MIME_application_zstd = 1606;
+MIME_application_x_tgif = 1607; // non standard .obj
 
 MIME_audio_1d_interleaved_parityfec = 10000;
 MIME_audio_32kadpcm = 10001;

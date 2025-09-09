@@ -1,4 +1,6 @@
-﻿namespace AbyssCLI.AML;
+﻿using System.Text;
+
+namespace AbyssCLI.AML;
 
 public class ElementLifespanMan(Body body)
 {
@@ -10,6 +12,8 @@ public class ElementLifespanMan(Body body)
     /// Actual disposal of elements can run concurrent to javascript if _all is ConcurrentDictionary, but
     /// CleanupOrphans call must be synchronous to javascript engine.
     /// </summary>
+    
+    //_all does not include body.
     private readonly Dictionary<int, Element> _all = [];
     private HashSet<Element> _isolated = [];
     private readonly Body _body = body;
@@ -109,5 +113,34 @@ public class ElementLifespanMan(Body body)
             RecursiveElementDeleteWithoutCheckingHelper(child);
             child.Dispose();
         }
+    }
+
+    public void GetStatistics(StringBuilder sb, string prefix)
+    {
+        _ = sb.AppendLine($"elements total: {_all.Count}");
+        _ = sb.AppendLine($"isolated root elements: {_isolated.Count}");
+
+        static int count_desc(Element root)
+        {
+            var count = 1;
+            foreach (Element child in root.Children)
+            {
+                count += count_desc(child);
+            }
+            return count;
+        }
+
+        var isolated_desc = 0;
+        foreach (var isolate in _isolated)
+        {
+            isolated_desc += count_desc(isolate);
+        }
+        _ = sb.AppendLine($"isolated total: {isolated_desc}");
+
+        //-1 is for the body; as body is not included in _all.
+        var body_atch_total = count_desc(_body) - 1;
+        _ = sb.AppendLine($"body attached total: {body_atch_total}");
+
+        _ = sb.AppendLine($"corrupted: {_all.Count - isolated_desc - body_atch_total}");
     }
 }

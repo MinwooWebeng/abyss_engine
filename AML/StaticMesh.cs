@@ -36,9 +36,9 @@ public class StaticMesh : Transform
         {
             if (Resource == null)
                 return;
-            if (!Resource.MIMEType.StartsWith("model"))
+            if (!Resource.MIMEType.StartsWith("model") && Resource.MIMEType != "application/x-tgif")
             {
-                Client.Client.RenderWriter.ConsolePrint("invalid content type for mesh");
+                Client.Client.RenderWriter.ConsolePrint("invalid content type for mesh: " + Resource.MIMEType);
                 return;
             }
             Client.Client.RenderWriter.ElemAttachResource(element_id, Resource.ResourceID, ResourceRole.Mesh);

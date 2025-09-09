@@ -73,7 +73,7 @@ public static partial class Client
                     "model/obj" or "image/png" => new Cache.StaticSimpleResource(result),
                     "image/jpeg" => new Cache.StaticResource(result),
                     _ when mime.StartsWith("text/") => new Cache.Text(result),
-                    _ => new Cache.StaticResource(result),
+                    _ => new Cache.StaticSimpleResource(result),
                 });
             }),
             abyst_request => Task.Run(() =>

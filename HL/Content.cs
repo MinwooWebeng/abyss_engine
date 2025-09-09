@@ -32,7 +32,7 @@ internal class Content : ContextedTask
         Document.AddToDeallocStack(new(_document_cache_ref));
 
         Cache.CachedResource doc_resource = await _document_cache_ref.Task.WaitAsync(token);
-        if (doc_resource is not Cache.Text || doc_resource.MIMEType != "text/aml")
+        if (doc_resource is not Cache.Text || !doc_resource.MIMEType.StartsWith("text/")) //relaxed from "text/aml" - for compatibility
         {
             throw new Exception("fatal:::MIME mismatch: " + (doc_resource.MIMEType == "" ? "<unspecified>" : doc_resource.MIMEType));
         }
@@ -62,5 +62,12 @@ internal class Content : ContextedTask
     {
         Document.Join();
         Client.Client.RenderWriter.ConsolePrint("||>closed content(" + _url.ToString() + ")<||"); //debug
+    }
+    public string GetStatistics()
+    {
+        return 
+            $"url: {_url}\n" +
+            $"document: \n" +
+            Document.GetStatistics("  ");
     }
 }

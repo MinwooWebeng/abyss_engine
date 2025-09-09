@@ -118,14 +118,9 @@ public class StaticResource : CachedResource
     }
     public static MIME GetMimeType(string mime_type)
     {
-        return mime_type switch
-        {
-            "model/obj" => MIME.ModelObj,
-            "image/png" => MIME.ImagePng,
-            "image/jpeg" => MIME.ImageJpeg,
-            "image/gif" => MIME.ImageGif,
-            _ => MIME.Invalid
-        };
+        var marsh = string.Join("", mime_type.Split(['/','-']).Select(s => char.ToUpper(s[0]) + s[1..]));
+        _ = Enum.TryParse(typeof(MIME), marsh, out var mime);
+        return (mime as MIME?) ?? MIME.Invalid;
     }
 }
 [StructLayout(LayoutKind.Sequential, Pack = 1)]
