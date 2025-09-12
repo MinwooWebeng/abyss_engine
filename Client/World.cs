@@ -61,7 +61,7 @@ public class World
     {
         var item = new HL.Item(_host.local_aurl.Id, uuid, url,
             new(transform[0], transform[1], transform[2]),
-            new(transform[3], transform[4], transform[5], transform[6]));
+            new(transform[4], transform[5], transform[6], transform[3]));
         item.Start();
 
         lock (_lock)
@@ -179,7 +179,7 @@ public class World
             {
                 var item = new HL.Item(_host.local_aurl.Id, obj.Item1, obj.Item2,
                     new(obj.Item3[0], obj.Item3[1], obj.Item3[2]),
-                    new(obj.Item3[3], obj.Item3[4], obj.Item3[5], obj.Item3[6]));
+                    new(obj.Item3[4], obj.Item3[5], obj.Item3[6], obj.Item3[3]));
                 if (!member.remote_items.TryAdd(obj.Item1, item))
                 {
                     Client.CerrWriteLine("uid collision of objects appended from peer");

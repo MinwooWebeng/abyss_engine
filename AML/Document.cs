@@ -20,7 +20,7 @@ public class Document
     private readonly DeallocStack _dealloc_stack;
     public ElementLifespanMan _elem_lifespan_man;
     private readonly JavaScriptDispatcher _js_dispatcher;
-    public bool IsUiInitialized => _ui_element_id == 0;
+    public bool IsUiInitialized => _ui_element_id != 0;
     public AmlMetadata Metadata
     {
         get;
