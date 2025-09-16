@@ -35,6 +35,17 @@ public class Document
         return _js_dispatcher.MarshalElement(result);
     }
 
+    public void open(string url)
+    {
+        //TODO: open new document
+        //_origin.
+    }
+
+    public void close()
+    {
+        //TODO: close this document
+    }
+
     public void debug_stat()
     {
         Client.Client.RenderWriter.ConsolePrint(_origin.GetStatistics(""));

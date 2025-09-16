@@ -12,26 +12,54 @@ public class FetchApi
     public readonly V8ScriptEngine Engine;
     public FetchApi(V8ScriptEngine engine) => Engine = engine;
 
-    // Fetch the content from a URL
-    public object FetchAsync(string resource, ScriptObject options) => 
-        JavaScriptExtensions.ToPromise(FetchInternalAsync(resource, options), Engine);
-    private Task<Response> FetchInternalAsync(string resource, ScriptObject options)
+    public object? TestVar(params object[] args)
     {
-        var method_raw = options.GetProperty("method");
-        if (method_raw is not string method)
-            method = "GET";
+        return args.Length > 0 ? args[^1] : null;
+    }
 
-        HttpContent? content = null;
-        var body_raw = options.GetProperty("method");
-        if (body_raw is string body)
-            content = new StringContent(body);
+    // Fetch the content from a URL
+    public object FetchAsync(object url, object options) =>
+        JavaScriptExtensions.ToPromise(FetchInternalAsync(url as string ?? string.Empty, options as ScriptObject), Engine);
+    private async Task<Response> FetchInternalAsync(string url, ScriptObject? options)
+    {
+        Client.Client.RenderWriter.ConsolePrint("wtf: fetch " + url);
 
-        return method switch
+        string method = "GET";
+        if (options != null)
         {
-            "GET" => Client.Client.HttpClient.GetAsync(resource).ContinueWith(t => new Response(this, t.Result)),
-            "POST" => Client.Client.HttpClient.PostAsync(resource, content ?? new StringContent("")).ContinueWith(t => new Response(this, t.Result)),
-            _ => throw new Exception("not supported request method"),
-        };
+            var method_provided = options.GetProperty("method");
+            if (method_provided is string method_provided_str)
+                method = method_provided_str;
+        }
+
+        Client.Client.RenderWriter.ConsolePrint("wtf: fetch " + method);
+
+        switch (method)
+        {
+        case "GET":
+        {
+            var response = await Client.Client.HttpClient.GetAsync(url);
+            return new Response(this, response);
+        }
+        case "POST":
+        {
+            HttpContent content;
+            var body_raw = options?.GetProperty("body");
+            if (body_raw is string body)
+            {
+                content = new StringContent(body);
+            }
+            else
+            {
+                content = new StringContent("");
+            }
+
+            var response = await Client.Client.HttpClient.PostAsync(url, content);
+            return new Response(this, response);
+        }
+        default:
+            throw new Exception("unsupported http method");
+        }
     }
 }
 

@@ -38,7 +38,8 @@ public class JavaScriptDispatcher
         _engine.AddHostObject("document", new JavaScriptAPI.Document(this, document));
         _engine.AddHostObject("console", console);
         _engine.AddHostObject("setTimeout", new Action<ScriptObject, int>(_timer.SetTimeout));
-        _engine.AddHostObject("fetch", new Func<string, ScriptObject, object>(_fetch.FetchAsync));
+        _engine.AddHostObject("fetch", new Func<object, object, object>((a, b) =>_fetch.FetchAsync(a, b)));
+        _engine.AddHostObject("testar", new Func<object, object, object?>((a, b)=> _fetch.TestVar(a, b)));
         _engine.AddHostObject("sleep", new Func<int, object>(t=>JavaScriptExtensions.ToPromise(Task.Delay(t))));
         _engine.AddHostObject("host", new JavaScriptAPI.Host());
 
