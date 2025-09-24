@@ -15,7 +15,6 @@ namespace AbyssCLI.AML;
 /// </summary>
 public class Document
 {
-    private readonly ContextedTask _root_context;
     private int _ui_element_id = 0;
     private readonly DeallocStack _dealloc_stack;
     public ElementLifespanMan _elem_lifespan_man;
@@ -27,9 +26,8 @@ public class Document
     }
 
     //document constructor must not allocate any resource that needs to be deallocated.
-    public Document(ContextedTask root_context, AmlMetadata metadata)
+    public Document(AmlMetadata metadata)
     {
-        _root_context = root_context;
         Metadata = metadata;
         _dealloc_stack = new();
         head = new();
@@ -69,19 +67,11 @@ public class Document
         _dealloc_stack.Add(entry);
 
     /// <summary>
-    /// CreateResourceLink creates ResourceLink rooted on this content.
-    /// All ResourceLink variabls in this content must be generated here.
+    /// This starts JavaScriptDispatcher to push scripts
+    /// If token cancels, no more scripts are added to engine, but engine keeps running.
+    /// TODO: make JavaScriptDispatcher Disposal straightforward
     /// </summary>
-    /// <param name="src"></param>
-    /// <param name="async_deploy_action"></param>
-    /// <param name="async_remove_action"></param>
-    /// <returns></returns>
-    public ResourceLink CreateResourceLink(string src,
-        Action<CachedResource> async_deploy_action,
-        Action<CachedResource> async_remove_action
-    ) => new(_root_context, _dealloc_stack, src,
-        async_deploy_action, async_remove_action);
-
+    /// <param name="token"></param>
     public void StartJavaScript(CancellationToken token) =>
         _js_dispatcher.Start(token);
 

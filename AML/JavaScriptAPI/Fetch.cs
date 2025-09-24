@@ -12,28 +12,13 @@ public class FetchApi
     public readonly V8ScriptEngine Engine;
     public FetchApi(V8ScriptEngine engine) => Engine = engine;
 
-    public object? TestVar(params object[] args)
-    {
-        return args.Length > 0 ? args[^1] : null;
-    }
-
     // Fetch the content from a URL
-    public object FetchAsync(object url, object options) =>
+    public object FetchAsync(object? url, object? options) =>
         JavaScriptExtensions.ToPromise(FetchInternalAsync(url as string ?? string.Empty, options as ScriptObject), Engine);
     private async Task<Response> FetchInternalAsync(string url, ScriptObject? options)
     {
-        Client.Client.RenderWriter.ConsolePrint("wtf: fetch " + url);
-
-        string method = "GET";
-        if (options != null)
-        {
-            var method_provided = options.GetProperty("method");
-            if (method_provided is string method_provided_str)
-                method = method_provided_str;
-        }
-
-        Client.Client.RenderWriter.ConsolePrint("wtf: fetch " + method);
-
+        //Client.Client.RenderWriter.ConsolePrint("fetch called, option: " + options?.ToString());
+        string method = options == null ? "GET" : options.GetProperty("method") as string ?? "GET";
         switch (method)
         {
         case "GET":

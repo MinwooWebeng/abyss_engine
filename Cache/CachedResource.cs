@@ -2,6 +2,10 @@
 
 namespace AbyssCLI.Cache;
 
+/// <summary>
+/// ***caution*** do not Dispose() CachedResource outside Cache.
+/// </summary>
+/// <param name="http_response"></param>
 public class CachedResource(HttpResponseMessage http_response) : IDisposable
 {
     protected HttpResponseMessage _http_response = http_response;

@@ -92,7 +92,6 @@ public static partial class Client
         }
         AbyssLib.World net_world = Host.OpenWorld(default_world_url_raw);
         _current_world = new World(Host, net_world, default_world_url);
-        _current_world.Start();
         if (!_resolver.TrySetMapping("", net_world.world_id).Empty)
             throw new Exception("faild to set path for initial world at default path");
     }

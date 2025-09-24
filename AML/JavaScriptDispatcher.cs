@@ -38,8 +38,7 @@ public class JavaScriptDispatcher
         _engine.AddHostObject("document", new JavaScriptAPI.Document(this, document));
         _engine.AddHostObject("console", console);
         _engine.AddHostObject("setTimeout", new Action<ScriptObject, int>(_timer.SetTimeout));
-        _engine.AddHostObject("fetch", new Func<object, object, object>((a, b) =>_fetch.FetchAsync(a, b)));
-        _engine.AddHostObject("testar", new Func<object, object, object?>((a, b)=> _fetch.TestVar(a, b)));
+        _engine.AddHostObject("__fetch_api", _fetch);
         _engine.AddHostObject("sleep", new Func<int, object>(t=>JavaScriptExtensions.ToPromise(Task.Delay(t))));
         _engine.AddHostObject("host", new JavaScriptAPI.Host());
 
@@ -56,6 +55,8 @@ function __aml_elem_dtor_reg(target, heldValue) {
     __aml_elem_finreg.register(target, heldValue);
     return target;
 }
+
+const fetch = (a, b) => __fetch_api.FetchAsync(a, b)
 "
         );
 
@@ -126,6 +127,7 @@ function __aml_elem_dtor_reg(target, heldValue) {
             //Client.Client.RenderWriter.ConsolePrint("JsDispatcher: running " + file_name);
             if (script_resource is not Cache.Text)
             {
+                Client.Client.CerrWriteLine(script_resource.MIMEType);
                 Client.Client.CerrWriteLine("invalid javascript resource");
                 return;
             }

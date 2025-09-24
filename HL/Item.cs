@@ -8,8 +8,7 @@ internal class Item
     public readonly string _sharer_hash;
     public readonly Guid _uuid;
     public readonly AbyssURL _url;
-    private readonly ContextedTask.ContextedTaskRoot _ct_root = new();
-    public readonly HL.Content _content;
+    public readonly HL.ContentB _content;
 
     public Item(string sharer_hash, Guid uuid, AbyssURL URL, Vector3 spawn_pos, Quaternion spawn_rot)
     {
@@ -26,7 +25,6 @@ internal class Item
             uuid = uuid
         });
     }
-    public void Start() => _ct_root.Attach(_content);
 
-    public void Stop() => _content.Stop();
+    public void Stop() => _content.Dispose();
 }

@@ -7,8 +7,7 @@ public class World
 {
     private readonly AbyssLib.Host _host;
     private readonly AbyssLib.World _world;
-    private readonly ContextedTask.ContextedTaskRoot _ct_root = new();
-    internal readonly HL.Content _environment;
+    internal readonly HL.ContentB _environment;
     private readonly Dictionary<string, HL.Member> _members = []; //peer hash - [uuid - item]
     private readonly Dictionary<Guid, HL.Item> _local_items = []; //UUID - item
     private readonly object _lock = new();
@@ -49,11 +48,6 @@ public class World
                 }
             }
         });
-    }
-
-    public void Start()
-    {
-        _ct_root.Attach(_environment);
         _world_th.Start();
     }
 
@@ -62,7 +56,6 @@ public class World
         var item = new HL.Item(_host.local_aurl.Id, uuid, url,
             new(transform[0], transform[1], transform[2]),
             new(transform[4], transform[5], transform[6], transform[3]));
-        item.Start();
 
         lock (_lock)
         {
@@ -90,8 +83,7 @@ public class World
 
     public void Leave()
     {
-        _environment.Stop();
-        _environment.Join();
+        _environment.Dispose();
         if (_world.Leave() != 0)
         {
             Client.CerrWriteLine("failed to leave world");
