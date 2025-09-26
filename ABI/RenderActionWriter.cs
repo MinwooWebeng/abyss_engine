@@ -425,6 +425,36 @@ namespace AbyssCLI.ABI
 			
 			Write(action);
 		}
+		public void DebugEnter
+		(
+			string msg
+		)
+		{
+			var action = new RenderAction
+			{
+				DebugEnter = new()
+				{
+					Msg = msg
+				}
+			};
+			
+			Write(action);
+		}
+		public void DebugLeave
+		(
+			string msg
+		)
+		{
+			var action = new RenderAction
+			{
+				DebugLeave = new()
+				{
+					Msg = msg
+				}
+			};
+			
+			Write(action);
+		}
 	}
 }
 #endregion Designer generated code

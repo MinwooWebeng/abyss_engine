@@ -15,7 +15,9 @@ public abstract class BetterResourceLink : IDisposable
         Src = src;
         _inner_task = Task.Run(async () =>
         {
+            Client.Client.RenderWriter.DebugEnter("brl inner");
             using TaskCompletionReference<Cache.CachedResource> cache_rsc_ref = Client.Client.Cache.GetReference(src);
+            Client.Client.RenderWriter.DebugLeave("brl inner");
 
             if (await Task.WhenAny(cache_rsc_ref.Task, _tcs.Task)
             is not Task<Cache.CachedResource> resource_task) //cancelled

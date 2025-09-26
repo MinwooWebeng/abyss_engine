@@ -84,7 +84,8 @@ public static partial class Client
         );
         CachedResourceWorker.Start();
 
-        string default_world_url_raw = "abyst:" + Host.local_aurl.Id;
+        //string default_world_url_raw = "abyst:" + Host.local_aurl.Id;
+        string default_world_url_raw = "http://127.0.0.1:7777/";
         if (!AbyssURLParser.TryParse(default_world_url_raw, out AbyssURL default_world_url))
         {
             CerrWriteLine("default world url parsing failed");

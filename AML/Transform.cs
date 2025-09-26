@@ -6,7 +6,7 @@ namespace AbyssCLI.AML;
 public class Transform : Element
 {
     public (Vector3, Quaternion) _transform = (new(), new()); //TODO: dynamic transform
-    public Transform(Document document, string tag, object options) : base(document, tag, options)
+    public Transform(Document document, string tag, object? options) : base(document, tag, options)
     {
         //apply attributes
         foreach (KeyValuePair<string, string> entry in Attributes)

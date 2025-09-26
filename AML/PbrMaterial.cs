@@ -12,7 +12,7 @@ public class PbrMaterial : Element
     private PbrTextureResourceLink? _opacity;
     private PbrTextureResourceLink? _emission;
 
-    internal PbrMaterial(Document document, object options) : base(document, "pbrm", options)
+    internal PbrMaterial(Document document, object? options) : base(document, "pbrm", options)
     {
         if (!Attributes.TryGetValue("albedo", out string? albedo_src))
             return;

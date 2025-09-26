@@ -128,6 +128,13 @@ message RenderAction {
 		string world_uuid = 4;
 	}
 
+	message DebugEnter {
+		string msg = 1;
+	}
+	message DebugLeave {
+		string msg = 1;
+	}
+
 	oneof inner {
 		ConsolePrint console_print = 100;
 
@@ -157,5 +164,8 @@ message RenderAction {
 		LocalInfo local_info = 600;
 		InfoContentShared info_content_shared = 601;
 		InfoContentDeleted info_content_deleted = 602;
+
+		DebugEnter debug_enter = 700;
+		DebugEnter debug_leave = 701;
 	}
 }

@@ -37,13 +37,17 @@ public class Document
         _js_dispatcher = new(js_engine_constraints, this, new Console(), new(_elem_lifespan_man));
         _title = string.Empty;
     }
+    /// <summary>
+    /// Prepares DOM and UI
+    /// </summary>
     public void Init()
     {
         body.setTransformAsValues(Metadata.pos, Metadata.rot);
-        title = Metadata.title;
+        body.Init();
 
         if (Metadata.is_item)
             InitUI();
+        title = Metadata.title;
     }
     private void InitUI()
     {
@@ -170,7 +174,7 @@ public class Document
         public override void Remove() =>
             Client.Client.RenderWriter.ItemSetIcon(ui_element_id, 0);
     }
-    public Element createElement(string tag, dynamic options)
+    public Element createElement(string tag, object? options)
     {
         Element result = tag switch
         {

@@ -24,7 +24,7 @@ public class Document
         set => _origin.iconSrc = value;
     }
     public object body => _js_dispatcher.MarshalElement(_origin.body)!;
-    public object createElement(string tag, dynamic options) =>
+    public object createElement(string tag, object? options) =>
         _js_dispatcher.MarshalElement(_origin.createElement(tag, options));
     public object? getElementById(string id)
     {

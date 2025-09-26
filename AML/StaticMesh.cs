@@ -6,7 +6,7 @@ namespace AbyssCLI.AML;
 public class StaticMesh : Transform
 {
     public StaticMeshResourceLink? _mesh = null;
-    public StaticMesh(Document document, object options) : base(document, "obj", options)
+    public StaticMesh(Document document, object? options) : base(document, "obj", options)
     {
         if (!Attributes.TryGetValue("src", out string? mesh_src))
             return;
@@ -20,13 +20,12 @@ public class StaticMesh : Transform
         get => _mesh?.Src;
         set
         {
+            _mesh?.Dispose();
             if (value == null || value.Length == 0)
             {
-                _mesh?.Dispose();
                 _mesh = null;
                 return;
             }
-            _mesh?.Dispose();
             _mesh = new(value, ElementId);
         }
     }

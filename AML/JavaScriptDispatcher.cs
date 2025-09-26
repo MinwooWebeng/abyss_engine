@@ -163,9 +163,11 @@ const fetch = (a, b) => __fetch_api.FetchAsync(a, b)
         };
         return _engine.Script.__aml_elem_dtor_reg(result, element.ElementId);
     }
-    public object[] MarshalElementArray(List<AML.Element> elements)
+    public object MarshalElementArray(List<AML.Element> elements)
     {
-        return elements.Select(MarshalElement)
-           .ToArray()!;
+        dynamic jsArray = _engine.Evaluate("[]");
+        foreach (var v in elements)
+            jsArray.push(v);
+        return jsArray;
     }
 }

@@ -15,7 +15,7 @@ public class Element : IDisposable
     public Element? Parent;
     public readonly List<Element> Children = [];
     public bool IsDeleteElementRequired = false; // this can be set to false when its parent is deleted in rendering engine.
-    public Element(Document document, string tag, object options)
+    public Element(Document document, string tag, object? options)
     {
         _document = document;
         RefCount = 0;
@@ -31,7 +31,7 @@ public class Element : IDisposable
         tagName = tag;
         if (options is ScriptObject optionsObj)
         {
-            foreach (string? prop in optionsObj.PropertyNames)
+            foreach (string prop in optionsObj.PropertyNames)
             {
                 string? value = optionsObj.GetProperty(prop)?.ToString();
                 if (value != null)

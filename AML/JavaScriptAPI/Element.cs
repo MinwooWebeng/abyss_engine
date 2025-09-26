@@ -13,7 +13,7 @@ public class Element
     }
 
     public override string ToString() => "[object AML" + GetType().Name + "]";
-    public object[] children => _js_dispatcher.MarshalElementArray(_origin.Children);
+    public object children => _js_dispatcher.MarshalElementArray(_origin.Children);
     public void setActive(bool active) => _origin.setActive(active);
     public object appendChild(Element child) => _origin.appendChild(child._origin);
     public void remove() => _origin.remove();
