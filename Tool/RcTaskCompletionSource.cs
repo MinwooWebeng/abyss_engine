@@ -8,7 +8,7 @@ public class RcTaskCompletionSource<TResult>() : IDisposable where TResult : IDi
     /// After TryClose succeedes, this may be disposed.
     /// Before disposing, result must be setted. Call TrySetResult().
     /// </summary>
-    private readonly TaskCompletionSource<TResult> _inner = new();
+    private readonly TaskCompletionSource<TResult> _inner = new(TaskCreationOptions.RunContinuationsAsynchronously);
     private int _count = 0; //if this is -1, it is closed.
     private DateTime _last_access = DateTime.Now;
     public bool TryGetLastAccess(out DateTime last_access) //returns false if occupied

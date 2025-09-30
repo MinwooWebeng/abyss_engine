@@ -1,9 +1,17 @@
 ﻿using AbyssCLI.ABI;
+using System.Collections.Concurrent;
+using System.Threading.Channels;
 
 namespace AbyssCLI.Client;
 
 public partial class Client
 {
+    private static readonly Channel<UIAction> _HL_Action_Channel = Channel.CreateUnbounded<UIAction>(new UnboundedChannelOptions
+    {
+        SingleReader = true,
+        SingleWriter = false
+    });
+
     private static UIAction ReadProtoMessage()
     {
         int length = _cin.ReadInt32();
@@ -15,9 +23,21 @@ public partial class Client
         return UIAction.Parser.ParseFrom(data);
     }
 
-    private static bool UIActionHandle()
+    public static async Task IssueMoveWorldInternalRequest(string world_url)
     {
-        UIAction message = ReadProtoMessage();
+        var message = new UIAction()
+        {
+            MoveWorld = new()
+            {
+                WorldUrl = world_url
+            }
+        };
+        await _HL_Action_Channel.Writer.WriteAsync(message);
+    }
+
+    private static async Task<bool> UIActionHandle()
+    {
+        UIAction message = await _HL_Action_Channel.Reader.ReadAsync();
         switch (message.InnerCase)
         {
         case UIAction.InnerOneofCase.Kill:
@@ -42,9 +62,22 @@ public partial class Client
         }
     }
 
-    public static void Start()
+    public static async Task Run()
     {
-        while (UIActionHandle())
+        _=Task.Run(async () =>
+        {
+            while (true)
+            {
+                var message = ReadProtoMessage();
+                await _HL_Action_Channel.Writer.WriteAsync(message);
+                if (message.InnerCase == UIAction.InnerOneofCase.Kill)
+                {
+                    break;
+                }
+            }
+        });
+
+        while (await UIActionHandle())
         {
         }
     }

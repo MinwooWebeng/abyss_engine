@@ -37,8 +37,13 @@ public class Cache(Action<HttpRequestMessage> http_requester, Action<AbystReques
         {
             if (_inner.TryGetValue(key, out RcTaskCompletionSource<CachedResource> entry))
             {
+                Client.Client.RenderWriter.DebugEnter("patch A");
                 if (entry.TrySetResult(value))
+                {
+                    Client.Client.RenderWriter.DebugLeave("patch A");
                     return;
+                }
+                Client.Client.RenderWriter.DebugLeave("patch A");
 
                 // we are updating.
                 _ = _inner.Remove(key);
@@ -54,13 +59,14 @@ public class Cache(Action<HttpRequestMessage> http_requester, Action<AbystReques
     {
         (object requestMessage, string normalized_key) = InterpreURIText(uri);
 
-        lock (_inner)
+        lock (_inner) //not releasing
         {
             if (_inner.TryGetValue(normalized_key, out RcTaskCompletionSource<CachedResource> entry))
             {
                 _ = entry.TryGetReference(out TaskCompletionReference<CachedResource> reference);
                 return reference;
             }
+
             RcTaskCompletionSource<CachedResource> new_entry = new();
             _ = new_entry.TryGetReference(out TaskCompletionReference<CachedResource> new_reference);
             _inner.Add(normalized_key, new_entry);

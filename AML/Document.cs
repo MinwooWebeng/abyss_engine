@@ -58,7 +58,6 @@ public class Document
             Metadata.sharer_hash,
             Google.Protobuf.ByteString.CopyFrom(Metadata.uuid.ToByteArray())
         );
-        _dealloc_stack.Add(new(_ui_element_id, DeallocEntry.EDeallocType.RendererUiItem));
     }
 
     /// <summary>

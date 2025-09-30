@@ -18,39 +18,40 @@ internal class ContentB : IDisposable
         //TODO: properly handle all exceptions from content task.
         _content_task = Task.Run(async() =>
         {
+            Document.Init();
+            using var _document_cache_ref = Client.Client.Cache.GetReference(_url.ToString());
+
+            Cache.CachedResource? doc_resource;
             try
             {
-                Document.Init();
-                using var _document_cache_ref = Client.Client.Cache.GetReference(_url.ToString());
-                var doc_resource = await _document_cache_ref.Task.WaitAsync(_cts.Token);
-                if (doc_resource is not Cache.Text doc_text) //relaxed from text/aml, Cache.Text allows text/* - for compatibility
-                {
-                    throw new Exception("fatal:::MIME mismatch: " + (doc_resource.MIMEType == "" ? "<unspecified>" : doc_resource.MIMEType));
-                }
-                string raw_document = await doc_text.ReadAsync(_cts.Token);
-
-                ParseUtil.ParseAMLDocument(Document, raw_document, _cts.Token);
-                Document.StartJavaScript(_cts.Token);
-
-                while (true)
-                { //temporary: fixed duration cleanup
-                    try
-                    {
-                        await Task.Delay(1000, _cts.Token);
-                    }
-                    catch
-                    {
-                        break;
-                    }
-                    Document.ScheduleOphanedElementCleanup();
-                }
-
-                Document.Interrupt();
-                Document.Join();
+                doc_resource = await _document_cache_ref.Task.WaitAsync(_cts.Token);
             }
-            catch (Exception ex)
+            catch
             {
-                Client.Client.RenderWriter.ConsolePrint("content throw an exception: " + ex.ToString());
+                //todo: show loading status/error in UI
+                return;
+            }
+
+            if (doc_resource is not Cache.Text doc_text) //relaxed from text/aml, Cache.Text allows text/* - for compatibility
+            {
+                throw new Exception("fatal:::MIME mismatch: " + (doc_resource.MIMEType == "" ? "<unspecified>" : doc_resource.MIMEType));
+            }
+            string raw_document = await doc_text.ReadAsync(_cts.Token);
+
+            ParseUtil.ParseAMLDocument(Document, raw_document, _cts.Token);
+            Document.StartJavaScript(_cts.Token);
+
+            while (true)
+            { //temporary: fixed duration cleanup
+                try
+                {
+                    await Task.Delay(1000, _cts.Token);
+                }
+                catch
+                {
+                    break;
+                }
+                Document.ScheduleOphanedElementCleanup();
             }
         });
     }
@@ -62,6 +63,7 @@ internal class ContentB : IDisposable
             return;
 
         _cts.Cancel();
+        Document.Interrupt();
         try
         {
             _content_task.Wait();

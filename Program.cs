@@ -1,12 +1,12 @@
 ﻿using AbyssCLI.Client;
 internal class Program
 {
-    public static void Main()
+    public static async Task Main()
     {
         try
         {
             Client.Init();
-            Client.Start();
+            await Client.Run();
             Client.CerrWriteLine("AbyssCLI terminated peacefully");
         }
         catch (Exception ex)
