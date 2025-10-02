@@ -159,6 +159,7 @@ const fetch = (a, b) => __fetch_api.FetchAsync(a, b)
             AML.StaticMesh static_mesh => new JavaScriptAPI.StaticMesh(this, static_mesh),
             AML.PbrMaterial pbr_material => new JavaScriptAPI.PbrMaterial(this, pbr_material),
             AML.Transform transform => new JavaScriptAPI.Transform(this, transform),
+            AML.BoxCollider box_collider => new JavaScriptAPI.BoxCollider(this, box_collider),
             _ => throw new NotImplementedException()
         };
         return _engine.Script.__aml_elem_dtor_reg(result, element.ElementId);

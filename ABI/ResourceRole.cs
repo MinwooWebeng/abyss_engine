@@ -25,11 +25,12 @@ public static partial class ResourceRoleReflection {
           "ChJSZXNvdXJjZVJvbGUucHJvdG8qdQoMUmVzb3VyY2VSb2xlEggKBE1lc2gQ",
           "ABIKCgZBbGJlZG8QARIKCgZOb3JtYWwQAhINCglSb3VnaG5lc3MQAxILCgdN",
           "ZXRhbGljEAQSDAoIU3BlY3VsYXIQBRILCgdPcGFjaXR5EAYSDAoIRW1pc3Np",
-          "b24QByomCgpFbGVtZW50VGFnEgUKAU8QABIHCgNPYmoQARIICgRQYnJtEAJi",
-          "BnByb3RvMw=="));
+          "b24QByowCgpFbGVtZW50VGFnEgUKAU8QABIHCgNPYmoQARIICgRQYnJtEAIS",
+          "CAoEQmNvbBADKikKCVZhbHVlUm9sZRIICgREaW1BEAASCAoERGltQhABEggK",
+          "BERpbUMQAmIGcHJvdG8z"));
     descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
         new pbr::FileDescriptor[] { },
-        new pbr::GeneratedClrTypeInfo(new[] {typeof(global::ResourceRole), typeof(global::ElementTag), }, null, null));
+        new pbr::GeneratedClrTypeInfo(new[] {typeof(global::ResourceRole), typeof(global::ElementTag), typeof(global::ValueRole), }, null, null));
   }
   #endregion
 
@@ -50,6 +51,13 @@ public enum ElementTag {
   [pbr::OriginalName("O")] O = 0,
   [pbr::OriginalName("Obj")] Obj = 1,
   [pbr::OriginalName("Pbrm")] Pbrm = 2,
+  [pbr::OriginalName("Bcol")] Bcol = 3,
+}
+
+public enum ValueRole {
+  [pbr::OriginalName("DimA")] DimA = 0,
+  [pbr::OriginalName("DimB")] DimB = 1,
+  [pbr::OriginalName("DimC")] DimC = 2,
 }
 
 #endregion

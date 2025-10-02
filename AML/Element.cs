@@ -25,6 +25,7 @@ public class Element : IDisposable
             "obj" => ElementTag.Obj,
             "pbrm" => ElementTag.Pbrm,
             "body" => ElementTag.O,
+            "bcol" => ElementTag.Bcol,
             _ => throw new InvalidOperationException()
         });
 

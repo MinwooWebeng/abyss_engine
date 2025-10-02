@@ -169,6 +169,25 @@ namespace AbyssCLI.ABI
 			
 			Write(action);
 		}
+		public void ElemSetValueF
+		(
+			int element_id,
+			ValueRole role,
+			float value
+		)
+		{
+			var action = new RenderAction
+			{
+				ElemSetValueF = new()
+				{
+					ElementId = element_id,
+                    Role = role,
+                    Value = value
+				}
+			};
+			
+			Write(action);
+		}
 		public void CreateItem
 		(
 			int element_id,
